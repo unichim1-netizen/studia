@@ -99,6 +99,229 @@ export function splitIntoSegments(text: string): string[] {
   return out;
 }
 
+/* ---------- Transcript có mốc thời gian (YouTube) ---------- */
+
+export type Timed = { text: string; start: number; end: number };
+
+const TS = /^\s*\[?((?:\d{1,2}:)?\d{1,2}:\d{2})(?:\.\d+)?\]?\s*(.*)$/;
+const toSec = (ts: string) => ts.split(":").reduce((s, p) => s * 60 + Number(p), 0);
+
+/**
+ * Đọc transcript chép từ YouTube ("Hiện bản chép lời"): mỗi mốc "0:12" hoặc "1:02:03" đứng riêng một dòng
+ * hoặc ở đầu dòng, theo sau là lời. Trả về null nếu không có mốc thời gian nào.
+ */
+export function parseTimedTranscript(raw: string): Timed[] | null {
+  const cues: { start: number; text: string }[] = [];
+  for (const line of raw.split(/\r?\n/)) {
+    const m = line.match(TS);
+    if (m) cues.push({ start: toSec(m[1]), text: m[2].trim() });
+    else if (line.trim() && cues.length) cues[cues.length - 1].text += ` ${line.trim()}`;
+  }
+  const out = cues
+    .map((c, i) => ({ text: c.text.replace(/\[[^\]]*\]/g, "").replace(/\s+/g, " ").trim(), start: c.start, end: cues[i + 1]?.start ?? c.start + Math.max(2, wordCount(c.text) / WORDS_PER_SEC) }))
+    .filter((c) => c.text && c.end > c.start);
+  return out.length ? out : null;
+}
+
+/** Gom các dòng transcript thành đoạn nghe 10–15 giây, ưu tiên cắt ở cuối câu. */
+export function segmentsFromTimed(cues: Timed[]): Timed[] {
+  const out: Timed[] = [];
+  let cur: Timed | null = null;
+  for (const c of cues) {
+    if (cur && (wordCount(`${cur.text} ${c.text}`) > MAX_SEG_WORDS + 4 || c.end - cur.start > 18)) { out.push(cur); cur = null; }
+    cur = cur ? { text: `${cur.text} ${c.text}`, start: cur.start, end: c.end } : { ...c };
+    const dur = cur.end - cur.start;
+    if ((dur >= 10 || wordCount(cur.text) >= MIN_SEG_WORDS) && /[.!?]["')\]]*$/.test(cur.text)) { out.push(cur); cur = null; }
+  }
+  if (cur) {
+    const last = out[out.length - 1];
+    if (last && cur.end - cur.start < 4) out[out.length - 1] = { text: `${last.text} ${cur.text}`, start: last.start, end: cur.end };
+    else out.push(cur);
+  }
+  return out;
+}
+
+/** Lấy mã video từ link YouTube (watch?v=, youtu.be/, shorts/, embed/) hoặc chính mã 11 ký tự. */
+export function youtubeId(url: string): string | null {
+  const s = url.trim();
+  if (/^[\w-]{11}$/.test(s)) return s;
+  const m = s.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
+/* ---------- Nghe tăng dần ---------- */
+
+export type Ladder = "off" | "speed" | "content";
+export const LADDER_STEPS = [0.25, 0.5, 0.75, 1] as const;
+
+/** Một lượt nghe: đọc `text` ở tốc độ `rate`; `share` là tỉ lệ nội dung (0–1] tính từ đầu đoạn, để cắt audio thật theo thời gian. */
+export type Round = { text: string; rate: number; share: number; from?: number };
+
+/** Vị trí (tỉ lệ 0–1 theo số từ) của từng cụm trong đoạn, để phát riêng một cụm của audio thật. */
+export function chunkSpans(text: string): { from: number; to: number }[] {
+  const cs = chunksOf(text);
+  const total = cs.reduce((s, c) => s + wordCount(c), 0) || 1;
+  let acc = 0;
+  return cs.map((c) => { const from = acc / total; acc += wordCount(c); return { from, to: acc / total }; });
+}
+
+/**
+ * Kế hoạch các lượt nghe tăng dần 25% → 50% → 75% → 100%:
+ * - "speed": nghe cả đoạn ở 0.25× → 0.5× → 0.75× → 1×;
+ * - "content": ở tốc độ đang chọn, nghe 25% đầu đoạn, rồi 50%, 75%, cả đoạn (cắt ở ranh giới cụm).
+ */
+export function ladderRounds(text: string, mode: Ladder, rate: number, times = 1): Round[] {
+  if (mode === "speed") return LADDER_STEPS.map((r) => ({ text, rate: r, share: 1 }));
+  if (mode === "content") {
+    const words = text.replace(/\s+/g, " ").trim().split(" ");
+    const total = words.length || 1;
+    // ranh giới cụm (số từ tính từ đầu đoạn), để ưu tiên dừng ở chỗ ngắt hơi tự nhiên
+    const bounds: number[] = [];
+    let acc = 0;
+    for (const c of chunksOf(text)) bounds.push((acc += wordCount(c)));
+    const seen = new Set<number>();
+    const rounds: Round[] = [];
+    for (const p of LADDER_STEPS) {
+      const target = Math.max(1, Math.round(p * total));
+      const near = bounds.reduce((best, b) => (Math.abs(b - target) < Math.abs(best - target) ? b : best), bounds[0] ?? total);
+      const n = p === 1 ? total : Math.abs(near - target) <= 3 ? near : target;
+      if (seen.has(n)) continue;
+      seen.add(n);
+      rounds.push({ text: words.slice(0, n).join(" "), rate, share: n / total });
+    }
+    return rounds;
+  }
+  return Array.from({ length: Math.max(1, times) }, () => ({ text, rate, share: 1 }));
+}
+
+/* ---------- Nối âm, nuốt âm, dạng yếu ---------- */
+
+export type LinkKind = "link" | "link-r" | "elide" | "assim" | "reduce" | "weak";
+export type LinkNote = { phrase: string; kind: LinkKind; sound: string; note: string };
+
+export const LINK_LABEL: Record<LinkKind, string> = {
+  link: "Nối âm", "link-r": "Nối âm /r/", elide: "Nuốt âm", assim: "Biến âm", reduce: "Rút gọn", weak: "Dạng yếu",
+};
+
+const VOWEL_START_EXCEPT = /^(uni|use|usu|uti|eu|ewe|one|once|ufo)/; // chữ nguyên âm nhưng đọc /j/, /w/
+const H_SILENT = /^(hour|honest|honou?r|heir)/;
+const NO_CONS_END = /^(the|he|she|we|be|me|ye)$/;
+const startsVowelSound = (w: string) => !VOWEL_START_EXCEPT.test(w) && (/^[aeiou]/.test(w) || H_SILENT.test(w));
+/** /t/, /d/ cuối từ đứng sau một phụ âm (next, last, and, kind) — hay bị nuốt khi từ sau bắt đầu bằng phụ âm. */
+const elidable = (w: string) => w.length > 2 && /[bcfghjklmnpsvxz][td]$/.test(w) && !/(nt|rd|rt|ed)$/.test(w) || /^(and|kind|want|went|don't|can't|isn't|wasn't)$/.test(w);
+/** Từ kết thúc bằng phụ âm khi đọc (tính cả "e" câm như make, take). */
+const endsConsSound = (w: string) => !NO_CONS_END.test(w) && (/[bcdfgklmnpstvxz]$/.test(w) || /[^aeiou]e$/.test(w) || /(ck|ng|sh|ch|th)$/.test(w)) && !/(ough|igh)$/.test(w);
+const endsR = (w: string) => /(er|or|ar|ur|ir|ere|ore|are|ure|ire|ear|air|oor|our)$/.test(w);
+
+/** Cụm hay đọc rút gọn trong văn nói. */
+const REDUCTIONS: [RegExp, string, string][] = [
+  [/^want to$/, "/ˈwɒnə/ (wanna)", "“want to” thường đọc liền thành wanna."],
+  [/^going to$/, "/ˈɡʌnə/ (gonna)", "“going to” chỉ tương lai hay đọc thành gonna."],
+  [/^got to$/, "/ˈɡɒtə/ (gotta)", "“got to” đọc nhanh thành gotta."],
+  [/^have to$/, "/ˈhæftə/", "“have” trước “to” đổi /v/ thành /f/: hafta."],
+  [/^has to$/, "/ˈhæstə/", "“has” trước “to” đổi /z/ thành /s/: hasta."],
+  [/^(let me|lemme)$/, "/ˈlemi/ (lemme)", "“let me” nuốt /t/: lemme."],
+  [/^give me$/, "/ˈɡɪmi/ (gimme)", "“give me” nuốt /v/: gimme."],
+  [/^kind of$/, "/ˈkaɪndə/ (kinda)", "“of” yếu đi còn /ə/: kinda."],
+  [/^sort of$/, "/ˈsɔːtə/ (sorta)", "“of” yếu đi còn /ə/: sorta."],
+  [/^a lot of$/, "/əˈlɒtə/", "“of” còn /ə/, nối với lot: a-lotta."],
+  [/^out of$/, "/ˈaʊtə/", "“of” còn /ə/: outta."],
+  [/^(do not|don't) know$/, "/dəˈnəʊ/ (dunno)", "“don't know” đọc nhanh thành dunno."],
+  [/^(would|could|should) have$/, "/ˈwʊdəv/", "“have” sau would/could/should gần như chỉ còn /əv/ hoặc /ə/."],
+];
+
+/** Dạng yếu của từ chức năng khi không được nhấn. */
+const WEAK: Record<string, string> = {
+  to: "/tə/", of: "/əv/", and: "/ən/ hoặc /n/", for: "/fə/", from: "/frəm/", at: "/ət/", can: "/kən/",
+  was: "/wəz/", were: "/wə/", are: "/ə/", have: "/əv/", has: "/əz/", them: "/ðəm/", than: "/ðən/",
+  but: "/bət/", some: "/səm/", there: "/ðə/", you: "/jə/", your: "/jə/", as: "/əz/", that: "/ðət/",
+};
+
+/**
+ * Tìm các chỗ nối âm, nuốt âm, biến âm và rút gọn trong đoạn (quy tắc gần đúng, đủ để người học biết nghe chỗ nào).
+ * Mỗi loại một vài ví dụ tiêu biểu, tối đa `limit` ghi chú.
+ */
+export function connectedSpeech(text: string, limit = 12): LinkNote[] {
+  const words = text.replace(/[’‘]/g, "'").split(/\s+/).filter(Boolean);
+  const clean = words.map((w) => w.toLowerCase().replace(/^[^a-z0-9']+|[^a-z0-9']+$/g, ""));
+  // không nối qua dấu câu (dấu phẩy, chấm…) vì người đọc ngắt hơi ở đó
+  const pause = words.map((w) => /[,.;:!?)"]$/.test(w));
+  const notes: LinkNote[] = [];
+  const used = new Set<string>();
+  const add = (n: LinkNote) => {
+    const key = n.phrase.toLowerCase();
+    if (used.has(key)) return;
+    used.add(key);
+    notes.push(n);
+  };
+  const shown = (i: number, n: number) => words.slice(i, i + n).join(" ").replace(/[,.;:!?"]+$/, "");
+
+  const covered = new Set<number>(); // vị trí đã nằm trong một cụm rút gọn, không ghi chú thêm
+  for (let i = 0; i < clean.length; i++) {
+    const a = clean[i], b = clean[i + 1], c = clean[i + 2];
+    if (!a) continue;
+    // rút gọn 2–3 từ
+    for (const [re, sound, note] of REDUCTIONS) {
+      for (const n of [3, 2]) {
+        const ph = clean.slice(i, i + n).join(" ");
+        if (!covered.has(i) && clean.slice(i, i + n - 1).every((_, k) => !pause[i + k]) && re.test(ph)) {
+          add({ phrase: shown(i, n), kind: "reduce", sound, note });
+          for (let k = 0; k < n; k++) covered.add(i + k);
+        }
+      }
+    }
+    if (!b || pause[i] || covered.has(i)) continue;
+    // biến âm: /t/, /d/ + you/your → /tʃ/, /dʒ/
+    if (/^(you|your|you're|yourself)$/.test(b) && /[td]$/.test(a)) {
+      const ch = a.endsWith("t") ? "/tʃ/" : "/dʒ/";
+      add({ phrase: shown(i, 2), kind: "assim", sound: `${a}‿${b} → ${ch}`, note: `/${a.slice(-1)}/ gặp /j/ của “${b}” hoà thành ${ch}.` });
+      continue;
+    }
+    // nuốt âm: /t/, /d/ kẹp giữa hai phụ âm (next day, last night, and then)
+    if (elidable(a) && /^[bcdfgjklmnpqrstvwxz]/.test(b)) {
+      add({ phrase: shown(i, 2), kind: "elide", sound: `${a.slice(0, -1)}(${a.slice(-1)}) ${b}`, note: `Âm /${a.slice(-1)}/ cuối “${a}” kẹp giữa hai phụ âm nên gần như bị nuốt.` });
+      continue;
+    }
+    // nối /r/ (giọng Anh): far away, there is
+    if (endsR(a) && startsVowelSound(b)) {
+      add({ phrase: shown(i, 2), kind: "link-r", sound: `${a}‿${b}`, note: `“${a}” vốn không đọc /r/, nhưng trước nguyên âm thì /r/ hiện ra để nối sang “${b}”.` });
+      continue;
+    }
+    // nối phụ âm cuối với nguyên âm đầu: turn left at, take it
+    if (endsConsSound(a) && startsVowelSound(b) && a.length > 1) {
+      const tail = c && !pause[i + 1] && endsConsSound(b) && startsVowelSound(c) ? 3 : 2;
+      for (let k = 1; k < tail - 1; k++) covered.add(i + k); // từ giữa chuỗi nối không tạo ghi chú riêng
+      add({ phrase: shown(i, tail), kind: "link", sound: clean.slice(i, i + tail).join("‿"), note: `Phụ âm cuối của “${a}” chuyển sang đầu “${b}”, nghe như một từ.` });
+      continue;
+    }
+  }
+  // dạng yếu: chỉ ghi từ chức năng xuất hiện giữa câu, mỗi từ một lần
+  for (let i = 1; i < clean.length - 1; i++) {
+    const w = clean[i];
+    if (WEAK[w] && !pause[i] && !covered.has(i)) add({ phrase: pause[i - 1] ? shown(i, 2) : shown(i - 1, 3), kind: "weak", sound: `${w} → ${WEAK[w]}`, note: `“${w}” không được nhấn nên đọc rất nhẹ, dễ nghe sót.` });
+  }
+  const order: LinkKind[] = ["reduce", "assim", "link", "link-r", "elide", "weak"];
+  // lấy xen kẽ các loại để danh sách không bị một loại chiếm hết
+  const byKind = order.map((k) => notes.filter((n) => n.kind === k));
+  const out: LinkNote[] = [];
+  for (let r = 0; out.length < limit && byKind.some((l) => l[r]); r++) for (const l of byKind) if (l[r] && out.length < limit) out.push(l[r]);
+  return out;
+}
+
+/* ---------- Shadowing ---------- */
+
+/** Tốc độ nói (từ/phút). */
+export const wpm = (text: string, seconds: number) => (seconds > 0 ? Math.round((wordCount(text) / seconds) * 60) : 0);
+
+/** Nhận xét nhịp so với mẫu: tỉ lệ người học / mẫu. */
+export function paceVerdict(user: number, model: number): { ratio: number; label: string; tone: "ok" | "warn" } {
+  if (!user || !model) return { ratio: 0, label: "Chưa đo được nhịp", tone: "warn" };
+  const ratio = user / model;
+  if (ratio < 0.85) return { ratio, label: `Chậm hơn mẫu ${Math.round((1 - ratio) * 100)}%. Thử nói liền các cụm, đừng ngắt sau từng từ.`, tone: "warn" };
+  if (ratio > 1.15) return { ratio, label: `Nhanh hơn mẫu ${Math.round((ratio - 1) * 100)}%. Bám theo nhịp của người đọc, giữ các chỗ ngắt hơi.`, tone: "warn" };
+  return { ratio, label: "Nhịp khớp với mẫu. Tốt lắm!", tone: "ok" };
+}
+
 /** Gợi ý chữ cái đầu: "Good morning," → "G___ m______,". */
 export function maskText(text: string): string {
   return text.replace(/([A-Za-z])([A-Za-z']*)/g, (_m, a: string, b: string) => a + b.replace(/[A-Za-z]/g, "_"));
@@ -227,6 +450,9 @@ export type PlayOpts = {
   voiceURI?: string;
   times?: number;      // số lần lặp
   gapMs?: number;      // nghỉ giữa các lần lặp
+  rounds?: Round[];    // nếu có: thay text/rate/times, mỗi lượt một nội dung và tốc độ riêng (nghe tăng dần)
+  onWord?: (charIndex: number) => void; // vị trí từ đang đọc trong lượt hiện tại (nếu giọng đọc hỗ trợ)
+  onStartRound?: () => void;            // giọng đọc thực sự bắt đầu phát lượt hiện tại
   onRound?: (round: number) => void;
   onEnd?: (completed: boolean) => void;
 };
@@ -243,19 +469,21 @@ export function play(o: PlayOpts): () => void {
   const mine = ++token;
   synth.cancel();
   const voice = o.voiceURI ? synth.getVoices().find((v) => v.voiceURI === o.voiceURI) : undefined;
-  const times = Math.max(1, o.times || 1);
+  const rounds = o.rounds?.length ? o.rounds : Array.from({ length: Math.max(1, o.times || 1) }, () => ({ text: o.text, rate: o.rate, share: 1 }));
   let round = 0;
   const once = () => {
     if (mine !== token) return;
-    round++;
+    const r = rounds[round++];
     o.onRound?.(round);
-    const u = new SpeechSynthesisUtterance(o.text);
+    const u = new SpeechSynthesisUtterance(r.text);
     u.lang = voice?.lang || "en-GB";
     if (voice) u.voice = voice;
-    u.rate = o.rate;
+    u.rate = r.rate;
+    u.onstart = () => { if (mine === token) o.onStartRound?.(); };
+    u.onboundary = (e) => { if (mine === token && e.name !== "sentence") o.onWord?.(e.charIndex); };
     u.onend = () => {
       if (mine !== token) return;
-      if (round < times) setTimeout(once, o.gapMs ?? 1500);
+      if (round < rounds.length) setTimeout(once, o.gapMs ?? 1500);
       else o.onEnd?.(true);
     };
     u.onerror = (e) => {
@@ -270,22 +498,27 @@ export function play(o: PlayOpts): () => void {
 
 /* ---------- Lưu tiến độ ---------- */
 
-export type Settings = { rate: number; voiceURI: string; times: number; gapSec: number; examMode: boolean };
+export type Settings = { rate: number; voiceURI: string; times: number; gapSec: number; examMode: boolean; ladder: Ladder };
 export type Store = {
   settings: Settings;
   done: Record<string, { best: number; attempts: number; last: number }>;
   weak: Record<string, number>;
   days: Record<string, { n: number; sum: number }>;
   custom: string;
+  /** Link YouTube đi kèm transcript ở mục “Của bạn”; có link + mốc thời gian thì nghe audio thật thay vì giọng máy. */
+  customVideo: string;
+  /** Shadowing: điểm khớp lời tốt nhất theo đoạn, và số lượt theo ngày. */
+  shadow: Record<string, { best: number; attempts: number }>;
+  shadowDays: Record<string, number>;
 };
 
-export const SPEEDS = [0.5, 0.75, 1, 1.25] as const;
+export const SPEEDS = [0.25, 0.5, 0.75, 1, 1.25] as const;
 export const EXAM_MAX_PLAYS = 2;
 
 const KEY = "studia-dictation-v1";
 export const EMPTY_STORE: Store = {
-  settings: { rate: 1, voiceURI: "", times: 1, gapSec: 3, examMode: false },
-  done: {}, weak: {}, days: {}, custom: "",
+  settings: { rate: 1, voiceURI: "", times: 1, gapSec: 3, examMode: false, ladder: "off" },
+  done: {}, weak: {}, days: {}, custom: "", customVideo: "", shadow: {}, shadowDays: {},
 };
 
 export function loadStore(): Store {
@@ -313,4 +546,15 @@ export function recordResult(store: Store, segId: string | null, score: number, 
   next.days[k] = { n: d.n + 1, sum: d.sum + score };
   for (const w of missed) next.weak[w] = (next.weak[w] || 0) + 1;
   return next;
+}
+
+/** Ghi một lượt shadowing. */
+export function recordShadow(store: Store, segId: string, score: number): Store {
+  const prev = store.shadow[segId];
+  const k = dayKey();
+  return {
+    ...store,
+    shadow: { ...store.shadow, [segId]: { best: Math.max(prev?.best ?? 0, score), attempts: (prev?.attempts ?? 0) + 1 } },
+    shadowDays: { ...store.shadowDays, [k]: (store.shadowDays[k] || 0) + 1 },
+  };
 }

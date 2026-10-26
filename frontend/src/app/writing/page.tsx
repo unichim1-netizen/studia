@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Mascot from "@/components/mascot/Mascot";
 import { API, apiFetch } from "@/lib/api";
+import { TIME_PLAN, checkEssay, essayType, loadHistory, outlineFor, paragraphsOf, pushHistory, type CheckResult, type WritingHistory } from "@/lib/writingCheck";
+import { CheckPanel, OutlineCard, PromptPicker, TimerCard } from "./parts";
+import AiContextCard from "@/components/AiContextCard";
+import { describeUsed, payload, type AiContext, type UsedContext } from "@/lib/aiContext";
 import "./writing.css";
 
 type Task = "task1" | "task2";
@@ -13,6 +17,8 @@ type Result = {
   task: Task; words: number; min_words: number; under_length: boolean; overall: number;
   criteria: Record<"task" | "coherence" | "lexical" | "grammar", Criterion>;
   summary_vi: string; priorities_vi: string[]; sentences: SentenceResult[]; issue_count: number;
+  model_rewrite?: { paragraph_index: number | null; text: string; notes_vi: string[] } | null;
+  context?: UsedContext;
 };
 
 const TASKS: { id: Task; label: string; min: number; hint: string; sample: string }[] = [
@@ -77,32 +83,87 @@ export default function WritingPage() {
   const [error, setError] = useState("");
   const [result, setResult] = useState<Result | null>(null);
   const [onlyIssues, setOnlyIssues] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+  const [source, setSource] = useState("");
+  const [outline, setOutline] = useState<Record<string, string>>({});
+  const [startedAt, setStartedAt] = useState<number | null>(null);
+  const [now, setNow] = useState(0);
+  const [strict, setStrict] = useState(false);
+  const [check, setCheck] = useState<CheckResult | null>(null);
+  const [history, setHistory] = useState<WritingHistory>([]);
+  const [loaded, setLoaded] = useState(false);
+  const essayRef = useRef<HTMLTextAreaElement>(null);
+  const aiCtx = useRef<AiContext | null>(null);
 
-  // Giữ bản nháp khi tải lại trang
+  // Giữ bản nháp (đề, bài, dàn ý, giờ bắt đầu) khi tải lại trang
   useEffect(() => {
     try {
       const d = JSON.parse(localStorage.getItem("studia_writing_draft") || "null");
-      if (d) { setTask(d.task === "task1" ? "task1" : "task2"); setPrompt(d.prompt || ""); setEssay(d.essay || ""); }
+      if (d) {
+        setTask(d.task === "task1" ? "task1" : "task2"); setPrompt(d.prompt || ""); setEssay(d.essay || "");
+        setOutline(d.outline || {}); setImage(d.image || null); setSource(d.source || ""); setStartedAt(d.startedAt || null); setStrict(!!d.strict);
+      }
     } catch {}
+    setHistory(loadHistory());
+    setNow(Date.now());
+    setLoaded(true);
   }, []);
   useEffect(() => {
-    try { localStorage.setItem("studia_writing_draft", JSON.stringify({ task, prompt, essay })); } catch {}
-  }, [task, prompt, essay]);
+    if (!loaded) return;
+    try { localStorage.setItem("studia_writing_draft", JSON.stringify({ task, prompt, essay, outline, image, source, startedAt, strict })); } catch {}
+  }, [loaded, task, prompt, essay, outline, image, source, startedAt, strict]);
+
+  useEffect(() => {
+    if (!startedAt) return;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [startedAt]);
 
   const cfg = TASKS.find((t) => t.id === task)!;
   const words = useMemo(() => countWords(essay), [essay]);
   const enough = words >= 30;
+  const elapsed = startedAt ? (now - startedAt) / 1000 : 0;
+  const timeUp = !!startedAt && elapsed >= TIME_PLAN[task].total * 60;
+  const locked = strict && timeUp;
+  const paraCount = useMemo(() => paragraphsOf(essay).length, [essay]);
+
+  const switchTask = (t: Task) => {
+    if (t === task) return;
+    setTask(t); setPrompt(""); setImage(null); setSource(""); setOutline({}); setStartedAt(null); setCheck(null); setResult(null);
+  };
+
+  const insertOutline = (text: string) => {
+    setEssay((e) => (e.trim() ? `${e.trim()}\n\n${text}` : text));
+    if (!startedAt) setStartedAt(Date.now());
+    setTimeout(() => essayRef.current?.focus(), 30);
+  };
+
+  const runCheck = () => {
+    setCheck(checkEssay(task, prompt, essay));
+    setTimeout(() => document.getElementById("wr-ck")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  };
 
   const submit = async () => {
     setBusy(true); setError("");
     try {
       const res = await apiFetch(`${API}/writing/grade`, {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task, prompt, essay }),
+        body: JSON.stringify({
+          task, prompt, essay,
+          context: aiCtx.current ? payload(aiCtx.current, "writing") : undefined,
+          attempt: {
+            minutes_used: startedAt ? Math.round(elapsed / 60) : 0,
+            // dàn ý người học đã lập, ghi theo tên từng phần để AI nhận xét bài có đi theo kế hoạch không
+            outline: outlineFor(task, task === "task2" ? essayType(prompt) : "unknown")
+              .filter((p) => (outline[p.id] || "").trim()).map((p) => `${p.title}: ${outline[p.id].trim()}`).join("\n"),
+          },
+        }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Không chấm được bài, thử lại sau");
       setResult(data);
+      pushHistory({ at: Date.now(), task, words, band: typeof data.overall === "number" ? data.overall : null, seconds: Math.round(elapsed), promptHead: (source || prompt).slice(0, 80) });
+      setHistory(loadHistory());
       setTimeout(() => document.getElementById("wr-result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
     } catch (e: any) {
       setError(e.message || "Không chấm được bài, thử lại sau");
@@ -116,39 +177,66 @@ export default function WritingPage() {
     <div className="wrap stagger wr">
       <header className="page-head">
         <div>
-          <h1 className="page-title">Chấm Writing</h1>
-          <p className="page-sub">Dán bài viết của bạn. Coal chấm theo 4 tiêu chí của IELTS và sửa lỗi từng câu.</p>
+          <h1 className="page-title">Luyện & chấm Writing</h1>
+          <p className="page-sub">Lập dàn ý 4 đoạn, viết trong giới hạn 20 phút (Task 1) hoặc 40 phút (Task 2), soát lỗi lặp từ và lỗi phổ biến ngay lập tức, rồi để Coal chấm chi tiết theo 4 tiêu chí IELTS.</p>
         </div>
       </header>
 
-      <section className="st-card wr-form" aria-label="Bài viết của bạn">
-        <div className="seg" role="tablist" aria-label="Loại bài">
-          {TASKS.map((t) => (
-            <button key={t.id} type="button" role="tab" className="seg-btn" aria-selected={task === t.id} onClick={() => setTask(t.id)}>{t.label}</button>
-          ))}
+      <section className="st-card wr-form" aria-label="Đề bài">
+        <div className="row" style={{ justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+          <div className="seg" role="tablist" aria-label="Loại bài">
+            {TASKS.map((t) => (
+              <button key={t.id} type="button" role="tab" className="seg-btn" aria-selected={task === t.id} onClick={() => switchTask(t.id)}>{t.label}</button>
+            ))}
+          </div>
+          <PromptPicker task={task} onPick={(p) => { setPrompt(p.text); setImage(p.image); setSource(p.source); setOutline({}); setCheck(null); setResult(null); }} />
         </div>
-        <p className="meta">{cfg.hint}. Tối thiểu {cfg.min} từ.</p>
+        <p className="meta">{cfg.hint}. Tối thiểu {cfg.min} từ, chuẩn {TIME_PLAN[task].total} phút.</p>
 
         <label className="wr-label" htmlFor="wr-prompt">
-          Đề bài
-          <button type="button" className="link" onClick={() => setPrompt(cfg.sample)}>Dùng đề mẫu</button>
+          Đề bài{source ? ` · ${source}` : ""}
+          <button type="button" className="link" onClick={() => { setPrompt(cfg.sample); setImage(null); setSource(""); }}>Dùng đề mẫu</button>
         </label>
         <textarea id="wr-prompt" className="wr-area" rows={3} value={prompt} maxLength={2000} placeholder="Dán đề bài vào đây để chấm đúng yêu cầu (không bắt buộc)" onChange={(e) => setPrompt(e.target.value)} />
-
-        <label className="wr-label" htmlFor="wr-essay">Bài viết</label>
-        <textarea id="wr-essay" className="wr-area wr-essay" rows={14} value={essay} placeholder="Viết hoặc dán bài của bạn bằng tiếng Anh…" onChange={(e) => setEssay(e.target.value)} spellCheck={false} />
-
-        <div className="wr-bar">
-          <span className="wr-count num" data-short={words < cfg.min || undefined}>
-            {words} / {cfg.min} từ{words > 0 && words < cfg.min ? " · chưa đủ độ dài" : ""}
-          </span>
-          <button type="button" className="st-btn st-btn-primary" onClick={submit} disabled={busy || !enough}>
-            {busy ? "Coal đang chấm…" : "Chấm bài"}
-          </button>
-        </div>
-        {!enough && essay.trim() && <p className="meta">Cần ít nhất 30 từ để chấm.</p>}
-        {error && <div role="alert" className="gp-msg">{error}</div>}
+        {image && <img src={image} alt="Hình minh hoạ của đề Task 1" style={{ maxWidth: "100%", maxHeight: 420, objectFit: "contain", borderRadius: "var(--radius-sm)", background: "#fff", marginTop: 6 }} />}
       </section>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20, alignItems: "start" }}>
+        <OutlineCard task={task} prompt={prompt} outline={outline} onChange={setOutline} onInsert={insertOutline} />
+
+        <div className="stack" style={{ gap: 16, minWidth: 0 }}>
+          <TimerCard task={task} startedAt={startedAt} now={now} strict={strict}
+            onStart={() => { setStartedAt(Date.now()); setNow(Date.now()); essayRef.current?.focus(); }}
+            onReset={() => setStartedAt(null)} onStrict={setStrict} />
+
+          <section className="st-card wr-form" aria-label="Bài viết của bạn">
+            <label className="wr-label" htmlFor="wr-essay">Bước 2 · Bài viết <span className="meta">mỗi đoạn cách một dòng trống</span></label>
+            <textarea id="wr-essay" ref={essayRef} className="wr-area wr-essay" rows={16} value={essay} readOnly={locked}
+              placeholder="Viết hoặc dán bài của bạn bằng tiếng Anh…" spellCheck={false}
+              onChange={(e) => { setEssay(e.target.value); if (!startedAt && e.target.value.length > 20) setStartedAt(Date.now()); }} />
+            {locked && <p role="status" className="wr-warn">Hết giờ, bài đã khoá. Soát lỗi và chấm để xem kết quả (bỏ chọn “Khoá bài khi hết giờ” nếu muốn viết tiếp).</p>}
+
+            <div className="wr-bar">
+              <span className="wr-count num" data-short={words < cfg.min || undefined}>
+                {words} / {cfg.min} từ · {paraCount} đoạn{words > 0 && words < cfg.min ? " · chưa đủ độ dài" : ""}
+                {startedAt && elapsed > 60 ? ` · ${Math.round(words / (elapsed / 60))} từ/phút` : ""}
+              </span>
+              <div className="row-wrap" style={{ gap: 8 }}>
+                <button type="button" className="st-btn st-btn-secondary" onClick={runCheck} disabled={!essay.trim()}>Bước 3 · Soát nhanh</button>
+                <button type="button" className="st-btn st-btn-primary" onClick={submit} disabled={busy || !enough}>
+                  {busy ? "Coal đang chấm…" : "Chấm chi tiết bằng AI"}
+                </button>
+              </div>
+            </div>
+            {!enough && essay.trim() && <p className="meta">Cần ít nhất 30 từ để chấm bằng AI.</p>}
+            {error && <div role="alert" className="gp-msg">{error}{check ? "" : " Bạn vẫn có thể bấm “Soát nhanh” để kiểm tra lỗi ngay trên máy."}</div>}
+          </section>
+        </div>
+      </div>
+
+      <AiContextCard skill="writing" onChange={(c) => { aiCtx.current = c; }} />
+
+      {check && <CheckPanel r={check} task={task} />}
 
       {busy && (
         <section className="st-card wr-wait" aria-live="polite">
@@ -164,6 +252,7 @@ export default function WritingPage() {
             <div className="wr-top-text">
               <div className="eyebrow">Kết quả · {TASKS.find((t) => t.id === result.task)?.label} · {result.words} từ</div>
               <p className="wr-summary">{result.summary_vi}</p>
+              {result.context && <p className="meta" style={{ marginTop: 6 }}>{describeUsed(result.context)}</p>}
               {result.under_length && <p className="wr-warn">Bài ngắn hơn {result.min_words} từ nên điểm tiêu chí đầu bị trừ.</p>}
               {result.priorities_vi.length > 0 && (
                 <>
@@ -191,6 +280,15 @@ export default function WritingPage() {
               );
             })}
           </section>
+
+          {result.model_rewrite && (
+            <section className="st-card" aria-labelledby="wr-rw-h">
+              <h2 id="wr-rw-h" className="sec-title">Viết lại ở band mục tiêu{result.model_rewrite.paragraph_index != null ? ` · đoạn ${result.model_rewrite.paragraph_index + 1}` : ""}</h2>
+              <p className="meta" style={{ marginTop: 4 }}>Coal chọn đoạn kéo điểm xuống nhiều nhất và viết lại, giữ nguyên ý của bạn. Đối chiếu từng câu để thấy khác biệt, đừng chép nguyên văn.</p>
+              <p lang="en" style={{ marginTop: 10, font: "400 16.5px/1.7 var(--font-reading, var(--font-sans))", padding: "12px 14px", borderRadius: "var(--radius-sm)", background: "var(--surface-sunken)", whiteSpace: "pre-wrap" }}>{result.model_rewrite.text}</p>
+              {result.model_rewrite.notes_vi.length > 0 && <ul className="wr-list ok" style={{ marginTop: 10 }}>{result.model_rewrite.notes_vi.map((n, i) => <li key={i}>{n}</li>)}</ul>}
+            </section>
+          )}
 
           <section className="st-card" aria-labelledby="wr-sent-h">
             <div className="sec-head">
@@ -232,6 +330,22 @@ export default function WritingPage() {
             )}
           </section>
         </div>
+      )}
+
+      {history.length > 0 && (
+        <section className="st-card" aria-labelledby="wr-hist">
+          <h2 id="wr-hist" className="sec-title" style={{ marginBottom: 10 }}>Các bài đã chấm</h2>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 6 }}>
+            {history.slice(-8).reverse().map((h) => (
+              <li key={h.at} className="row" style={{ gap: 12, fontSize: 14, alignItems: "baseline", flexWrap: "wrap" }}>
+                <b className="num" style={{ minWidth: 34, color: h.band != null ? bandColor(h.band) : undefined }}>{h.band != null ? h.band.toFixed(1) : "—"}</b>
+                <span className="st-badge">{h.task === "task1" ? "Task 1" : "Task 2"}</span>
+                <span className="meta">{new Date(h.at).toLocaleDateString("vi-VN")} · {h.words} từ{h.seconds ? ` · ${Math.round(h.seconds / 60)} phút` : ""}</span>
+                <span className="ink2" style={{ flex: 1, minWidth: 160, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{h.promptHead}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   );

@@ -7,6 +7,7 @@ Cấu hình hệ thống do quản lý chỉnh trong trang Quản trị, lưu �
   dictation_segments       [..] | None             ngân hàng đoạn Nghe chép (None = dùng bộ có sẵn trong app)
   pronunciation_sentences  [..] | None             câu luyện Phát âm (None = dùng bộ có sẵn)
   book_meta                {doc_id: {...}}         mô tả, danh mục, thứ tự, nổi bật của sách chung
+  ai_grading               {...}                   ngữ cảnh chấm AI Writing/Speaking (xem grading_context)
 
 Đọc có cache ngắn (một tiến trình duy nhất) và KHÔNG BAO GIỜ làm hỏng request: lỗi DB thì dùng mặc định.
 """
@@ -26,6 +27,7 @@ FEATURES: dict[str, tuple[str, str]] = {
     "scenarios": ("Hội thoại tình huống", "Nói chuyện với trợ lý AI (tốn lượt gọi AI)"),
     "tutor": ("Gia sư AI", "Hỏi đáp và bôi đen chữ để giải thích (tốn lượt gọi AI)"),
     "writing": ("Chấm Writing", "Chấm Task 1/2 theo 4 tiêu chí band, sửa lỗi từng câu (tốn lượt gọi AI)"),
+    "speaking": ("Speaking IELTS", "Luyện Part 1–3, ghi âm, tự sửa lỗi; chấm AI theo 4 tiêu chí (tốn lượt gọi AI)"),
     "exam": ("Thi thử IELTS", "Thư viện đề, làm bài và chấm"),
     "flashcards": ("Thẻ & từ vựng", "Flashcard, sổ từ vựng"),
     "practice": ("Ôn luyện", "Câu hỏi ôn tập, ôn theo lịch lặp lại"),

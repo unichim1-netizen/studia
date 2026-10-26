@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Home, BarChart3, BookOpen, CalendarDays, Layers, Mic,
-  PenLine, Target, FlaskConical, Headphones, AudioLines, FileText, LogOut, PanelLeftClose, PanelLeftOpen, type LucideIcon,
-  NotebookPen, RotateCcw, BookMarked, AlertCircle, ChevronRight, LayoutGrid, Users, CreditCard, Package, Library, Sparkles, Zap, Settings, SlidersHorizontal, Megaphone,
+  PenLine, Target, FlaskConical, Headphones, BookOpenCheck, Speech, AudioLines, FileText, LogOut, PanelLeftClose, PanelLeftOpen, type LucideIcon,
+  NotebookPen, RotateCcw, BookMarked, AlertCircle, ChevronRight, LayoutGrid, Users, CreditCard, Package, Library, Sparkles, Zap, Settings, SlidersHorizontal, Megaphone, BrainCircuit,
 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import SelectionContextMenu from "@/components/SelectionContextMenu";
@@ -44,7 +44,9 @@ const navGroups: NavItem[][] = [
     { href: "/scenarios", label: "Luyện nói", icon: Mic },
     { href: "/pronunciation", label: "Shadowing", icon: AudioLines },
     { href: "/dictation", label: "Nghe chép chính tả", icon: Headphones },
-    { href: "/writing", label: "Chấm Writing", icon: FileText },
+    { href: "/reading", label: "Luyện đọc", icon: BookOpenCheck },
+    { href: "/speaking", label: "Speaking IELTS", icon: Speech },
+    { href: "/writing", label: "Luyện Writing", icon: FileText },
     { href: "/feedback", label: "Phân tích lỗi", icon: PenLine },
     { href: "/mistakes", label: "Sổ lỗi sai", icon: AlertCircle },
     { href: "/exam", label: "Thi thử IELTS", icon: Target },
@@ -56,7 +58,7 @@ const mobileTabs: NavItem[] = [
   { href: "/home", label: "Hôm nay", icon: Home },
   { href: "/flashcards", label: "Thẻ", icon: Layers },
   { href: "/practice", label: "Ôn luyện", icon: Zap },
-  { href: "/scenarios", label: "Luyện nói", icon: Mic, also: ["/pronunciation", "/dictation"] },
+  { href: "/scenarios", label: "Luyện nói", icon: Mic, also: ["/pronunciation", "/dictation", "/speaking"] },
   { href: "/exam", label: "Thi thử", icon: Target },
 ];
 
@@ -68,6 +70,7 @@ const adminGroup: NavItem[] = [
   { href: "/admin/library", label: "Sách hệ thống", icon: Library },
   { href: "/admin/features", label: "Tính năng & giới hạn", icon: SlidersHorizontal },
   { href: "/admin/content", label: "Nội dung & thông báo", icon: Megaphone },
+  { href: "/admin/ai", label: "Cấu hình chấm AI", icon: BrainCircuit },
 ];
 
 /** Mục đang active: khớp đúng "/" hoặc tiền tố của các route con (vd /books/123). */

@@ -32,10 +32,11 @@ def _get_gemini_client():
         return None
 
 
-def _call_gemini(prompt: str, expect_json: bool = True) -> Any:
+def _call_gemini(prompt: str, expect_json: bool = True, timeout: Optional[float] = None) -> Any:
     """
     Gọi Gemini API với prompt, trả về JSON object hoặc text.
     Fallback về None nếu không có key hoặc lỗi.
+    timeout (giây): đặt cho tác vụ người dùng đang chờ (vd. tra từ) để không treo khi Gemini lỗi; khi đó bỏ cả cơ chế thử lại.
     """
     model = _get_gemini_client()
     if not model:
@@ -47,7 +48,8 @@ def _call_gemini(prompt: str, expect_json: bool = True) -> Any:
             temperature=0.3,
             response_mime_type="application/json" if expect_json else "text/plain",
         )
-        response = model.generate_content(prompt, generation_config=config)
+        opts = {"timeout": timeout, "retry": None} if timeout else None
+        response = model.generate_content(prompt, generation_config=config, request_options=opts)
         text = response.text.strip()
 
         if expect_json:
@@ -59,6 +61,27 @@ def _call_gemini(prompt: str, expect_json: bool = True) -> Any:
     except Exception as e:
         logger.error(f"Gemini call failed: {e}")
         return None
+
+
+import urllib.parse
+import urllib.request
+
+def _quick_translate_vi(text: str) -> str:
+    """Instant translation from EN to VI via Google Translate API endpoint (free, sub-100ms)."""
+    if not text:
+        return ""
+    try:
+        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q={urllib.parse.quote(text)}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=3) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            if data and data[0]:
+                translated = "".join([part[0] for part in data[0] if part and part[0]])
+                if translated:
+                    return translated.strip()
+    except Exception as e:
+        logger.warning(f"Quick translate failed for '{text}': {e}")
+    return ""
 
 
 class AIEngine:
@@ -576,26 +599,6 @@ Requirements:
         basic["new_concepts_count"] = 0
         return basic
 
-import urllib.parse
-import urllib.request
-
-def _quick_translate_vi(text: str) -> str:
-    """Instant translation from EN to VI via Google Translate API endpoint (free, sub-100ms)."""
-    if not text:
-        return ""
-    try:
-        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=vi&dt=t&q={urllib.parse.quote(text)}"
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=3) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            if data and data[0]:
-                translated = "".join([part[0] for part in data[0] if part and part[0]])
-                if translated:
-                    return translated.strip()
-    except Exception as e:
-        logger.warning(f"Quick translate failed for '{text}': {e}")
-    return ""
-
     @staticmethod
     def generate_vocabulary_card(
         word: str,
@@ -638,7 +641,7 @@ Requirements:
 - collocations: 3-5 cụm từ thông dụng
 - pronunciation: IPA notation nếu có thể"""
 
-        result = _call_gemini(prompt, expect_json=True)
+        result = _call_gemini(prompt, expect_json=True, timeout=10)
 
         if result and "meaning_vi" in result and len(result["meaning_vi"].strip()) > 2 and "Vui lòng tra từ điển" not in result["meaning_vi"]:
             return result

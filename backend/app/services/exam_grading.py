@@ -153,6 +153,18 @@ Scores are IELTS bands from 0 to 9 in 0.5 steps.
 CRITERIA = ("task_response", "coherence_cohesion", "lexical_resource", "grammatical_range_accuracy")
 
 
+def _exam_calibration() -> str:
+    """Mức chấm, hướng dẫn của trung tâm và ngôn ngữ nhận xét từ cấu hình chấm AI. Phòng thi không dùng ngữ cảnh người học
+    để điểm thi thử luôn theo một chuẩn. Lỗi đọc cấu hình thì bỏ qua, giữ prompt gốc."""
+    try:
+        from app.services import grading_context as gc
+        cfg = gc.config()
+        return "\n" + gc.context_block("writing", cfg, None) + "\n" + gc.language_rule(gc.feedback_language(cfg, None)) + "\n"
+    except Exception as e:
+        logger.warning(f"Không đọc được cấu hình chấm AI cho phòng thi: {e}")
+        return ""
+
+
 def grade_writing(task: int, prompt: str, text: str, min_words: int, llm: Any = None) -> Dict[str, Any]:
     """
     Chấm một bài Writing. `llm` có `.generate_json(prompt) -> dict|None`; không có/lỗi → heuristic.
@@ -166,7 +178,7 @@ def grade_writing(task: int, prompt: str, text: str, min_words: int, llm: Any = 
     if llm is not None:
         try:
             result = llm.generate_json(WRITING_PROMPT.format(
-                task=task, prompt=(prompt or "")[:2500], words=words, min_words=min_words, text=text[:6000]))
+                task=task, prompt=(prompt or "")[:2500], words=words, min_words=min_words, text=text[:6000]) + _exam_calibration())
             if isinstance(result, dict) and all(isinstance(result.get(c), (int, float)) for c in CRITERIA):
                 criteria = {c: round_ielts(max(0.0, min(9.0, float(result[c])))) for c in CRITERIA}
                 band = round_ielts(sum(criteria.values()) / 4)

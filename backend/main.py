@@ -14,6 +14,7 @@ from app.api.v1.tutor import router as tutor_router
 from app.api.v1.speech import router as speech_router
 from app.api.v1.scenarios import router as scenarios_router
 from app.api.v1.writing import router as writing_router
+from app.api.v1.speaking import router as speaking_router
 from app.api.v1.export import router as export_router
 from app.api.v1.dual_coding import router as dual_coding_router
 from app.api.v1.vocabulary import router as vocabulary_router
@@ -116,6 +117,7 @@ app.include_router(tutor_router, prefix=settings.API_V1_STR, dependencies=authen
 app.include_router(speech_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_feature("pronunciation"))])
 app.include_router(scenarios_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_feature("scenarios"))])
 app.include_router(writing_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_feature("writing"))])
+app.include_router(speaking_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_feature("speaking"))])
 app.include_router(export_router, prefix=settings.API_V1_STR, dependencies=authenticated)
 app.include_router(dual_coding_router, prefix=settings.API_V1_STR, dependencies=authenticated)
 # V3 — Learnova Language Learning Features

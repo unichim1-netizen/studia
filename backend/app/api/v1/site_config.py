@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel
 
 from app.config import settings
-from app.services import mailer, sysconfig
+from app.services import grading_context, mailer, speaking_grader, sysconfig, writing_grader
 
 public_router = APIRouter(prefix="/config", tags=["Config public"])
 admin_router = APIRouter(prefix="/admin", tags=["Admin config"])
@@ -127,3 +127,59 @@ def put_content(req: ContentRequest):
         except ValueError as e:
             raise HTTPException(status_code=400, detail=str(e))
     return _content_state()
+
+
+# ---------------------------------------------------------------- cấu hình chấm AI (Writing / Speaking)
+class AiGradingRequest(BaseModel):
+    config: Optional[Dict[str, Any]] = None   # một phần hoặc toàn bộ cấu hình; null = khôi phục mặc định
+
+
+def _ai_grading_state() -> dict:
+    return {"config": grading_context.config(), "defaults": grading_context.DEFAULTS, "options": grading_context.options()}
+
+
+@admin_router.get("/ai-grading")
+def get_ai_grading():
+    return _ai_grading_state()
+
+
+@admin_router.put("/ai-grading")
+def put_ai_grading(req: AiGradingRequest):
+    if req.config is None:
+        sysconfig.save("ai_grading", {})  # rỗng = dùng mặc định
+        return _ai_grading_state()
+    try:
+        cleaned = grading_context.clean_config(req.config, grading_context.config())
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    sysconfig.save("ai_grading", cleaned)
+    return _ai_grading_state()
+
+
+class AiPreviewRequest(BaseModel):
+    skill: str = "writing"
+    config: Optional[Dict[str, Any]] = None   # cấu hình chưa lưu để xem trước; bỏ trống = cấu hình đang áp dụng
+    context: Optional[Dict[str, Any]] = None  # ngữ cảnh người học mẫu
+
+
+@admin_router.post("/ai-grading/preview")
+def preview_ai_grading(req: AiPreviewRequest):
+    """Prompt đầy đủ sẽ gửi cho AI với một bài mẫu, để quản lý kiểm tra trước khi lưu (không gọi AI)."""
+    if req.skill not in grading_context.SKILLS:
+        raise HTTPException(status_code=400, detail="skill phải là writing hoặc speaking")
+    try:
+        cfg = grading_context.clean_config(req.config, grading_context.config()) if req.config else grading_context.config()
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    sample_ctx = req.context if req.context is not None else {"target": 7.0, "kind": "Academic", "level": "6.0", "focus": [], "note": ""}
+    learner = grading_context.clean_learner(sample_ctx, req.skill)
+    if req.skill == "writing":
+        essay = ("Some people think that studying abroad is the best way to get a good education. "
+                 "In my opinion, it has many advantages. For example, students can learn a new language.")
+        prompt = writing_grader.build_prompt("task2", "Some people believe studying abroad is the best way to gain a good education. "
+                                             "Discuss both views and give your opinion.", writing_grader.split_sentences(essay),
+                                             writing_grader.count_words(essay), cfg, learner, {"minutes_used": 38, "outline": "intro / view 1 / view 2 / conclusion"})
+    else:
+        prompt = speaking_grader.build_prompt(1, "Do you enjoy cooking?", "yes I really enjoy cooking because it help me relax after work for example I cook pho every sunday",
+                                              {"speech_sec": 18, "wpm": 105, "pauses": 2, "longest_pause": 2.1, "avg_confidence": 0.84}, "", cfg, learner)
+    return {"prompt": prompt, "chars": len(prompt)}
