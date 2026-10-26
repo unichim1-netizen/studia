@@ -77,6 +77,12 @@ class PracticeExamGenerationTests(unittest.TestCase):
 
 
 class GenerateApiTests(ExamSetsApiTestCase):
+    def setUp(self):
+        super().setUp()
+        p = patch("app.api.v1.exam.get_supabase_client", return_value=self.store)
+        p.start()
+        self.addCleanup(p.stop)
+
     def upload_text_book(self):
         doc = self.upload_pdf("text_book", title="Learning")
         return doc

@@ -15,7 +15,7 @@ type Config = {
 };
 
 const LIMIT_LABELS: Record<string, { label: string; unit: string; hint: string }> = {
-  MAX_PDF_MB: { label: "Dung lượng sách tối đa", unit: "MB", hint: "Áp dụng cho PDF và DOCX tải lên. Máy chủ RAM 1 GB nên để dưới 30 MB." },
+  MAX_PDF_MB: { label: "Dung lượng sách tối đa", unit: "MB", hint: "Áp dụng cho PDF và DOCX tải lên. Mặc định 100 MB; máy chủ RAM 1 GB nên tránh xử lý nhiều tệp lớn cùng lúc." },
   MAX_PDF_PAGES: { label: "Số trang PDF tối đa", unit: "trang", hint: "Sách nhiều trang xử lý lâu và tốn lượt gọi AI." },
   MAX_AUDIO_MB: { label: "Dung lượng audio đề thi tối đa", unit: "MB", hint: "Áp dụng cho tệp audio Listening của bộ đề." },
 };

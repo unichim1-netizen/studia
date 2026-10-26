@@ -4,7 +4,7 @@
 - Instance: **t3.micro** (x86, 2 vCPU, 1 GB) hoặc **t4g.micro** (ARM, 1 GB). Chọn loại nào có nhãn *Free tier eligible* trong màn hình Launch; tài khoản mới (sau 07/2025) thường nhận gói credit có thời hạn thay vì 12 tháng miễn phí, nên **xem lại điều kiện thực tế trong Billing › Free tier** và đặt AWS Budgets (vd. 1 USD) để được cảnh báo.
 - Ổ đĩa: gp3 **20 GB** (hạn mức miễn phí 30 GB). Chỉ 1 Elastic IP gắn vào instance đang chạy (IPv4 công khai hiện có tính phí nhỏ sau free tier).
 - RAM 1 GB rất sát: `setup.sh` tạo swap 2 GB, compose giới hạn container 750 MB. Lần build đầu mất vài phút vì dùng swap; nếu bị `Killed`, chạy lại lệnh build.
-- Giảm tải: hạn chế xử lý nhiều PDF lớn cùng lúc (đặt `MAX_PDF_MB=30`, `MAX_PDF_PAGES=300` trong `.env`).
+- Giảm tải: hạn chế xử lý nhiều PDF lớn cùng lúc (đặt `MAX_PDF_PAGES=300`; `MAX_PDF_MB` mặc định 100 trong `.env`).
 - Khi hết free tier, nâng lên `t4g.small` (bảng dưới) mà không cần đổi cấu hình, chỉ tăng `mem_limit` lên 1400m.
 
 ## Cấu hình khuyến nghị (trả phí)

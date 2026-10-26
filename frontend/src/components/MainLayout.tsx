@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Home, BarChart3, BookOpen, CalendarDays, Layers, Mic,
   PenLine, Target, FlaskConical, Headphones, AudioLines, FileText, LogOut, PanelLeftClose, PanelLeftOpen, type LucideIcon,
-  NotebookPen, ChevronRight, LayoutGrid, Users, CreditCard, Package, Library, Sparkles, Zap, Settings, SlidersHorizontal, Megaphone,
+  NotebookPen, RotateCcw, BookMarked, AlertCircle, ChevronRight, LayoutGrid, Users, CreditCard, Package, Library, Sparkles, Zap, Settings, SlidersHorizontal, Megaphone,
 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import SelectionContextMenu from "@/components/SelectionContextMenu";
@@ -26,7 +26,6 @@ const AUTH_DISABLED = process.env.NEXT_PUBLIC_AUTH_DISABLED === "true";
 
 type NavItem = { href: string; label: string; icon: LucideIcon; also?: string[] };
 
-// Mỗi mục gộp 2 màn hình liên quan; chuyển qua lại bằng thanh tab trong trang (SectionTabs).
 const navGroups: NavItem[][] = [
   [
     { href: "/home", label: "Hôm nay", icon: Home },
@@ -36,15 +35,18 @@ const navGroups: NavItem[][] = [
     { href: "/journal", label: "Nhật ký", icon: NotebookPen },
   ],
   [
-    { href: "/practice", label: "Ôn luyện", icon: Zap, also: ["/review"] },
-    { href: "/flashcards", label: "Thẻ & từ vựng", icon: Layers, also: ["/vocabulary"] },
+    { href: "/practice", label: "Ôn luyện", icon: Zap },
+    { href: "/review", label: "Ôn tập", icon: RotateCcw },
+    { href: "/flashcards", label: "Flashcards", icon: Layers },
+    { href: "/vocabulary", label: "Từ vựng", icon: BookMarked },
   ],
   [
     { href: "/scenarios", label: "Luyện nói", icon: Mic },
     { href: "/pronunciation", label: "Shadowing", icon: AudioLines },
     { href: "/dictation", label: "Nghe chép chính tả", icon: Headphones },
     { href: "/writing", label: "Chấm Writing", icon: FileText },
-    { href: "/feedback", label: "Lỗi sai", icon: PenLine, also: ["/mistakes"] },
+    { href: "/feedback", label: "Phân tích lỗi", icon: PenLine },
+    { href: "/mistakes", label: "Sổ lỗi sai", icon: AlertCircle },
     { href: "/exam", label: "Thi thử IELTS", icon: Target },
     ...(SHOW_DEV_TOOLS ? [{ href: "/config-test", label: "Công cụ kiểm thử", icon: FlaskConical }] : []),
   ],
@@ -52,8 +54,8 @@ const navGroups: NavItem[][] = [
 
 const mobileTabs: NavItem[] = [
   { href: "/home", label: "Hôm nay", icon: Home },
-  { href: "/flashcards", label: "Thẻ", icon: Layers, also: ["/vocabulary"] },
-  { href: "/practice", label: "Ôn luyện", icon: Zap, also: ["/review"] },
+  { href: "/flashcards", label: "Thẻ", icon: Layers },
+  { href: "/practice", label: "Ôn luyện", icon: Zap },
   { href: "/scenarios", label: "Luyện nói", icon: Mic, also: ["/pronunciation", "/dictation"] },
   { href: "/exam", label: "Thi thử", icon: Target },
 ];

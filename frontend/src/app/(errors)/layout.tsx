@@ -1,15 +1,9 @@
-import SectionTabs from "@/components/SectionTabs";
+import SectionBack from "@/components/SectionBack";
 
 export default function ErrorsLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <SectionTabs
-        title="Lỗi sai"
-        tabs={[
-          { href: "/feedback", label: "Phân tích lỗi", hint: "Dán bài viết để AI chỉ ra lỗi" },
-          { href: "/mistakes", label: "Sổ lỗi sai", hint: "Các lỗi bạn đã gặp, để xem lại" },
-        ]}
-      />
+      <SectionBack paths={["/feedback", "/mistakes"]} />
       {children}
     </>
   );

@@ -1,15 +1,9 @@
-import SectionTabs from "@/components/SectionTabs";
+import SectionBack from "@/components/SectionBack";
 
 export default function StudyLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <SectionTabs
-        title="Ôn luyện"
-        tabs={[
-          { href: "/practice", label: "Luyện nhanh", hint: "Buổi luyện ngắn xen kẽ thẻ và câu hỏi" },
-          { href: "/review", label: "Ôn tập", hint: "Hàng đợi ôn theo lịch lặp lại ngắt quãng" },
-        ]}
-      />
+      <SectionBack paths={["/practice", "/review"]} />
       {children}
     </>
   );
