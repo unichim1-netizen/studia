@@ -37,7 +37,8 @@ jobs:
           code=$?
           cat /tmp/pytest.txt
           if [ $code -ne 0 ]; then
-            { echo '```'; tail -n 70 /tmp/pytest.txt; python .github/scripts/ci_diag.py blocks 2>&1; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+            python ../.github/scripts/ci_diag.py pytest
+            python ../.github/scripts/ci_diag.py blocks
           fi
           exit $code
 

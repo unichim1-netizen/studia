@@ -4,8 +4,9 @@ import sys
 import tempfile
 import traceback
 
-sys.path.insert(0, "backend")
-sys.path.insert(0, os.path.join("backend", "tests", "fixtures"))
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.insert(0, os.path.join(ROOT, "backend"))
+sys.path.insert(0, os.path.join(ROOT, "backend", "tests", "fixtures"))
 
 
 def annotate(title: str, text: str) -> None:
