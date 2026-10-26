@@ -32,10 +32,24 @@ try:
         blocks = extract_blocks(open(os.path.join(d, "mini_ielts.pdf"), "rb").read(), "pdf")
         blocks = getattr(blocks, "blocks", blocks)
         rows = [ascii(str(b.get("text") if isinstance(b, dict) else getattr(b, "text", b))[:90]) for b in blocks]
-        start = next((i for i, r in enumerate(rows) if "Questions 15" in r), 0)
-        annotate("blocks", NL.join(rows[max(0, start - 1):start + 6]))
-        tb = extract_blocks(open(os.path.join(d, "text_book.pdf"), "rb").read(), "pdf")
-        tb = getattr(tb, "blocks", tb)
-        annotate("textbook", NL.join(ascii(str(b.get("text") if isinstance(b, dict) else getattr(b, "text", b))[:45]) for b in tb))
+        import pypdfium2 as pdfium
+        from app.services.doc_ingest import pdf_extractor as pe
+
+        def dump(name, needle, before, after):
+            pdf = pdfium.PdfDocument(open(os.path.join(d, name), "rb").read())
+            pages = [pe._page_lines(pdf[i], i + 1) for i in range(len(pdf))]
+            pe._mark_short_lines(pages)
+            gap = pe._paragraph_gap_threshold(pages)
+            for lines in pages:
+                for i, ln in enumerate(lines):
+                    if needle in ln["text"]:
+                        rows = []
+                        for x in lines[max(0, i - before):i + after]:
+                            rows.append("%s|sz%s|t%.4f|b%.4f|l%.0f|r%.0f|s%d|%s" % (
+                                x["page"], x["size"], x["top"], x["bottom"], x["left"], x["right"], x["short"], ascii(x["text"][:28])))
+                        annotate("geom-" + name[:4], "gapthr=%.3f" % gap + NL + NL.join(rows))
+                        return
+        dump("text_book.pdf", "Review Interval", 2, 4)
+        dump("mini_ielts.pdf", "Questions 15", 0, 5)
 except Exception:
     annotate("diag-error", traceback.format_exc()[-1500:])
