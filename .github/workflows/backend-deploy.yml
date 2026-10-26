@@ -1,3 +1,4 @@
+# diag3
 # CI/CD backend: test -> build image (amd64+arm64) đẩy lên GHCR -> SSH vào EC2 kéo image mới và restart.
 # Secrets cần tạo: EC2_HOST, EC2_USER, EC2_SSH_KEY  (xem docs/DEPLOY_EC2.md mục CI/CD).
 name: backend
