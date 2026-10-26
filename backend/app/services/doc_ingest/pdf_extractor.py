@@ -34,6 +34,7 @@ _GLYPH_RUN = re.compile(f"[{_GLYPH}]{{3,}}[-\u2013\u2014~]*[{_GLYPH}]*")
 _GLYPH_BULLET = re.compile(f"^[{_GLYPH}\u25CF\u25AA\u25E6\u25A0\u25A1\u25C6\u27A2\u27A4\u25BA]+\\s*")
 
 MIN_TEXT_CHARS_PER_PAGE = 20
+LINE_BOX_EM = 1.115       # chiều cao hộp dòng danh định (theo cỡ chữ), không phụ thuộc phông thay thế của hệ điều hành
 EDGE_ZONE = 0.09          # 9% trên/dưới trang là vùng header/footer
 HEADING_SIZE_RATIO = 1.15
 MAX_HEADING_CHARS = 120
@@ -74,12 +75,16 @@ def _page_lines(page, page_number: int) -> List[Dict[str, Any]]:
                 mid_size, mid_bold = _font_info(textpage, middle)
                 left, bottom, _, top = textpage.get_charbox(first, loose=True)
                 right = textpage.get_charbox(last, loose=True)[2]
+                line_size = max(size, mid_size)
+                line_top = 1 - top / height
                 lines.append({
                     "text": re.sub(r"\s+", " ", cleaned),
-                    "size": max(size, mid_size),
+                    "size": line_size,
                     "bold": bold and mid_bold,
-                    "top": 1 - top / height,
-                    "bottom": 1 - bottom / height,
+                    "top": line_top,
+                    # Hộp ký tự "loose" của PDFium lấy theo ascent/descent của phông thay thế (Windows ≠ Linux),
+                    # làm khoảng cách giữa dòng lệch và ngắt đoạn khác nhau giữa các máy; dùng hộp danh định theo cỡ chữ.
+                    "bottom": line_top + line_size * LINE_BOX_EM / height,
                     "left": left,
                     "right": right,
                     "page": page_number,
