@@ -16,8 +16,8 @@ import "./lobby.css";
 
 function sessionLabel(h: any) {
   if (h.title) return h.title;
-  const m = /^cambridge21_test(\d)$/.exec(h.exam_type || "");
-  return m ? `Cambridge IELTS 21 - Test ${m[1]}` : "Phiên thi";
+  const m = /^cambridge(\d+)_test(\d)$/.exec(h.exam_type || "");
+  return m ? `Cambridge IELTS ${m[1]} - Test ${m[2]}` : "Phiên thi";
 }
 
 export default function ExamLobbyPage() {

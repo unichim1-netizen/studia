@@ -1,0 +1,67 @@
+{
+  "expo": {
+    "name": "Studia",
+    "slug": "studia",
+    "scheme": "studia",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#f8f6f2",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.studia.mobile"
+    },
+    "android": {
+      "package": "app.studia.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#0f1f4d",
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "monochromeImage": "./assets/monochrome-icon.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "output": "single",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#0f1f4d",
+          "dark": {
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#0f1f4d"
+          }
+        }
+      ],
+      "expo-image",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#2344c9",
+          "defaultChannel": "friends"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Studia cần máy ảnh để bạn chụp khoảnh khắc học chia sẻ cho bạn bè.",
+          "photosPermission": "Studia cần ảnh trong máy để bạn chọn khoảnh khắc học chia sẻ cho bạn bè."
+        }
+      ],
+      "expo-web-browser"
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

@@ -25,6 +25,7 @@ from app.api.v1.billing import account_router, public_router as billing_public_r
 from app.api.v1.admin import router as admin_router
 from app.api.v1.site_config import admin_router as admin_config_router, public_router as config_public_router
 from app.api.v1.schedule import router as schedule_router
+from app.api.v1.friends import router as friends_router
 from app.core.accounts import require_admin
 from app.core.features import require_feature
 import asyncio
@@ -126,6 +127,7 @@ app.include_router(account_router, prefix=settings.API_V1_STR, dependencies=auth
 app.include_router(profile_router, prefix=settings.API_V1_STR, dependencies=authenticated)
 app.include_router(billing_router, prefix=settings.API_V1_STR, dependencies=authenticated)
 app.include_router(schedule_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_feature("plan"))])
+app.include_router(friends_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_feature("friends"))])
 # Quản trị: phải đăng nhập VÀ có role admin
 app.include_router(admin_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_admin)])
 app.include_router(admin_config_router, prefix=settings.API_V1_STR, dependencies=authenticated + [Depends(require_admin)])

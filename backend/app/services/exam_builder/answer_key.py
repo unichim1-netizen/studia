@@ -80,10 +80,11 @@ def parse_numbered_answers(text: str, numbers: Iterable[int]) -> Dict[int, str]:
     """
     text, pair_answers = _extract_pairs(_clean_key_text(text))
     numbers = list(numbers)
+    search_numbers = [n for n in numbers if n not in pair_answers]
     positions: Dict[int, tuple] = {}
     cursor = 0
     previous_end: Optional[int] = None
-    for number in numbers:
+    for number in search_numbers:
         found = None
         for m in _marker(number).finditer(text, cursor):
             # Đáp án của câu trước không được rỗng: "1 2 2 Monday" → câu 1 là "2", dấu "2" thứ hai mới là câu 2
@@ -96,13 +97,13 @@ def parse_numbered_answers(text: str, numbers: Iterable[int]) -> Dict[int, str]:
             cursor = previous_end = found.end()
 
     answers: Dict[int, str] = {}
-    ordered = [n for n in numbers if n in positions]
+    ordered = [n for n in search_numbers if n in positions]
     for i, number in enumerate(ordered):
         start = positions[number][1]
         end = positions[ordered[i + 1]][0] if i + 1 < len(ordered) else len(text)
         answer = _squash(text[start:end])
         if answer:
-            answers[number] = answer
+            answers[number] = clean_answer(answer)
     for number, raw in pair_answers.items():
         if number in numbers:
             answers[number] = raw
@@ -117,6 +118,7 @@ _KEY_JUNK = re.compile(
 
 
 def _clean_key_text(text: str) -> str:
+    text = text.replace("–", "-").replace("—", "-")
     text = _squash(text)
     text = re.sub(r"\bNOTGIVEN\b", "NOT GIVEN", text)
     # OCR hay đọc dấu "/" thành chữ I: "cafe I cafe"

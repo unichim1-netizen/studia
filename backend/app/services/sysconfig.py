@@ -30,6 +30,7 @@ FEATURES: dict[str, tuple[str, str]] = {
     "flashcards": ("Thẻ & từ vựng", "Flashcard, sổ từ vựng"),
     "practice": ("Ôn luyện", "Câu hỏi ôn tập, ôn theo lịch lặp lại"),
     "plan": ("Lịch học", "Lịch học, nhắc học và thống kê chuỗi ngày"),
+    "friends": ("Kết bạn và chia sẻ khoảnh khắc", "Thêm bạn bằng mã, xem và thả cảm xúc cho khoảnh khắc học của bạn bè (app mobile)"),
     "upload": ("Học sinh tải sách lên", "Tắt thì chỉ còn đọc Thư viện Studia; quản lý vẫn tải được"),
 }
 

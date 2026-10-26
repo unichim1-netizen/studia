@@ -60,12 +60,12 @@ _DEBRIS_HEAD = re.compile(
     r"(?:(?:Listening|Reading|Writing|Speaking)\s+)?(?=Questions?\b)")
 _DEBRIS_TAILS = [
     re.compile(r"\s+\d{1,3}\s+(?:\S{1,6}\s+){0,4}p\.\s*\S*(?:\s+\S{1,10}){0,5}\s*$"),
-    re.compile(r"\s+\d{1,3}\s+(?:Listening|Reading|Writing|Speaking)\s*$"),
+    re.compile(r"\s+\d{2,3}\s+(?:Listening|Reading|Writing|Speaking)\s*$"),
     re.compile(r"\s+\d{1,3}\s+Test\s+\d\s*$"),
     re.compile(r"\s+(?:Listening|Reading|Writing|Speaking)\s*$"),
     re.compile(r"(?<=[._·…])\s+\d{1,3}\s*$"),   # số trang dính sau chỗ trống: "...... 12"
 ]
-_NOISE_TOKEN = re.compile(r"^(?:\d{1,4}|p\.?\S*|Test|Listening|Reading|Writing|Speaking|\S{1,2}|[^\w]+)$")
+_NOISE_TOKEN = re.compile(r"^(?:\d{1,4}|(?:p|page|pp)\.?\d{1,4}|Test|Listening|Reading|Writing|Speaking|\S{1,2}|[^\w]+)$", re.IGNORECASE)
 
 
 @lru_cache(maxsize=50000)
@@ -174,8 +174,9 @@ def segment_blocks(blocks: List[Block]) -> Dict[int, TestSegments]:
             continue
         short = len(raw) <= MAX_MARKER_CHARS or block.get("block_type") == "heading"
 
-        # Mốc chuyển chế độ: chỉ xét khi khối ngắn/tiêu đề, để bỏ qua mục lục
-        if short and len(raw) <= 160:
+        page_no = block.get("page_number") or 0
+        is_toc = bool(re.search(r"\s+\d{1,3}$", raw))
+        if short and len(raw) <= 160 and not is_toc and (bool(tests) or page_no == 0):
             if END_MATTER_RE.match(raw):
                 switch_mode("ignore")
                 continue

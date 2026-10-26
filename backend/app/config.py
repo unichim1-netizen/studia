@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY", None)
 
     # Gemini model names
-    GEMINI_PRO_MODEL: str = "gemini-2.5-flash"
+    GEMINI_PRO_MODEL: str = "models/gemini-3.8-flash"
     GEMINI_EMBEDDING_MODEL: str = "models/text-embedding-004"
     GEMINI_EMBEDDING_DIMS: int = 768  # text-embedding-004 outputs 768 dims
 

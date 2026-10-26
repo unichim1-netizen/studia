@@ -1,0 +1,2149 @@
+{
+  "listening": [
+    {
+      "number": 1,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "throughout the apartment\n• Cleaning shower, sinks, toilet etc.\nAdditional services agreed\n• Every week − Cleaning the",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "floor(s)",
+      "accepted_answers": [
+        "floor",
+        "floors"
+      ]
+    },
+    {
+      "number": 2,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "− Ironing clothes –",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "fridge",
+      "accepted_answers": [
+        "fridge"
+      ]
+    },
+    {
+      "number": 3,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "only\n• Every month − Cleaning all the",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "shirts",
+      "accepted_answers": [
+        "shirts"
+      ]
+    },
+    {
+      "number": 4,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "from the inside − Washing down the",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "windows",
+      "accepted_answers": [
+        "windows"
+      ]
+    },
+    {
+      "number": 5,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "Other possibilities\n• They can organise a plumber or an",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "balcony",
+      "accepted_answers": [
+        "balcony"
+      ]
+    },
+    {
+      "number": 6,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "if necessary.\n• A special cleaning service is available for customers who are allergic to",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "electrician",
+      "accepted_answers": [
+        "electrician"
+      ]
+    },
+    {
+      "number": 7,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": ".\nInformation on the cleaners\n• Before being hired, all cleaners have a background check carried out by the",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "dust",
+      "accepted_answers": [
+        "dust"
+      ]
+    },
+    {
+      "number": 8,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": ".\n• References are required.\n• All cleaners are given",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "police",
+      "accepted_answers": [
+        "police"
+      ]
+    },
+    {
+      "number": 9,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "for two weeks.\n• Customers send a",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "training",
+      "accepted_answers": [
+        "training"
+      ]
+    },
+    {
+      "number": 10,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "after each visit.\n• Usually, each customer has one regular cleaner.\nListening test audio",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD for each answer. Easy Life Cleaning Services",
+      "group_title": "Basic cleaning package offered",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 1",
+      "correct_answer": "review",
+      "accepted_answers": [
+        "review"
+      ]
+    },
+    {
+      "number": 11,
+      "type": "multiple_choice",
+      "original_type": "multiple_choice",
+      "question": "Many hotel managers are unaware that their staff often leave because of",
+      "options": [
+        "A. a lack of training.",
+        "B. long hours.",
+        "C. low pay."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Choose the correct letter, A, B or C.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    {
+      "number": 12,
+      "type": "multiple_choice",
+      "original_type": "multiple_choice",
+      "question": "What is the impact of high staff turnover on managers?",
+      "options": [
+        "A. an increased workload",
+        "B. low morale",
+        "C. an inability to meet targets"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Choose the correct letter, A, B or C.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    {
+      "number": 13,
+      "type": "multiple_choice",
+      "original_type": "multiple_choice",
+      "question": "What mistake should managers always avoid?",
+      "options": [
+        "A. failing to treat staff equally",
+        "B. reorganising shifts without warning",
+        "C. neglecting to have enough staff during busy periods"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Choose the correct letter, A, B or C.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    {
+      "number": 14,
+      "type": "multiple_choice",
+      "original_type": "multiple_choice",
+      "question": "What unexpected benefit did Dunwich Hotel notice after improving staff retention rates?",
+      "options": [
+        "A. a fall in customer complaints",
+        "B. an increase in loyalty club membership",
+        "C. a rise in spending per customer"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Choose the correct letter, A, B or C.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "C",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    {
+      "number": 15,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "The Sun Club",
+      "options": [
+        "A. improving relationships and teamwork",
+        "B. offering incentives and financial benefits",
+        "C. providing career opportunities"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Which way of reducing staff turnover was used in each of the following hotels? Write the correct letter, A, B or C, next to Questions 15–20.",
+      "group_title": "Ways of reducing staff turnover",
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    {
+      "number": 16,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "The Portland",
+      "options": [
+        "A. improving relationships and teamwork",
+        "B. offering incentives and financial benefits",
+        "C. providing career opportunities"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Which way of reducing staff turnover was used in each of the following hotels? Write the correct letter, A, B or C, next to Questions 15–20.",
+      "group_title": "Ways of reducing staff turnover",
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "C",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    {
+      "number": 17,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "Bluewater Hotels",
+      "options": [
+        "A. improving relationships and teamwork",
+        "B. offering incentives and financial benefits",
+        "C. providing career opportunities"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Which way of reducing staff turnover was used in each of the following hotels? Write the correct letter, A, B or C, next to Questions 15–20.",
+      "group_title": "Ways of reducing staff turnover",
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "B",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    {
+      "number": 18,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "Pentlow Hotels",
+      "options": [
+        "A. improving relationships and teamwork",
+        "B. offering incentives and financial benefits",
+        "C. providing career opportunities"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Which way of reducing staff turnover was used in each of the following hotels? Write the correct letter, A, B or C, next to Questions 15–20.",
+      "group_title": "Ways of reducing staff turnover",
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "C",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    {
+      "number": 19,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "Green Planet",
+      "options": [
+        "A. improving relationships and teamwork",
+        "B. offering incentives and financial benefits",
+        "C. providing career opportunities"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Which way of reducing staff turnover was used in each of the following hotels? Write the correct letter, A, B or C, next to Questions 15–20.",
+      "group_title": "Ways of reducing staff turnover",
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "B",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    {
+      "number": 20,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "The Amesbury",
+      "options": [
+        "A. improving relationships and teamwork",
+        "B. offering incentives and financial benefits",
+        "C. providing career opportunities"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C"
+      ],
+      "group_instruction": "Which way of reducing staff turnover was used in each of the following hotels? Write the correct letter, A, B or C, next to Questions 15–20.",
+      "group_title": "Ways of reducing staff turnover",
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 2",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    {
+      "number": 21,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO points do Thomas and Jeanne make about Thomas’s sporting activities at school?",
+      "options": [
+        "A. He should have felt more positive about them.",
+        "B. The training was too challenging for him.",
+        "C. He could have worked harder at them.",
+        "D. His parents were disappointed in him.",
+        "E. His fellow students admired him."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "section": "Part 3",
+      "correct_answer": "C",
+      "accepted_answers": [
+        "C",
+        "E"
+      ],
+      "either_order_with": 22
+    },
+    {
+      "number": 22,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO points do Thomas and Jeanne make about Thomas’s sporting activities at school?",
+      "options": [
+        "A. He should have felt more positive about them.",
+        "B. The training was too challenging for him.",
+        "C. He could have worked harder at them.",
+        "D. His parents were disappointed in him.",
+        "E. His fellow students admired him."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "section": "Part 3",
+      "correct_answer": "E",
+      "accepted_answers": [
+        "C",
+        "E"
+      ],
+      "either_order_with": 21
+    },
+    {
+      "number": 23,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO feelings did Thomas experience when he was in Kenya?",
+      "options": [
+        "A. disbelief",
+        "B. relief",
+        "C. stress",
+        "D. gratitude",
+        "E. homesickness"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "section": "Part 3",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A",
+        "D"
+      ],
+      "either_order_with": 24
+    },
+    {
+      "number": 24,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO feelings did Thomas experience when he was in Kenya?",
+      "options": [
+        "A. disbelief",
+        "B. relief",
+        "C. stress",
+        "D. gratitude",
+        "E. homesickness"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "section": "Part 3",
+      "correct_answer": "D",
+      "accepted_answers": [
+        "A",
+        "D"
+      ],
+      "either_order_with": 23
+    },
+    {
+      "number": 25,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "the table tennis bat",
+      "options": [
+        "A. It could cause excessive sweating.",
+        "B. The material was being mass produced for another purpose.",
+        "C. People often needed to make their own.",
+        "D. It often had to be replaced.",
+        "E. The material was expensive.",
+        "F. It was unpopular among spectators.",
+        "G. It caused injuries.",
+        "H. No one using it liked it at first."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "What comment do the students make about the development of each of the following items of sporting equipment? Choose SIX answers from the box and write the correct letter, A–H, next to Questions 25–30.",
+      "group_title": null,
+      "options_title": "Comments about the development of the equipment",
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 3",
+      "correct_answer": "B",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    {
+      "number": 26,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "the cricket helmet",
+      "options": [
+        "A. It could cause excessive sweating.",
+        "B. The material was being mass produced for another purpose.",
+        "C. People often needed to make their own.",
+        "D. It often had to be replaced.",
+        "E. The material was expensive.",
+        "F. It was unpopular among spectators.",
+        "G. It caused injuries.",
+        "H. No one using it liked it at first."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "What comment do the students make about the development of each of the following items of sporting equipment? Choose SIX answers from the box and write the correct letter, A–H, next to Questions 25–30.",
+      "group_title": null,
+      "options_title": "Comments about the development of the equipment",
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 3",
+      "correct_answer": "F",
+      "accepted_answers": [
+        "F"
+      ]
+    },
+    {
+      "number": 27,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "the cycle helmet",
+      "options": [
+        "A. It could cause excessive sweating.",
+        "B. The material was being mass produced for another purpose.",
+        "C. People often needed to make their own.",
+        "D. It often had to be replaced.",
+        "E. The material was expensive.",
+        "F. It was unpopular among spectators.",
+        "G. It caused injuries.",
+        "H. No one using it liked it at first."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "What comment do the students make about the development of each of the following items of sporting equipment? Choose SIX answers from the box and write the correct letter, A–H, next to Questions 25–30.",
+      "group_title": null,
+      "options_title": "Comments about the development of the equipment",
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 3",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    {
+      "number": 28,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "the golf club",
+      "options": [
+        "A. It could cause excessive sweating.",
+        "B. The material was being mass produced for another purpose.",
+        "C. People often needed to make their own.",
+        "D. It often had to be replaced.",
+        "E. The material was expensive.",
+        "F. It was unpopular among spectators.",
+        "G. It caused injuries.",
+        "H. No one using it liked it at first."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "What comment do the students make about the development of each of the following items of sporting equipment? Choose SIX answers from the box and write the correct letter, A–H, next to Questions 25–30.",
+      "group_title": null,
+      "options_title": "Comments about the development of the equipment",
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 3",
+      "correct_answer": "D",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    {
+      "number": 29,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "the hockey stick",
+      "options": [
+        "A. It could cause excessive sweating.",
+        "B. The material was being mass produced for another purpose.",
+        "C. People often needed to make their own.",
+        "D. It often had to be replaced.",
+        "E. The material was expensive.",
+        "F. It was unpopular among spectators.",
+        "G. It caused injuries.",
+        "H. No one using it liked it at first."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "What comment do the students make about the development of each of the following items of sporting equipment? Choose SIX answers from the box and write the correct letter, A–H, next to Questions 25–30.",
+      "group_title": null,
+      "options_title": "Comments about the development of the equipment",
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 3",
+      "correct_answer": "C",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    {
+      "number": 30,
+      "type": "multiple_choice",
+      "original_type": "matching_features",
+      "question": "the football",
+      "options": [
+        "A. It could cause excessive sweating.",
+        "B. The material was being mass produced for another purpose.",
+        "C. People often needed to make their own.",
+        "D. It often had to be replaced.",
+        "E. The material was expensive.",
+        "F. It was unpopular among spectators.",
+        "G. It caused injuries.",
+        "H. No one using it liked it at first."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "What comment do the students make about the development of each of the following items of sporting equipment? Choose SIX answers from the box and write the correct letter, A–H, next to Questions 25–30.",
+      "group_title": null,
+      "options_title": "Comments about the development of the equipment",
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 3",
+      "correct_answer": "G",
+      "accepted_answers": [
+        "G"
+      ]
+    },
+    {
+      "number": 31,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "added to food or used in cooking • very",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "golden",
+      "accepted_answers": [
+        "golden"
+      ]
+    },
+    {
+      "number": 32,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "compared to refined sugar The maple tree\n• has many species\n• needs sunny days and cool nights\n• maple leaf has been on the Canadian flag since 1964\n• needs moist soil but does not need fertiliser as well\n• best growing conditions and",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "healthy",
+      "accepted_answers": [
+        "healthy"
+      ]
+    },
+    {
+      "number": 33,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "are in Canada and North America Early maple sugar producers\n• made holes in the tree trunks\n• used hot",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "climate",
+      "accepted_answers": [
+        "climate"
+      ]
+    },
+    {
+      "number": 34,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "to heat the sap\n• used tree bark to make containers for collection\n• sweetened food and drink with sugar\nToday’s maple syrup\nThe trees\n• Tree trunks may not have the correct",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "rock(s)",
+      "accepted_answers": [
+        "rock",
+        "rocks"
+      ]
+    },
+    {
+      "number": 35,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "until they have been growing for 40 years.\n• The changing temperature and movement of water within the tree produces the sap. The production\n• A tap is drilled into the trunk and a",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "diameter",
+      "accepted_answers": [
+        "diameter"
+      ]
+    },
+    {
+      "number": 36,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "carries the sap into a bucket.\n• Large pans of sap called evaporators are heated by means of a",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "tube",
+      "accepted_answers": [
+        "tube"
+      ]
+    },
+    {
+      "number": 37,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": ".\n• A lot of",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "fire",
+      "accepted_answers": [
+        "fire"
+      ]
+    },
+    {
+      "number": 38,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "is produced during the evaporation process.\n• ‘Sugar sand’ is removed because it makes the syrup look",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "steam",
+      "accepted_answers": [
+        "steam"
+      ]
+    },
+    {
+      "number": 39,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "and affects the taste.\n• The syrup is ready for use.\n• A huge quantity of sap is needed to make a",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "cloudy",
+      "accepted_answers": [
+        "cloudy"
+      ]
+    },
+    {
+      "number": 40,
+      "type": "note_completion",
+      "original_type": "note_completion",
+      "question": "of maple syrup.\nListening test audio",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the notes below. Write ONE WORD ONLY for each answer.",
+      "group_title": "Maple syrup",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "section": "Part 4",
+      "correct_answer": "litre / liter",
+      "accepted_answers": [
+        "litre",
+        "liter"
+      ]
+    }
+  ],
+  "reading": [
+    {
+      "number": 1,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "Many Madagascan forests are being destroyed by attacks from insects.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 1? In boxes 1–6 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information on this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "FALSE",
+      "accepted_answers": [
+        "FALSE"
+      ]
+    },
+    {
+      "number": 2,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "Loss of habitat has badly affected insectivorous bats in Madagascar.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 1? In boxes 1–6 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information on this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "FALSE",
+      "accepted_answers": [
+        "FALSE"
+      ]
+    },
+    {
+      "number": 3,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "Ricardo Rocha has carried out studies of bats in different parts of the world.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 1? In boxes 1–6 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information on this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "NOT GIVEN",
+      "accepted_answers": [
+        "NOT GIVEN"
+      ]
+    },
+    {
+      "number": 4,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "Habitat modification has resulted in indigenous bats in Madagascar becoming useful to farmers.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 1? In boxes 1–6 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information on this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "TRUE",
+      "accepted_answers": [
+        "TRUE"
+      ]
+    },
+    {
+      "number": 5,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "The Malagasy mouse-eared bat is more common than other indigenous bat species in Madagascar.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 1? In boxes 1–6 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information on this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "NOT GIVEN",
+      "accepted_answers": [
+        "NOT GIVEN"
+      ]
+    },
+    {
+      "number": 6,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "Bats may feed on paddy swarming caterpillars and grass webworms.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 1? In boxes 1–6 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information on this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "TRUE",
+      "accepted_answers": [
+        "TRUE"
+      ]
+    },
+    {
+      "number": 7,
+      "type": "sentence_completion",
+      "original_type": "table_completion",
+      "question": "Findings • the bats − were most active in rice fields located on hills − ate pests of rice,",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the table below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 7–13 on your answer sheet.",
+      "group_title": "The study carried out by Rocha’s team",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "droppings",
+      "accepted_answers": [
+        "droppings"
+      ]
+    },
+    {
+      "number": 8,
+      "type": "sentence_completion",
+      "original_type": "table_completion",
+      "question": ", sugarcane, nuts and fruit − prevent the spread of disease by eating",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the table below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 7–13 on your answer sheet.",
+      "group_title": "The study carried out by Rocha’s team",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "coffee",
+      "accepted_answers": [
+        "coffee"
+      ]
+    },
+    {
+      "number": 9,
+      "type": "sentence_completion",
+      "original_type": "table_completion",
+      "question": "and blackflies\n• local attitudes to bats are mixed: − they provide food rich in",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the table below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 7–13 on your answer sheet.",
+      "group_title": "The study carried out by Rocha’s team",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "mosquitoes",
+      "accepted_answers": [
+        "mosquitoes"
+      ]
+    },
+    {
+      "number": 10,
+      "type": "sentence_completion",
+      "original_type": "table_completion",
+      "question": "− the buildings where they roost become",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the table below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 7–13 on your answer sheet.",
+      "group_title": "The study carried out by Rocha’s team",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "protein",
+      "accepted_answers": [
+        "protein"
+      ]
+    },
+    {
+      "number": 11,
+      "type": "sentence_completion",
+      "original_type": "table_completion",
+      "question": "− they play an important role in local",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the table below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 7–13 on your answer sheet.",
+      "group_title": "The study carried out by Rocha’s team",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "unclean",
+      "accepted_answers": [
+        "unclean"
+      ]
+    },
+    {
+      "number": 12,
+      "type": "sentence_completion",
+      "original_type": "table_completion",
+      "question": "Recommendation • farmers should provide special",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the table below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 7–13 on your answer sheet.",
+      "group_title": "The study carried out by Rocha’s team",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "culture",
+      "accepted_answers": [
+        "culture"
+      ]
+    },
+    {
+      "number": 13,
+      "type": "sentence_completion",
+      "original_type": "table_completion",
+      "question": "to support the bat population",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the table below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 7–13 on your answer sheet.",
+      "group_title": "The study carried out by Rocha’s team",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 1",
+      "correct_answer": "houses",
+      "accepted_answers": [
+        "houses"
+      ]
+    },
+    {
+      "number": 14,
+      "type": "sentence_completion",
+      "original_type": "short_answer",
+      "question": "an explanation of the need for research to focus on individuals with a fairly consistent income",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Reading Passage 2 has six sections, A–F.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "E",
+      "accepted_answers": [
+        "E"
+      ]
+    },
+    {
+      "number": 15,
+      "type": "sentence_completion",
+      "original_type": "short_answer",
+      "question": "examples of the sources the database has been compiled from",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Reading Passage 2 has six sections, A–F.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "A",
+      "accepted_answers": [
+        "A"
+      ]
+    },
+    {
+      "number": 16,
+      "type": "sentence_completion",
+      "original_type": "short_answer",
+      "question": "an account of one individual’s refusal to obey an order",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Reading Passage 2 has six sections, A–F.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "D",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    {
+      "number": 17,
+      "type": "sentence_completion",
+      "original_type": "short_answer",
+      "question": "a reference to a region being particularly suited to research into the link between education and economic growth",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Reading Passage 2 has six sections, A–F.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "F",
+      "accepted_answers": [
+        "F"
+      ]
+    },
+    {
+      "number": 18,
+      "type": "sentence_completion",
+      "original_type": "short_answer",
+      "question": "examples of the items included in a list of personal possessions",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Reading Passage 2 has six sections, A–F.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "C",
+      "accepted_answers": [
+        "C"
+      ]
+    },
+    {
+      "number": 19,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": ", over a 300-year period. For example, Ana Regina and Magdalena Riethmüllerin were reprimanded for reading while they should have been paying attention to a",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD from the passage for each answer. Write your answers in boxes 19–22 on your answer sheet.",
+      "group_title": "Demographic reconstruction of two German communities",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "descendants",
+      "accepted_answers": [
+        "descendants"
+      ]
+    },
+    {
+      "number": 20,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": ". There was also Juliana Schweickherdt, who came to the notice of the weavers’ guild in the year 1752 for breaking guild rules. As a punishment, she was later given a",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD from the passage for each answer. Write your answers in boxes 19–22 on your answer sheet.",
+      "group_title": "Demographic reconstruction of two German communities",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "sermon",
+      "accepted_answers": [
+        "sermon"
+      ]
+    },
+    {
+      "number": 21,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": ". Cases like this illustrate how the guilds could prevent",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD from the passage for each answer. Write your answers in boxes 19–22 on your answer sheet.",
+      "group_title": "Demographic reconstruction of two German communities",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "fine",
+      "accepted_answers": [
+        "fine"
+      ]
+    },
+    {
+      "number": 22,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": "and stop skilled people from working.",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD from the passage for each answer. Write your answers in boxes 19–22 on your answer sheet.",
+      "group_title": "Demographic reconstruction of two German communities",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 2",
+      "correct_answer": "innovation",
+      "accepted_answers": [
+        "innovation"
+      ]
+    },
+    {
+      "number": 23,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO of the following statements does the writer make about literacy rates in Section B?",
+      "options": [
+        "A. Very little research has been done into the link between high literacy rates and improved earnings.",
+        "B. Literacy rates in Germany between 1600 and 1900 were very good.",
+        "C. There is strong evidence that high literacy rates in the modern world result in economic growth.",
+        "D. England is a good example of how high literacy rates helped a country industrialise.",
+        "E. Economic growth can help to improve literacy rates."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E. Write the correct letters in boxes 23 and 24 on your answer sheet.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "passage": "Passage 2",
+      "correct_answer": "B",
+      "accepted_answers": [
+        "B",
+        "E"
+      ],
+      "either_order_with": 24
+    },
+    {
+      "number": 24,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO of the following statements does the writer make about literacy rates in Section B?",
+      "options": [
+        "A. Very little research has been done into the link between high literacy rates and improved earnings.",
+        "B. Literacy rates in Germany between 1600 and 1900 were very good.",
+        "C. There is strong evidence that high literacy rates in the modern world result in economic growth.",
+        "D. England is a good example of how high literacy rates helped a country industrialise.",
+        "E. Economic growth can help to improve literacy rates."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E. Write the correct letters in boxes 23 and 24 on your answer sheet.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "passage": "Passage 2",
+      "correct_answer": "E",
+      "accepted_answers": [
+        "B",
+        "E"
+      ],
+      "either_order_with": 23
+    },
+    {
+      "number": 25,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO of the following statements does the writer make in Section F about guilds in German-speaking Central Europe between 1600 and 1900?",
+      "options": [
+        "A. They helped young people to learn a skill.",
+        "B. They were opposed to people moving to an area for work.",
+        "C. They kept better records than guilds in other parts of the world.",
+        "D. They opposed practices that threatened their control over a trade.",
+        "E. They predominantly consisted of wealthy merchants."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E. Write the correct letters in boxes 25 and 26 on your answer sheet.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "passage": "Passage 2",
+      "correct_answer": "B",
+      "accepted_answers": [
+        "B",
+        "D"
+      ],
+      "either_order_with": 26
+    },
+    {
+      "number": 26,
+      "type": "multiple_choice",
+      "original_type": "multiple_select",
+      "question": "Which TWO of the following statements does the writer make in Section F about guilds in German-speaking Central Europe between 1600 and 1900?",
+      "options": [
+        "A. They helped young people to learn a skill.",
+        "B. They were opposed to people moving to an area for work.",
+        "C. They kept better records than guilds in other parts of the world.",
+        "D. They opposed practices that threatened their control over a trade.",
+        "E. They predominantly consisted of wealthy merchants."
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "group_instruction": "Choose TWO letters, A–E. Write the correct letters in boxes 25 and 26 on your answer sheet.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": 2,
+      "passage": "Passage 2",
+      "correct_answer": "D",
+      "accepted_answers": [
+        "B",
+        "D"
+      ],
+      "either_order_with": 25
+    },
+    {
+      "number": 27,
+      "type": "multiple_choice",
+      "original_type": "matching_information",
+      "question": "a reference to earlier examples of blindfold chess",
+      "options": [
+        "A. Paragraph A",
+        "B. Paragraph B",
+        "C. Paragraph C",
+        "D. Paragraph D",
+        "E. Paragraph E",
+        "F. Paragraph F",
+        "G. Paragraph G",
+        "H. Paragraph H"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "Reading Passage 3 has eight paragraphs, A–H.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "D",
+      "accepted_answers": [
+        "D"
+      ]
+    },
+    {
+      "number": 28,
+      "type": "multiple_choice",
+      "original_type": "matching_information",
+      "question": "an outline of what blindfold chess involves",
+      "options": [
+        "A. Paragraph A",
+        "B. Paragraph B",
+        "C. Paragraph C",
+        "D. Paragraph D",
+        "E. Paragraph E",
+        "F. Paragraph F",
+        "G. Paragraph G",
+        "H. Paragraph H"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "Reading Passage 3 has eight paragraphs, A–H.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "E",
+      "accepted_answers": [
+        "E"
+      ]
+    },
+    {
+      "number": 29,
+      "type": "multiple_choice",
+      "original_type": "matching_information",
+      "question": "a claim that Gareyev’s skill is limited to chess",
+      "options": [
+        "A. Paragraph A",
+        "B. Paragraph B",
+        "C. Paragraph C",
+        "D. Paragraph D",
+        "E. Paragraph E",
+        "F. Paragraph F",
+        "G. Paragraph G",
+        "H. Paragraph H"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "Reading Passage 3 has eight paragraphs, A–H.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "F",
+      "accepted_answers": [
+        "F"
+      ]
+    },
+    {
+      "number": 30,
+      "type": "multiple_choice",
+      "original_type": "matching_information",
+      "question": "why Gareyev’s skill is of interest to scientists",
+      "options": [
+        "A. Paragraph A",
+        "B. Paragraph B",
+        "C. Paragraph C",
+        "D. Paragraph D",
+        "E. Paragraph E",
+        "F. Paragraph F",
+        "G. Paragraph G",
+        "H. Paragraph H"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "Reading Passage 3 has eight paragraphs, A–H.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "B",
+      "accepted_answers": [
+        "B"
+      ]
+    },
+    {
+      "number": 31,
+      "type": "multiple_choice",
+      "original_type": "matching_information",
+      "question": "an outline of Gareyev’s priorities",
+      "options": [
+        "A. Paragraph A",
+        "B. Paragraph B",
+        "C. Paragraph C",
+        "D. Paragraph D",
+        "E. Paragraph E",
+        "F. Paragraph F",
+        "G. Paragraph G",
+        "H. Paragraph H"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "Reading Passage 3 has eight paragraphs, A–H.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "H",
+      "accepted_answers": [
+        "H"
+      ]
+    },
+    {
+      "number": 32,
+      "type": "multiple_choice",
+      "original_type": "matching_information",
+      "question": "a reason why the last part of a game may be difficult",
+      "options": [
+        "A. Paragraph A",
+        "B. Paragraph B",
+        "C. Paragraph C",
+        "D. Paragraph D",
+        "E. Paragraph E",
+        "F. Paragraph F",
+        "G. Paragraph G",
+        "H. Paragraph H"
+      ],
+      "option_keys": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "group_instruction": "Reading Passage 3 has eight paragraphs, A–H.",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "E",
+      "accepted_answers": [
+        "E"
+      ]
+    },
+    {
+      "number": 33,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "In the forthcoming games, all the participants will be blindfolded.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 3? In boxes 33–36 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information about this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "FALSE",
+      "accepted_answers": [
+        "FALSE"
+      ]
+    },
+    {
+      "number": 34,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "Gareyev has won competitions in BASE jumping.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 3? In boxes 33–36 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information about this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "NOT GIVEN",
+      "accepted_answers": [
+        "NOT GIVEN"
+      ]
+    },
+    {
+      "number": 35,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "UCLA is the first university to carry out research into blindfold chess players.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 3? In boxes 33–36 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information about this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "NOT GIVEN",
+      "accepted_answers": [
+        "NOT GIVEN"
+      ]
+    },
+    {
+      "number": 36,
+      "type": "true_false_ng",
+      "original_type": "true_false_ng",
+      "question": "Good chess players are likely to be able to play blindfold chess.",
+      "options": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "option_keys": [
+        "TRUE",
+        "FALSE",
+        "NOT GIVEN"
+      ],
+      "group_instruction": "Do the following statements agree with the information given in Reading Passage 3? In boxes 33–36 on your answer sheet, write TRUE if the statement agrees with the information FALSE if the statement contradicts the information NOT GIVEN if there is no information about this",
+      "group_title": null,
+      "options_title": null,
+      "word_limit": null,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "TRUE",
+      "accepted_answers": [
+        "TRUE"
+      ]
+    },
+    {
+      "number": 37,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": "; for example, he was required to recall a string of",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 37–40 on your answer sheet.",
+      "group_title": "How the research was carried out",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "memory",
+      "accepted_answers": [
+        "memory"
+      ]
+    },
+    {
+      "number": 38,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": "in order and also in reverse order. Although his performance was normal, scans showed an unusual amount of",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 37–40 on your answer sheet.",
+      "group_title": "How the research was carried out",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "numbers",
+      "accepted_answers": [
+        "numbers"
+      ]
+    },
+    {
+      "number": 39,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": "within the areas of Gareyev’s brain that are concerned with directing attention. In addition, the scans raised the possibility of unusual strength in the parts of his brain that deal with",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 37–40 on your answer sheet.",
+      "group_title": "How the research was carried out",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "communication",
+      "accepted_answers": [
+        "communication"
+      ]
+    },
+    {
+      "number": 40,
+      "type": "sentence_completion",
+      "original_type": "summary_completion",
+      "question": "input.",
+      "options": null,
+      "option_keys": null,
+      "group_instruction": "Complete the summary below. Choose ONE WORD ONLY from the passage for each answer. Write your answers in boxes 37–40 on your answer sheet.",
+      "group_title": "How the research was carried out",
+      "options_title": null,
+      "word_limit": 1,
+      "allow_number": false,
+      "image_url": null,
+      "choose_count": null,
+      "passage": "Passage 3",
+      "correct_answer": "visual",
+      "accepted_answers": [
+        "visual"
+      ]
+    }
+  ],
+  "reading_passage": "**Bats to the rescue How Madagascar’s bats are helping to save the rainforest**\n\nThere are few places in the world where relations between agriculture and conservation are more strained. Madagascar’s forests are being converted to agricultural land at a rate of one percent every year. Much of this destruction is fuelled by the cultivation of the country’s main staple crop: rice. And a key reason for this destruction is that insect pests are destroying vast quantities of what is grown by local subsistence farmers, leading them to clear forest to create new paddy fields. The result is devastating habitat and biodiversity loss on the island, but not all species are suffering. In fact, some of the island’s insectivorous bats are currently thriving and this has important implications for farmers and conservationists alike.\n\nEnter University of Cambridge zoologist Ricardo Rocha. He’s passionate about conservation, and bats. More specifically, he’s interested in how bats are responding to human activity and deforestation in particular. Rocha’s new study shows that several species of bats are giving Madagascar’s rice farmers a vital pest control service by feasting on plagues of insects. And this, he believes, can ease the financial pressure on farmers to turn forest into fields.\n\nBats comprise roughly one-fifth of all mammal species in Madagascar and thirty-six recorded bat species are native to the island, making it one of the most important regions for conservation of this animal group anywhere in the world.\n\nCo-leading an international team of scientists, Rocha found that several species of indigenous bats are taking advantage of habitat modification to hunt insects swarming above the country’s rice fields. They include the Malagasy mouse-eared bat, Major’s long-fingered bat, the Malagasy white-bellied free-tailed bat and Peters’ wrinkle-lipped bat.\n\n‘These winner species are providing a valuable free service to Madagascar as biological pest suppressors,’ says Rocha. ‘We found that six species of bat are preying on rice pests, including the paddy swarming caterpillar and grass webworm. The damage which these insects cause puts the island’s farmers under huge financial pressure and that encourages deforestation.’\n\nThe study, now published in the journal Agriculture, Ecosystems and Environment, set out to investigate the feeding activity of insectivorous bats in the farmland bordering the Ranomafana National Park in the southeast of the country.\n\nRocha and his team used state-of-the-art ultrasonic recorders to record over a thousand bat ‘feeding buzzes’ (echolocation sequences used by bats to target their prey) at 54 sites, in order to identify the favourite feeding spots of the bats. They next used DNA barcoding techniques to analyse droppings collected from bats at the different sites.\n\nThe recordings revealed that bat activity over rice fields was much higher than it was in continuous forest – seven times higher over rice fields which were on flat ground, and sixteen times higher over fields on the sides of hills – leaving no doubt that the animals are preferentially foraging in these man-made ecosystems. The researchers suggest that the bats favour these fields because lack of water and nutrient run-off make these crops more susceptible to insect pest infestations. DNA analysis showed that all six species of bat had fed on economically important insect pests. While the findings indicated that rice farming benefits most from the bats, the scientists also found indications that the bats were consuming pests of other crops, including the black twig borer (which infests coffee plants), the sugarcane cicada, the macadamia nut-borer, and the sober tabby (a pest of citrus fruits).\n\n‘The effectiveness of bats as pest controllers has already been proven in the USA and Catalonia,’ said co-author James Kemp, from the University of Lisbon. ‘But our study is the first to show this happening in Madagascar, where the stakes for both farmers and conservationists are so high.’\n\nLocal people may have a further reason to be grateful to their bats. While the animal is often associated with spreading disease, Rocha and his team found evidence that Malagasy bats feed not just on crop pests but also on mosquitoes – carriers of malaria, Rift Valley fever virus and elephantiasis – as well as blackflies, which spread river blindness.\n\nRocha points out that the relationship is complicated. When food is scarce, bats become a crucial source of protein for local people. Even the children will hunt them. And as well as roosting in trees, the bats sometimes roost in buildings, but are not welcomed there because they make them unclean. At the same time, however, they are associated with sacred caves and the ancestors, so they can be viewed as beings between worlds, which makes them very significant in the culture of the people. And one potential problem is that while these bats are benefiting from farming, at the same time deforestation is reducing the places where they can roost, which could have long-term effects on their numbers. Rocha says, ‘With the right help, we hope that farmers can promote this mutually beneficial relationship by installing bat houses.’\n\nRocha and his colleagues believe that maximising bat populations can help to boost crop yields and promote sustainable livelihoods. The team is now calling for further research to quantify this contribution. ‘I’m very optimistic,’ says Rocha. ‘If we give nature a hand, we can speed up the process of regeneration.’\n\nDoes education fuel economic growth? A Over the last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University’s Faculty of Economics. It includes court records, guild ledgers, parish registers, village censuses, tax lists and – the most recent addition – 9,000 handwritten inventories listing over a million personal possessions belonging to ordinary women and men across three centuries. Ogilvie, who discovered the inventories in the archives of two German communities 30 years ago, believes they may hold the answer to a conundrum that has long puzzled economists: the lack of evidence for a causal link between education and a country’s economic growth.\n\nB As Ogilvie explains, ‘Education helps us to work more productively, invent better technology, and earn more … surely it must be critical for economic growth? But, if you look back through history, there’s no evidence that having a high literacy rate made a country industrialise earlier.’ Between 1600 and 1900, England had only mediocre literacy rates by European standards, yet its economy grew fast and it was the first country to industrialise. During this period, Germany and Scandinavia had excellent literacy rates, but their economies grew slowly and they industrialised late. ‘Modern cross-country analyses have also struggled to find evidence that education causes economic growth, even though there is plenty of evidence that growth increases education,’ she adds.\n\nC In the handwritten inventories that Ogilvie is analysing are the belongings of women and men at marriage, remarriage and death. From badger skins to Bibles, sewing machines to scarlet bodices – the villagers’ entire worldly goods are included. Inventories of agricultural equipment and craft tools reveal economic activities; ownership of books and educationrelated objects like pens and slates suggests how people learned. In addition, the tax lists\n\nincluded in the database record the value of farms, workshops, assets and debts; signatures and people’s estimates of their age indicate literacy and numeracy levels; and court records reveal obstacles (such as the activities of the guilds*) that stifled industry.\n\nPrevious studies usually had just one way of linking education with economic growth – the presence of schools and printing presses, perhaps, or school enrolment, or the ability to sign names. According to Ogilvie, the database provides multiple indicators for the same individuals, making it possible to analyse links between literacy, numeracy, wealth, and industriousness, for individual women and men over the long term.\n\n* guild: an association of artisans or merchants which oversees the practice of their craft or trade in a particular area\n\nD Ogilvie and her team have been building the vast database of material possessions on top of their full demographic reconstruction of the people who lived in these two German communities. ‘We can follow the same people – and their descendants – across 300 years of educational and economic change,’ she says. Individual lives have unfolded before their eyes. Stories like that of the 24-year-olds Ana Regina and Magdalena Riethmüllerin, who were chastised in 1707 for reading books in church instead of listening to the sermon. ‘This tells us they were continuing to develop their reading skills at least a decade after leaving school,’ explains Ogilvie. The database also reveals the case of Juliana Schweickherdt, a 50-year-old spinster living in the small Black Forest community of Wildberg, who was reprimanded in 1752 by the local weavers’ guild for ‘weaving cloth and combing wool, counter to the guild ordinance’. When Juliana continued taking jobs reserved for male guild members, she was summoned before the guild court and told to pay a fine equivalent to one third of a servant’s annual wage. It was a small act of defiance by today’s standards, but it reflects a time when laws in Germany and elsewhere regulated people’s access to labour markets. The dominance of guilds not only prevented people from using their skills, but also held back even the simplest industrial innovation.\n\nE The data-gathering phase of the project has been completed and now, according to Ogilvie, it is time ‘to ask the big questions’. One way to look at whether education causes economic growth is to ‘hold wealth constant’. This involves following the lives of different people with the same level of wealth over a period of time. If wealth is constant, it is possible to discover whether education was, for example, linked to the cultivation of new crops, or to the adoption of industrial innovations like sewing machines. The team will also ask what aspect of education helped people engage more with productive and innovative activities. Was it, for instance, literacy, numeracy, book ownership, years of schooling? Was there a threshold level – a tipping point – that needed to be reached to affect economic performance?\n\nF Ogilvie hopes to start finding answers to these questions over the next few years. One thing is already clear, she says: the relationship between education and economic growth is far from straightforward. ‘German-speaking central Europe is an excellent laboratory for testing theories of economic growth,’ she explains. Between 1600 and 1900, literacy rates and book ownership were high and yet the region remained poor. It was also the case that local guilds and merchant associations were extremely powerful and legislated against anything that undermined their monopolies. In villages throughout the region, guilds blocked labour migration and resisted changes that might reduce their influence.\n\n‘Early findings suggest that the potential benefits of education for the economy can be held back by other barriers, and this has implications for today,’ says Ogilvie. ‘Huge amounts are spent improving education in developing countries, but this spending can fail to deliver economic growth if restrictions block people – especially women and the poor – from using their education in economically productive ways. If economic institutions are poorly set up, for instance, education can’t lead to growth.’\n\nTimur Gareyev – blindfold chess champion A Next month, a chess player named Timur Gareyev will take on nearly 50 opponents at once. But that is not the hard part. While his challengers will play the games as normal, Gareyev himself will be blindfolded. Even by world record standards, it sets a high bar for human performance. The 28-year-old already stands out in the rarefied world of blindfold chess. He has a fondness for bright clothes and unusual hairstyles, and he gets his kicks from the adventure sport of BASE jumping. He has already proved himself a strong chess player, too. In a 10-hour chess marathon in 2013, Gareyev played 33 games in his head simultaneously. He won 29 and lost none. The skill has become his brand: he calls himself the Blindfold King. B But Gareyev’s prowess has drawn interest from beyond the chess-playing community. In the hope of understanding how he and others like him can perform such mental feats, researchers at the University of California in Los Angeles (UCLA) called him in for tests. They now have their first results. ‘The ability to play a game of chess with your eyes closed is not a far reach for most accomplished players,’ said Jesse Rissman, who runs a memory lab at UCLA. ‘But the thing that’s so remarkable about Timur and a few other individuals is the number of games they can keep active at once. To me it is simply astonishing.’\n\nC Gareyev learned to play chess in his native Uzbekistan when he was six years old. Tutored by his grandfather, he entered his first tournament aged eight and soon became obsessed with competitions. At 16, he was crowned Asia’s youngest ever chess grandmaster. He moved to the US soon after, and as a student helped his university win its first national chess championship. In 2013, Gareyev was ranked the third best chess player in the US.\n\nD To the uninitiated, blindfold chess seems to call for superhuman skill. But displays of the feat go back centuries. The first recorded game in Europe was played in 13th-century Florence. In 1947, the Argentinian grandmaster Miguel Najdorf played 45 simultaneous games in his mind, winning 39 in the 24-hour session. E Accomplished players can develop the skill of playing blind even without realising it. The nature of the game is to run through possible moves in the mind to see how they play out. From this, regular players develop a memory for the patterns the pieces make, the defences and attacks. ‘You recreate it in your mind,’ said Gareyev. ‘A lot of players are capable of doing what I’m doing.’ The real mental challenge comes from playing multiple games at once in the head. Not only must the positions of each piece on every board be memorised, they must be recalled\n\nfaithfully when needed, updated with each player’s moves, and then reliably stored again, so the brain can move on to the next board. First moves can be tough to remember because they are fairly uninteresting. But the ends of games are taxing too, as exhaustion sets in. When Gareyev is tired, his recall can get patchy. He sometimes makes moves based on only a fragmented memory of the pieces’ positions.\n\nF The scientists first had Gareyev perform some standard memory tests. These assessed his ability to hold numbers, pictures and words in mind. One classic test measures how many numbers a person can repeat, both forwards and backwards, soon after hearing them. Most people manage about seven. ‘He was not exceptional on any of these standard tests,’ said Rissman. ‘We didn’t find anything other than playing chess that he seems to be supremely gifted at.’ But next came the brain scans. With Gareyev lying down in the machine, Rissman looked at how well connected the various regions of the chess player’s brain were. Though the results are tentative and as yet unpublished, the scans found much greater than average communication between parts of Gareyev’s brain that make up what is called the frontoparietal control network. Of 63 people scanned alongside the chess player, only one or two scored more highly on the measure. ‘You use this network in almost any complex task. It helps you to allocate attention, keep rules in mind, and work out whether you should be responding or not,’ said Rissman. G It was not the only hint of something special in Gareyev’s brain. The scans also suggest that Gareyev’s visual network is more highly connected to other brain parts than usual. Initial results suggest that the areas of his brain that process visual images – such as chess boards – may have stronger links to other brain regions, and so be more powerful than normal. While the analyses are not finalised yet, they may hold the first clues to Gareyev’s extraordinary ability.\n\nH For the world record attempt, Gareyev hopes to play 47 blindfold games at once in about 16 hours. He will need to win 80% to claim the title. ‘I don’t worry too much about the winning percentage, that’s never been an issue for me,’ he said. ‘The most important part of blindfold chess for me is that I have found the one thing that I can fully dedicate myself to. I miss having an obsession.’",
+  "reading_passages": {
+    "passage1": "PASSAGE 1\nBats to the rescue How Madagascar’s bats are helping to save the rainforest\n\nThere are few places in the world where relations between agriculture and conservation are more strained. Madagascar’s forests are being converted to agricultural land at a rate of one percent every year. Much of this destruction is fuelled by the cultivation of the country’s main staple crop: rice. And a key reason for this destruction is that insect pests are destroying vast quantities of what is grown by local subsistence farmers, leading them to clear forest to create new paddy fields. The result is devastating habitat and biodiversity loss on the island, but not all species are suffering. In fact, some of the island’s insectivorous bats are currently thriving and this has important implications for farmers and conservationists alike.\n\nEnter University of Cambridge zoologist Ricardo Rocha. He’s passionate about conservation, and bats. More specifically, he’s interested in how bats are responding to human activity and deforestation in particular. Rocha’s new study shows that several species of bats are giving Madagascar’s rice farmers a vital pest control service by feasting on plagues of insects. And this, he believes, can ease the financial pressure on farmers to turn forest into fields.\n\nBats comprise roughly one-fifth of all mammal species in Madagascar and thirty-six recorded bat species are native to the island, making it one of the most important regions for conservation of this animal group anywhere in the world.\n\nCo-leading an international team of scientists, Rocha found that several species of indigenous bats are taking advantage of habitat modification to hunt insects swarming above the country’s rice fields. They include the Malagasy mouse-eared bat, Major’s long-fingered bat, the Malagasy white-bellied free-tailed bat and Peters’ wrinkle-lipped bat.\n\n‘These winner species are providing a valuable free service to Madagascar as biological pest suppressors,’ says Rocha. ‘We found that six species of bat are preying on rice pests, including the paddy swarming caterpillar and grass webworm. The damage which these insects cause puts the island’s farmers under huge financial pressure and that encourages deforestation.’\n\nThe study, now published in the journal Agriculture, Ecosystems and Environment, set out to investigate the feeding activity of insectivorous bats in the farmland bordering the Ranomafana National Park in the southeast of the country.\n\nRocha and his team used state-of-the-art ultrasonic recorders to record over a thousand bat ‘feeding buzzes’ (echolocation sequences used by bats to target their prey) at 54 sites, in order to identify the favourite feeding spots of the bats. They next used DNA barcoding techniques to analyse droppings collected from bats at the different sites.\n\nThe recordings revealed that bat activity over rice fields was much higher than it was in continuous forest – seven times higher over rice fields which were on flat ground, and sixteen times higher over fields on the sides of hills – leaving no doubt that the animals are preferentially foraging in these man-made ecosystems. The researchers suggest that the bats favour these fields because lack of water and nutrient run-off make these crops more susceptible to insect pest infestations. DNA analysis showed that all six species of bat had fed on economically important insect pests. While the findings indicated that rice farming benefits most from the bats, the scientists also found indications that the bats were consuming pests of other crops, including the black twig borer (which infests coffee plants), the sugarcane cicada, the macadamia nut-borer, and the sober tabby (a pest of citrus fruits).\n\n‘The effectiveness of bats as pest controllers has already been proven in the USA and Catalonia,’ said co-author James Kemp, from the University of Lisbon. ‘But our study is the first to show this happening in Madagascar, where the stakes for both farmers and conservationists are so high.’\n\nLocal people may have a further reason to be grateful to their bats. While the animal is often associated with spreading disease, Rocha and his team found evidence that Malagasy bats feed not just on crop pests but also on mosquitoes – carriers of malaria, Rift Valley fever virus and elephantiasis – as well as blackflies, which spread river blindness.\n\nRocha points out that the relationship is complicated. When food is scarce, bats become a crucial source of protein for local people. Even the children will hunt them. And as well as roosting in trees, the bats sometimes roost in buildings, but are not welcomed there because they make them unclean. At the same time, however, they are associated with sacred caves and the ancestors, so they can be viewed as beings between worlds, which makes them very significant in the culture of the people. And one potential problem is that while these bats are benefiting from farming, at the same time deforestation is reducing the places where they can roost, which could have long-term effects on their numbers. Rocha says, ‘With the right help, we hope that farmers can promote this mutually beneficial relationship by installing bat houses.’\n\nRocha and his colleagues believe that maximising bat populations can help to boost crop yields and promote sustainable livelihoods. The team is now calling for further research to quantify this contribution. ‘I’m very optimistic,’ says Rocha. ‘If we give nature a hand, we can speed up the process of regeneration.’",
+    "passage2": "Does education fuel economic growth? A Over the last decade, a huge database about the lives of southwest German villagers between 1600 and 1900 has been compiled by a team led by Professor Sheilagh Ogilvie at Cambridge University’s Faculty of Economics. It includes court records, guild ledgers, parish registers, village censuses, tax lists and – the most recent addition – 9,000 handwritten inventories listing over a million personal possessions belonging to ordinary women and men across three centuries. Ogilvie, who discovered the inventories in the archives of two German communities 30 years ago, believes they may hold the answer to a conundrum that has long puzzled economists: the lack of evidence for a causal link between education and a country’s economic growth.\n\nB As Ogilvie explains, ‘Education helps us to work more productively, invent better technology, and earn more … surely it must be critical for economic growth? But, if you look back through history, there’s no evidence that having a high literacy rate made a country industrialise earlier.’ Between 1600 and 1900, England had only mediocre literacy rates by European standards, yet its economy grew fast and it was the first country to industrialise. During this period, Germany and Scandinavia had excellent literacy rates, but their economies grew slowly and they industrialised late. ‘Modern cross-country analyses have also struggled to find evidence that education causes economic growth, even though there is plenty of evidence that growth increases education,’ she adds.\n\nC In the handwritten inventories that Ogilvie is analysing are the belongings of women and men at marriage, remarriage and death. From badger skins to Bibles, sewing machines to scarlet bodices – the villagers’ entire worldly goods are included. Inventories of agricultural equipment and craft tools reveal economic activities; ownership of books and educationrelated objects like pens and slates suggests how people learned. In addition, the tax lists\n\nincluded in the database record the value of farms, workshops, assets and debts; signatures and people’s estimates of their age indicate literacy and numeracy levels; and court records reveal obstacles (such as the activities of the guilds*) that stifled industry.\n\nPrevious studies usually had just one way of linking education with economic growth – the presence of schools and printing presses, perhaps, or school enrolment, or the ability to sign names. According to Ogilvie, the database provides multiple indicators for the same individuals, making it possible to analyse links between literacy, numeracy, wealth, and industriousness, for individual women and men over the long term.\n\n* guild: an association of artisans or merchants which oversees the practice of their craft or trade in a particular area\n\nD Ogilvie and her team have been building the vast database of material possessions on top of their full demographic reconstruction of the people who lived in these two German communities. ‘We can follow the same people – and their descendants – across 300 years of educational and economic change,’ she says. Individual lives have unfolded before their eyes. Stories like that of the 24-year-olds Ana Regina and Magdalena Riethmüllerin, who were chastised in 1707 for reading books in church instead of listening to the sermon. ‘This tells us they were continuing to develop their reading skills at least a decade after leaving school,’ explains Ogilvie. The database also reveals the case of Juliana Schweickherdt, a 50-year-old spinster living in the small Black Forest community of Wildberg, who was reprimanded in 1752 by the local weavers’ guild for ‘weaving cloth and combing wool, counter to the guild ordinance’. When Juliana continued taking jobs reserved for male guild members, she was summoned before the guild court and told to pay a fine equivalent to one third of a servant’s annual wage. It was a small act of defiance by today’s standards, but it reflects a time when laws in Germany and elsewhere regulated people’s access to labour markets. The dominance of guilds not only prevented people from using their skills, but also held back even the simplest industrial innovation.\n\nE The data-gathering phase of the project has been completed and now, according to Ogilvie, it is time ‘to ask the big questions’. One way to look at whether education causes economic growth is to ‘hold wealth constant’. This involves following the lives of different people with the same level of wealth over a period of time. If wealth is constant, it is possible to discover whether education was, for example, linked to the cultivation of new crops, or to the adoption of industrial innovations like sewing machines. The team will also ask what aspect of education helped people engage more with productive and innovative activities. Was it, for instance, literacy, numeracy, book ownership, years of schooling? Was there a threshold level – a tipping point – that needed to be reached to affect economic performance?\n\nF Ogilvie hopes to start finding answers to these questions over the next few years. One thing is already clear, she says: the relationship between education and economic growth is far from straightforward. ‘German-speaking central Europe is an excellent laboratory for testing theories of economic growth,’ she explains. Between 1600 and 1900, literacy rates and book ownership were high and yet the region remained poor. It was also the case that local guilds and merchant associations were extremely powerful and legislated against anything that undermined their monopolies. In villages throughout the region, guilds blocked labour migration and resisted changes that might reduce their influence.\n\n‘Early findings suggest that the potential benefits of education for the economy can be held back by other barriers, and this has implications for today,’ says Ogilvie. ‘Huge amounts are spent improving education in developing countries, but this spending can fail to deliver economic growth if restrictions block people – especially women and the poor – from using their education in economically productive ways. If economic institutions are poorly set up, for instance, education can’t lead to growth.’",
+    "passage3": "Timur Gareyev – blindfold chess champion A Next month, a chess player named Timur Gareyev will take on nearly 50 opponents at once. But that is not the hard part. While his challengers will play the games as normal, Gareyev himself will be blindfolded. Even by world record standards, it sets a high bar for human performance. The 28-year-old already stands out in the rarefied world of blindfold chess. He has a fondness for bright clothes and unusual hairstyles, and he gets his kicks from the adventure sport of BASE jumping. He has already proved himself a strong chess player, too. In a 10-hour chess marathon in 2013, Gareyev played 33 games in his head simultaneously. He won 29 and lost none. The skill has become his brand: he calls himself the Blindfold King. B But Gareyev’s prowess has drawn interest from beyond the chess-playing community. In the hope of understanding how he and others like him can perform such mental feats, researchers at the University of California in Los Angeles (UCLA) called him in for tests. They now have their first results. ‘The ability to play a game of chess with your eyes closed is not a far reach for most accomplished players,’ said Jesse Rissman, who runs a memory lab at UCLA. ‘But the thing that’s so remarkable about Timur and a few other individuals is the number of games they can keep active at once. To me it is simply astonishing.’\n\nC Gareyev learned to play chess in his native Uzbekistan when he was six years old. Tutored by his grandfather, he entered his first tournament aged eight and soon became obsessed with competitions. At 16, he was crowned Asia’s youngest ever chess grandmaster. He moved to the US soon after, and as a student helped his university win its first national chess championship. In 2013, Gareyev was ranked the third best chess player in the US.\n\nD To the uninitiated, blindfold chess seems to call for superhuman skill. But displays of the feat go back centuries. The first recorded game in Europe was played in 13th-century Florence. In 1947, the Argentinian grandmaster Miguel Najdorf played 45 simultaneous games in his mind, winning 39 in the 24-hour session. E Accomplished players can develop the skill of playing blind even without realising it. The nature of the game is to run through possible moves in the mind to see how they play out. From this, regular players develop a memory for the patterns the pieces make, the defences and attacks. ‘You recreate it in your mind,’ said Gareyev. ‘A lot of players are capable of doing what I’m doing.’ The real mental challenge comes from playing multiple games at once in the head. Not only must the positions of each piece on every board be memorised, they must be recalled\n\nfaithfully when needed, updated with each player’s moves, and then reliably stored again, so the brain can move on to the next board. First moves can be tough to remember because they are fairly uninteresting. But the ends of games are taxing too, as exhaustion sets in. When Gareyev is tired, his recall can get patchy. He sometimes makes moves based on only a fragmented memory of the pieces’ positions.\n\nF The scientists first had Gareyev perform some standard memory tests. These assessed his ability to hold numbers, pictures and words in mind. One classic test measures how many numbers a person can repeat, both forwards and backwards, soon after hearing them. Most people manage about seven. ‘He was not exceptional on any of these standard tests,’ said Rissman. ‘We didn’t find anything other than playing chess that he seems to be supremely gifted at.’ But next came the brain scans. With Gareyev lying down in the machine, Rissman looked at how well connected the various regions of the chess player’s brain were. Though the results are tentative and as yet unpublished, the scans found much greater than average communication between parts of Gareyev’s brain that make up what is called the frontoparietal control network. Of 63 people scanned alongside the chess player, only one or two scored more highly on the measure. ‘You use this network in almost any complex task. It helps you to allocate attention, keep rules in mind, and work out whether you should be responding or not,’ said Rissman. G It was not the only hint of something special in Gareyev’s brain. The scans also suggest that Gareyev’s visual network is more highly connected to other brain parts than usual. Initial results suggest that the areas of his brain that process visual images – such as chess boards – may have stronger links to other brain regions, and so be more powerful than normal. While the analyses are not finalised yet, they may hold the first clues to Gareyev’s extraordinary ability.\n\nH For the world record attempt, Gareyev hopes to play 47 blindfold games at once in about 16 hours. He will need to win 80% to claim the title. ‘I don’t worry too much about the winning percentage, that’s never been an issue for me,’ he said. ‘The most important part of blindfold chess for me is that I have found the one thing that I can fully dedicate myself to. I miss having an obsession.’"
+  },
+  "writing_task1": "This test consists of two tasks. It is suggested that candidates spend about 20 minutes on Task 1, which requires them to write at least 150 words, and 40 minutes on Task 2, which requires them to write at least 250 words. Task 2 contributes twice as much as Task 1 to the Writing score.\n\nTask 1 requires candidates to look at a diagram or some data (in a graph, table or chart) and to present the information in their own words. They are assessed on their ability to organise, present and possibly compare data, and are required to describe the stages of a process, describe an object or event, or explain how something works. In Task 2, candidates are presented with a point of view, argument or problem. They are assessed on their ability to present a solution to the problem, present and justify an opinion, compare and contrast evidence and opinions, and to evaluate and challenge ideas, evidence or arguments.\n\nCandidates are also assessed on their ability to write in an appropriate style. More information on assessing the Writing test, including Writing assessment criteria (public version), is available at ielts.org.\n\nSpeaking This test takes between 11 and 14 minutes and is conducted by a trained examiner. There are three parts:\n\nPart 1 The candidate and the examiner introduce themselves. Candidates then answer general questions about themselves, their home/family, their job/studies, their interests and a wide range of similar familiar topic areas. This part lasts between four and five minutes. Part 2 The candidate is given a task card with prompts and is asked to talk on a particular topic. The candidate has one minute to prepare and they can make some notes if they wish, before speaking for between one and two minutes. The examiner then asks one or two questions on the same topic.\n\nPart 3 The examiner and the candidate engage in a discussion of more abstract issues which are thematically linked to the topic in Part 2. The discussion lasts between four and five minutes. The Speaking test assesses whether candidates can communicate effectively in English. The assessment takes into account Fluency and Coherence, Lexical Resource, Grammatical Range and Accuracy, and Pronunciation. More information on assessing the Speaking test, including Speaking assessment criteria (public version), is available at ielts.org.\n\nIntroduction\n\nHOW IS IELTS SCORED?\n\nIELTS results are reported on a nine-band scale. In addition to the score for overall language ability, IELTS provides a score in the form of a profile for each of the four skills (Listening, Reading, Writing and Speaking). These scores are also reported on a nine-band scale. All scores are recorded on the Test Report Form along with details of the candidate’s nationality, first language and date of birth. Each Overall Band Score corresponds to a descriptive statement which gives a summary of the English-language ability of a candidate classified at that level. The nine bands and their descriptive statements are as follows:\n\n9 Expert user – Has fully operational command of the language: appropriate, accurate and fluent with complete understanding.\n\n8 Very good user – Has fully operational command of the language with only occasional unsystematic inaccuracies and inappropriacies. Misunderstandings may occur in unfamiliar situations. Handles complex detailed argumentation well. 7 Good user – Has operational command of the language, though with occasional inaccuracies, inappropriacies and misunderstandings in some situations. Generally handles complex language well and understands detailed reasoning. 6 Competent user – Has generally effective command of the language despite some inaccuracies, inappropriacies and misunderstandings. Can use and understand fairly complex language, particularly in familiar situations.\n\n5 Modest user – Has partial command of the language, coping with overall meaning in most situations, though is likely to make many mistakes. Should be able to handle basic communication in own field.\n\n4 Limited user – Basic competence is limited to familiar situations. Has frequent problems in understanding and expression. Is not able to use complex language. 3 Extremely limited user – Conveys and understands only general meaning in very familiar situations. Frequent breakdowns in communication occur. 2 Intermittent user – Has great difficulty understanding spoken and written English. 1 Non-user – Essentially has no ability to use the language beyond possibly a few isolated words.\n\n0 Did not attempt the test – Did not answer the questions.\n\nIntroduction\n\nMARKING THE PRACTICE TESTS\n\nListening and\n\nThe answer keys are on pages 119–126.\n\nEach question in the Listening and Reading tests is worth one mark.\n\nQuestions which require letter / Roman numeral answers For questions where the answers are letters or Roman numerals, you should write only the number of answers required. For example, if the answer is a single letter or numeral, you should write only one answer. If you have written more letters or numerals than are required, the answer must be marked wrong.\n\nQuestions which require answers in the form of words or numbers\n\n• Answers may be written in upper or lower case.\n\n• Words in brackets are optional – they are correct, but not necessary.\n\n• Alternative answers are separated by a slash (/).\n\n• If you are asked to write an answer using a certain number of words and/or (a) number(s), you will be penalised if you exceed this. For example, if a question specifies an answer using NO MORE THAN THREE WORDS and the correct answer is ‘black leather coat’, the answer ‘coat of black leather’ is incorrect.\n\n• In questions where you are expected to complete a gap, you should only transfer the necessary missing word(s) onto the answer sheet. For example, to complete ‘in the …’, where the correct answer is ‘morning’, the answer ‘in the morning’ would be incorrect.\n\n• All answers require correct spelling (including words in brackets).\n\n• Both US and UK spelling are acceptable and are included in the answer key.\n\n• All standard alternatives for numbers, dates and currencies are acceptable.\n\n• All standard abbreviations are acceptable.\n\n• You will find additional notes about individual answers in the answer key. Writing The sample answers are on pages 127–138. It is not possible for you to give yourself a mark for the Writing tasks. We have provided sample answers (written by candidates), showing their score and the examiners’ comments. These sample answers will give you an insight into what is required for the Writing test.\n\nIntroduction\n\nHOW SHOULD YOU INTERPRET YOUR SCORES?\n\nAt the end of each Listening and Reading answer key you will find a chart which will help you assess whether, on the basis of your Practice Test results, you are ready to take the IELTS test.\n\nIn interpreting your score, there are a number of points you should bear in mind. Your performance in the real IELTS test will be reported in two ways: there will be a Band Score from 1 to 9 for each of the components and an Overall Band Score from 1 to 9, which is the average of your scores in the four components. However, institutions considering your application are advised to look at both the Overall Band Score and the Band Score for each component in order to determine whether you have the language skills needed for a particular course of study. For example, if your course involves a lot of reading and writing, but no lectures, listening skills might be less important and a score of 5 in Listening might be acceptable if the Overall Band Score was 7. However, for a course which has lots of lectures and spoken instructions, a score of 5 in Listening might be unacceptable even though the Overall Band Score was 7.\n\nOnce you have marked your tests, you should have some idea of whether your listening and reading skills are good enough for you to try the IELTS test. If you did well enough in one component, but not in others, you will have to decide for yourself whether you are ready to take the test.\n\nThe Practice Tests have been checked to ensure that they are the same level of difficulty as the real IELTS test. However, we cannot guarantee that your score in the Practice Tests will be reflected in the real IELTS test. The Practice Tests can only give you an idea of your possible future performance and it is ultimately up to you to make decisions based on your score.\n\nDifferent institutions accept different IELTS scores for different types of courses. We have based our recommendations on the average scores which the majority of institutions accept. The institution to which you are applying may, of course, require a higher or lower score than most other institutions.\n\nThe graph below shows the number of shops that closed and the number of new shops that opened in one country between 2011 and 2018.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nNumber of shop closures and openings 2011– 2018\n\n0 1,000 2,000 3,000 4,000 5,000 6,000 7,000 8,000 9,000 Openings 2011 2012 2013 2014 2015 2016 2017 2018 Closures",
+  "writing_task1_image": null,
+  "writing_task1_min_words": 150,
+  "writing_task2": "Write about the following topic:\n\nNowadays, a growing number of people with health problems are trying alternative medicines and treatments instead of visiting their usual doctor. Do you think this is a positive or a negative development?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.",
+  "writing_task2_min_words": 250,
+  "speaking": {
+    "part1": {
+      "title": "Part 1 — Introduction & Interview",
+      "duration": 270,
+      "duration_seconds": 270,
+      "questions": [
+        "Do you think it’s better to use a paper map or a map on your phone?",
+        "When was the last time you needed to use a map?",
+        "If you visit a new city, do you always use a map to find your way around?",
+        "In general, do you find it easy to read maps?"
+      ]
+    },
+    "part2": {
+      "title": "Part 2 — Individual Long Turn",
+      "prep": 60,
+      "prep_seconds": 60,
+      "speaking": 120,
+      "speaking_seconds": 120,
+      "cue_card": "**Describe an occasion when you had to do**\n\nYou should say:\n"
+    },
+    "part3": {
+      "title": "Part 3 — Two-way Discussion",
+      "duration": 270,
+      "duration_seconds": 270,
+      "questions": [
+        "Do you think it’s OK to arrive late when meeting a friend?",
+        "What should happen to people who arrive late for work?",
+        "Can you suggest how people can make sure they don’t arrive late?",
+        "Is it better to study for long periods or in shorter blocks of time?",
+        "What are the likely effects of students not managing their study time well?",
+        "How important is it for students to have enough leisure time?"
+      ]
+    }
+  },
+  "listening_audio": "/audio/cambridge20_test4.m4a",
+  "listening_audio_parts": {
+    "Part 1": "/audio/cambridge17_test4_part1.mp3",
+    "Part 2": "/audio/cambridge17_test4_part2.mp3",
+    "Part 3": "/audio/cambridge17_test4_part3.mp3",
+    "Part 4": "/audio/cambridge17_test4_part4.mp3"
+  }
+}

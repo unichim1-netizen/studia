@@ -138,7 +138,8 @@ def detect_type(instruction: str, body: str, title: str = "") -> str:
 @lru_cache(maxsize=256)
 def _number_marker(n: int) -> re.Pattern:
     return re.compile(
-        rf"(?<![\w.,/&$£%:-]){n}(?![\w.,%/&-])(?=\s*(?:_{{2,}}|…|[.·]{{4,}}|[.·_\-–]{{6,}})|\s+\S)")
+        rf"(?<![\w.,/&$£%:-]){n}(?![\w.,%/&-])(?=\s*(?:_{{2,}}|…|[.·]{{4,}}|[.·_\-–]{{6,}})|\s+\S|\s*$)"
+    )
 
 
 @lru_cache(maxsize=256)
@@ -248,7 +249,7 @@ def parse_options(text: str, style: str = "letter", max_options: int = 10, limit
 # Nhóm câu hỏi (heuristic)
 # ============================================================
 
-def _split_instruction(blocks: List[Block]) -> Tuple[str, List[Block]]:
+def _split_instruction(blocks: List[Block], start_number: Optional[int] = None) -> Tuple[str, List[Block]]:
     """Câu lệnh = các khối đầu bắt đầu như câu lệnh; phần còn lại là nội dung nhóm."""
     taken: List[str] = []
     index = 0
@@ -257,6 +258,16 @@ def _split_instruction(blocks: List[Block]) -> Tuple[str, List[Block]]:
         if not text:
             index += 1
             continue
+        if start_number is not None:
+            marker = _number_marker(start_number).search(text)
+            if marker:
+                head = text[:marker.start()].strip()
+                tail = text[marker.start():].strip()
+                if head:
+                    taken.append(head)
+                rest_blocks = [{**blocks[index], "text": tail}] + blocks[index + 1:]
+                return " ".join(taken), rest_blocks
+
         starts_like_instruction = bool(INSTRUCTION_START.match(text))
         if index == 0 or (starts_like_instruction and taken):
             if index == 0 and not starts_like_instruction and blocks[index].get("block_type") == "heading":
@@ -353,7 +364,7 @@ def _segments(body: str, numbers: List[int]) -> Dict[int, str]:
 def parse_group(start: int, end: int, blocks: List[Block]) -> Dict[str, Any]:
     """Một nhóm "Questions a–b" → dict nhóm chuẩn (xem docs/PLAN_PDF_EBOOK_EXAM.md mục 3.2)."""
     numbers = list(range(start, end + 1))
-    instruction, body_blocks = _split_instruction(blocks)
+    instruction, body_blocks = _split_instruction(blocks, start_number=start)
     body_blocks = [b for b in body_blocks if block_text(b)]
 
     # Tiêu đề ngữ cảnh / tiêu đề danh sách lựa chọn ngay sau câu lệnh
@@ -392,6 +403,10 @@ def parse_group(start: int, end: int, blocks: List[Block]) -> Dict[str, Any]:
         group["context_title"] = None
 
     embedded = sum(1 for n in numbers if _anchor(n).search(body)) >= max(1, round(0.6 * len(numbers)))
+    if qtype in COMPLETION_TYPES and not embedded and not BLANK_RE.search(body):
+        for n in numbers:
+            body = re.sub(rf"(?<![\w.,/&$£%:-]){n}(?![\w.,%/&-])(?!\s*___)", rf"{n} ___", body)
+        embedded = sum(1 for n in numbers if _anchor(n).search(body)) >= max(1, round(0.6 * len(numbers)))
 
     if qtype in TFNG_OPTIONS:
         segments = _segments(body, numbers)

@@ -12,6 +12,11 @@ import os
 import sys
 from typing import Any, Dict, List
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 from app.services.exam_builder import ExamDraft, GeminiJsonLLM, build_exam_drafts
 from app.services.exam_builder.schema import iter_groups, strip_answers, to_exam_room_payload
 from app.services.exam_builder.segmenter import segment_blocks
