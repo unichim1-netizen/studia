@@ -9,6 +9,9 @@ sys.path.insert(0, os.path.join(ROOT, "backend"))
 sys.path.insert(0, os.path.join(ROOT, "backend", "tests", "fixtures"))
 
 
+NL = chr(10)
+
+
 def annotate(title: str, text: str) -> None:
     text = text[:3800].replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
     print(f"::error title={title}::{text}")
@@ -30,11 +33,9 @@ try:
         blocks = getattr(blocks, "blocks", blocks)
         rows = [ascii(str(b.get("text") if isinstance(b, dict) else getattr(b, "text", b))[:90]) for b in blocks]
         start = next((i for i, r in enumerate(rows) if "Questions 15" in r), 0)
-        annotate("blocks", "
-".join(rows[max(0, start - 1):start + 6]))
+        annotate("blocks", NL.join(rows[max(0, start - 1):start + 6]))
         tb = extract_blocks(open(os.path.join(d, "text_book.pdf"), "rb").read(), "pdf")
         tb = getattr(tb, "blocks", tb)
-        annotate("textbook", "
-".join(ascii(str(b.get("text") if isinstance(b, dict) else getattr(b, "text", b))[:45]) for b in tb))
+        annotate("textbook", NL.join(ascii(str(b.get("text") if isinstance(b, dict) else getattr(b, "text", b))[:45]) for b in tb))
 except Exception:
     annotate("diag-error", traceback.format_exc()[-1500:])
