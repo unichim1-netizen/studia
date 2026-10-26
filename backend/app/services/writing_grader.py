@@ -3,10 +3,12 @@ Chấm IELTS Writing Task 1/2 bằng AI theo 4 tiêu chí band, kèm sửa lỗi
 
 Bài viết được tách câu ở phía server (đánh số) rồi mới gửi cho AI, để mỗi câu có đúng một mục nhận xét
 và kết quả luôn khớp với bài gốc dù AI trả thiếu hay thừa. Điểm tổng được tính ở đây, không để AI tự tính.
+Ngữ cảnh chấm (mức chấm, hướng dẫn của trung tâm, band mục tiêu của người học…) lấy từ grading_context.
 """
 import re
 from typing import Any, Dict, List, Optional
 
+from app.services import grading_context as gc
 from app.services.ai_engine import _call_gemini
 
 TASKS = {
@@ -55,17 +57,58 @@ def _strs(value: Any, limit: int = 4) -> List[str]:
     return [str(x).strip() for x in value if str(x).strip()][:limit]
 
 
-def build_prompt(task: str, prompt_text: str, sentences: List[str], words: int) -> str:
-    t = TASKS[task]
-    numbered = "\n".join(f"[{i}] {s}" for i, s in enumerate(sentences))
-    return f"""You are a certified IELTS Writing examiner. Grade the candidate's {t['label']} response strictly using the official IELTS Writing band descriptors (bands 0-9, half bands allowed).
+def _attempt_lines(attempt: Optional[Dict[str, Any]]) -> str:
+    """Ngữ cảnh của lần viết: thời gian đã dùng, dàn ý người học lập trước khi viết."""
+    if not attempt:
+        return ""
+    out = []
+    try:
+        minutes = int(attempt.get("minutes_used") or 0)
+    except (TypeError, ValueError):
+        minutes = 0
+    if 0 < minutes <= 240:
+        out.append(f"- Time the candidate spent writing: about {minutes} minutes.")
+    outline = gc._text(attempt.get("outline"), 1500)
+    if outline:
+        out.append("- Outline the candidate planned before writing (information only):")
+        out.append(f'  """{outline}"""')
+        out.append("  Comment briefly on whether the essay followed a clear plan.")
+    return ("\n## This attempt\n" + "\n".join(out) + "\n") if out else ""
 
-Task type: {t['label']} ({'Academic report on a visual' if task == 'task1' else 'Essay'})
+
+REWRITE_SHAPE = ''',
+  "model_rewrite": {{"paragraph_index": 1, "text": "The weakest paragraph rewritten at the target band, keeping the candidate's ideas", "notes_vi": ["Vì sao bản viết lại tốt hơn"]}}'''
+
+
+def build_prompt(task: str, prompt_text: str, sentences: List[str], words: int,
+                 cfg: Optional[Dict[str, Any]] = None, learner: Optional[Dict[str, Any]] = None,
+                 attempt: Optional[Dict[str, Any]] = None) -> str:
+    t = TASKS[task]
+    cfg = cfg or gc.DEFAULTS
+    sk = cfg["writing"]
+    kind = (learner or {}).get("kind") or "Academic"
+    target = (learner or {}).get("target") or 7.0
+    numbered = "\n".join(f"[{i}] {s}" for i, s in enumerate(sentences))
+    if task == "task1":
+        task_kind = "Academic report on a visual" if kind == "Academic" else "General Training letter"
+    else:
+        task_kind = "Essay"
+    rewrite_shape = REWRITE_SHAPE.replace("{{", "{").replace("}}", "}") if sk.get("model_rewrite") else ""
+    rewrite_rule = (
+        f"\n- model_rewrite: pick the paragraph (0-based index in the essay) that most limits the score and rewrite it "
+        f"as a band {target:.1f} candidate would, keeping the same ideas. At most 2 notes_vi."
+    ) if sk.get("model_rewrite") else ""
+    return f"""You are a certified IELTS Writing examiner. Grade the candidate's {t['label']} response using the official IELTS Writing band descriptors (bands 0-9, half bands allowed).
+
+{gc.context_block("writing", cfg, learner)}
+
+## Task
+Task type: {t['label']} ({task_kind})
 Task prompt given to the candidate:
 \"\"\"{prompt_text.strip() or '(not provided - judge the response on its own, and lower the task criterion if the purpose is unclear)'}\"\"\"
 
 Word count: {words} (minimum {t['min_words']}). If the response is under the minimum length, reflect it in {t['criterion']}.
-
+{_attempt_lines(attempt)}
 The candidate's response is split into numbered sentences:
 {numbered}
 
@@ -78,13 +121,13 @@ Return ONLY valid JSON with this exact shape:
     "grammar": {{"band": 5.5, "comment_vi": "...", "strengths": ["..."], "improvements": ["..."]}}
   }},
   "summary_vi": "2-3 câu tổng kết và việc nên làm đầu tiên",
-  "priorities_vi": ["Ưu tiên sửa 1", "Ưu tiên sửa 2", "Ưu tiên sửa 3"],
+  "priorities_vi": ["Ưu tiên sửa 1", "Ưu tiên sửa 2", "Ưu tiên sửa 3"]{rewrite_shape},
   "sentences": [
     {{
       "index": 0,
       "corrected": "The sentence rewritten correctly (identical to the original if it has no problem)",
       "issues": [
-        {{"type": "grammar", "text": "exact wrong words copied from the original sentence", "suggestion": "replacement", "explanation_vi": "Giải thích ngắn gọn bằng tiếng Việt"}}
+        {{"type": "grammar", "text": "exact wrong words copied from the original sentence", "suggestion": "replacement", "explanation_vi": "Giải thích ngắn gọn"}}
       ]
     }}
   ]
@@ -92,15 +135,15 @@ Return ONLY valid JSON with this exact shape:
 
 Rules:
 - "task" is {t['criterion']}; "coherence" is Coherence and Cohesion; "lexical" is Lexical Resource; "grammar" is Grammatical Range and Accuracy.
-- Be realistic and strict like a real examiner; do not inflate bands. Most learners are between 4.5 and 7.0.
-- comment_vi, explanation_vi, summary_vi, priorities_vi, strengths and improvements are written in Vietnamese. "suggestion" and "corrected" stay in English.
+- Be realistic like a real examiner; never inflate bands because of the candidate's target. Most learners are between 4.5 and 7.0.
+- {gc.language_rule(gc.feedback_language(cfg, learner))} "suggestion"{', "corrected" and "model_rewrite.text"' if sk.get("model_rewrite") else ' and "corrected"'} stay in English.
 - Include one entry in "sentences" for EVERY numbered sentence, using the same index. Keep the candidate's meaning and voice; only fix real errors or clearly weak wording.
 - issue.type is one of: grammar, vocabulary, spelling, punctuation, style.
-- issue.text must be copied exactly from that sentence so it can be highlighted. At most 4 issues per sentence.
-- At most 3 strengths and 3 improvements per criterion."""
+- issue.text must be copied exactly from that sentence so it can be highlighted. At most {sk.get("max_issues", 4)} issues per sentence.
+- At most 3 strengths and 3 improvements per criterion.{rewrite_rule}"""
 
 
-def normalise(raw: Dict[str, Any], sentences: List[str], task: str, words: int) -> Optional[Dict[str, Any]]:
+def normalise(raw: Dict[str, Any], sentences: List[str], task: str, words: int, max_issues: int = 4) -> Optional[Dict[str, Any]]:
     """Chuẩn hoá phản hồi của AI: kẹp band, ghép câu theo chỉ số, tính điểm tổng."""
     crit_in = raw.get("criteria") if isinstance(raw, dict) else None
     if not isinstance(crit_in, dict):
@@ -127,7 +170,7 @@ def normalise(raw: Dict[str, Any], sentences: List[str], task: str, words: int) 
     for i, original in enumerate(sentences):
         item = by_index.get(i, {})
         issues = []
-        for iss in (item.get("issues") or [])[:4]:
+        for iss in (item.get("issues") or [])[:max_issues]:
             if not isinstance(iss, dict):
                 continue
             text = str(iss.get("text") or "").strip()
@@ -146,6 +189,15 @@ def normalise(raw: Dict[str, Any], sentences: List[str], task: str, words: int) 
                               "changed": corrected != original or bool(issues), "issues": issues})
 
     overall = round_band(sum(c["band"] for c in criteria.values()) / 4)
+    rewrite = None
+    mr = raw.get("model_rewrite")
+    if isinstance(mr, dict) and str(mr.get("text") or "").strip():
+        idx = mr.get("paragraph_index")
+        rewrite = {
+            "paragraph_index": idx if isinstance(idx, int) and 0 <= idx < 20 else None,
+            "text": str(mr.get("text")).strip()[:3000],
+            "notes_vi": _strs(mr.get("notes_vi"), 2),
+        }
     return {
         "task": task,
         "words": words,
@@ -157,14 +209,24 @@ def normalise(raw: Dict[str, Any], sentences: List[str], task: str, words: int) 
         "priorities_vi": _strs(raw.get("priorities_vi"), 3),
         "sentences": out_sentences,
         "issue_count": sum(len(s["issues"]) for s in out_sentences),
+        "model_rewrite": rewrite,
     }
 
 
-def grade(task: str, prompt_text: str, essay: str) -> Optional[Dict[str, Any]]:
-    """Trả về kết quả đã chuẩn hoá, hoặc None khi AI không khả dụng / trả sai định dạng."""
+def grade(task: str, prompt_text: str, essay: str, learner: Optional[Dict[str, Any]] = None,
+          attempt: Optional[Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+    """Trả về kết quả đã chuẩn hoá, hoặc None khi AI không khả dụng / trả sai định dạng.
+    `learner` là ngữ cảnh người học đã qua grading_context.clean_learner; cấu hình hệ thống đọc từ app_settings."""
+    cfg = gc.config()
     sentences = split_sentences(essay)
     words = count_words(essay)
-    raw = _call_gemini(build_prompt(task, prompt_text, sentences, words), expect_json=True)
+    prompt = build_prompt(task, prompt_text, sentences, words, cfg, learner, attempt)
+    raw = _call_gemini(prompt, expect_json=True, timeout=cfg["timeout_sec"])
     if not isinstance(raw, dict):
         return None
-    return normalise(raw, sentences, task, words)
+    result = normalise(raw, sentences, task, words, cfg["writing"]["max_issues"])
+    if result is not None:
+        if not cfg["writing"].get("model_rewrite"):
+            result["model_rewrite"] = None
+        result["context"] = gc.context_summary("writing", cfg, learner)
+    return result

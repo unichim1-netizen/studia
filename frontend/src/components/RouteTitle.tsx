@@ -31,6 +31,9 @@ const RULES: [RegExp, string][] = [
   [/^\/scenarios/, "Luyện nói: hội thoại"],
   [/^\/pronunciation/, "Luyện nói: phát âm"],
   [/^\/dictation/, "Nghe chép chính tả"],
+  [/^\/reading/, "Luyện đọc"],
+  [/^\/speaking/, "Speaking IELTS"],
+  [/^\/writing/, "Luyện Writing"],
   [/^\/feedback/, "Lỗi sai"],
   [/^\/mistakes/, "Lỗi sai"],
   [/^\/exam\/[^/]+/, "Làm bài thi"],
@@ -45,6 +48,7 @@ const RULES: [RegExp, string][] = [
   [/^\/admin\/library/, "Quản trị: sách hệ thống"],
   [/^\/admin\/features/, "Quản trị: tính năng và giới hạn"],
   [/^\/admin\/content/, "Quản trị: nội dung và thông báo"],
+  [/^\/admin\/ai/, "Quản trị: cấu hình chấm AI"],
   [/^\/admin/, "Quản trị: tổng quan"],
   [/^\/config-test/, "Công cụ kiểm thử"],
 ];

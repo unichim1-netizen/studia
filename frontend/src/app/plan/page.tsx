@@ -16,6 +16,7 @@ import MonthView, { monthGrid } from "@/components/plan/MonthView";
 import YearView from "@/components/plan/YearView";
 import DayView from "@/components/plan/DayView";
 import GoalsPanel from "@/components/plan/GoalsPanel";
+import WeeklyPlanner from "@/components/plan/WeeklyPlanner";
 import "./plan.css";
 
 type View = "day" | "month" | "year";
@@ -215,6 +216,7 @@ export default function PlanPage() {
           reminder={reminder} defaultStart={profile?.remindAt || "19:00"} onChanged={reload} />
       )}
 
+      <WeeklyPlanner onChanged={reload} version={version} />
       <GoalsPanel onChanged={reload} />
     </div>
   );
