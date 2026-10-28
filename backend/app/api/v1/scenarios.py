@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
 from app.services.scenario_engine import ScenarioEngine
-from app.services.ai_engine import AIEngine
+from app.services.ai_engine import AIEngine, require_ai_feature
 from app.services.rag_engine import RAGEngine
 from app.core.supabase_client import get_supabase_client
 from app.config import settings
@@ -42,6 +42,7 @@ async def generate_scenarios(req: GenerateScenariosRequest):
     """
     Sinh các nhiệm vụ tình huống thực tế (TBLT Scenarios) từ RAG context của sách.
     """
+    require_ai_feature("scenarios", "Tạo tình huống hội thoại")
     supabase = get_supabase_client()
     document_title = "Tài liệu chuyên ngành"
 
@@ -82,6 +83,7 @@ async def interact_scenario_step(req: InteractStepRequest):
     Lượt tương tác nhập vai (Roleplay Turn) với AI.
     Trả về phản hồi của nhân vật AI + điểm đánh giá truyền thông & thuật ngữ.
     """
+    require_ai_feature("scenarios", "Nhập vai hội thoại với AI")
     supabase = get_supabase_client()
     rag_chunks = []
 

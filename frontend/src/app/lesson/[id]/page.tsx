@@ -237,10 +237,6 @@ function LessonContent() {
 
       <div className="split" style={{ gridTemplateColumns: "minmax(0, 1.5fr) minmax(300px, 1fr)" }}>
         <article className="st-card" style={{ padding: "32px 36px" }}>
-          <div className="tabs" role="tablist" aria-label="Chế độ xem bài học" style={{ marginBottom: 20 }}>
-            <button className="tab" type="button" role="tab" aria-selected={tab === "read"} onClick={() => setTab("read")}>Bài đọc</button>
-            <button className="tab" type="button" role="tab" aria-selected={tab === "diagram"} onClick={() => { setTab("diagram"); loadDiagram(); }}>Sơ đồ</button>
-          </div>
           {tab === "diagram" ? (
             <div role="tabpanel" aria-label="Sơ đồ khái niệm" style={{ overflowX: "auto" }}>
               {diagramState === "loading" && <div className="skeleton" style={{ height: 320 }} />}

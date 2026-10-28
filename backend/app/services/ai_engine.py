@@ -32,12 +32,32 @@ def _get_gemini_client():
         return None
 
 
-def _call_gemini(prompt: str, expect_json: bool = True, timeout: Optional[float] = None) -> Any:
+def ai_feature_enabled(feature: Optional[str]) -> bool:
+    """Tác vụ `feature` có được phép gọi Gemini không (theo AI_ENABLED_FEATURES)."""
+    if not feature:
+        return False
+    from app.config import settings
+    allowed = {f.strip() for f in (settings.AI_ENABLED_FEATURES or "").split(",") if f.strip()}
+    return feature in allowed
+
+
+def require_ai_feature(feature: str, what: str) -> None:
+    """Chặn endpoint sinh nội dung bằng AI khi tác vụ này đã tắt; `detail` là chuỗi để các trang hiện thẳng cho người dùng."""
+    if not ai_feature_enabled(feature):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=403, detail=f"{what} không còn dùng AI. Hãy tạo thủ công.")
+
+
+def _call_gemini(prompt: str, expect_json: bool = True, timeout: Optional[float] = None,
+                 feature: Optional[str] = None) -> Any:
     """
     Gọi Gemini API với prompt, trả về JSON object hoặc text.
     Fallback về None nếu không có key hoặc lỗi.
+    feature: tác vụ đang gọi (tutor | lookup | writing | speaking); không nằm trong AI_ENABLED_FEATURES thì không gọi AI, trả None.
     timeout (giây): đặt cho tác vụ người dùng đang chờ (vd. tra từ) để không treo khi Gemini lỗi; khi đó bỏ cả cơ chế thử lại.
     """
+    if not ai_feature_enabled(feature):
+        return None
     model = _get_gemini_client()
     if not model:
         return None
@@ -237,6 +257,15 @@ Requirements:
     @staticmethod
     def _fallback_lesson(topic_name: str, user_mastery: float, context_str: str) -> Dict[str, Any]:
         depth = "Cơ bản" if user_mastery < 40 else ("Trung cấp" if user_mastery < 70 else "Nâng cao")
+        if not ai_feature_enabled("lessons"):
+            # Không để AI viết bài: hiện nguyên văn các đoạn liên quan trong sách
+            excerpts = context_str or "Chưa có đoạn nào trong sách khớp với chủ đề này. Hãy mở sách và đọc phần liên quan."
+            return {
+                "title": topic_name,
+                "content_markdown": f"# {topic_name}\n\n_Trích nguyên văn từ sách (không do AI viết)._\n\n{excerpts}\n",
+                "key_takeaways": [],
+                "source": "book",
+            }
         return {
             "title": f"Bài học: {topic_name}",
             "content_markdown": f"""# {topic_name}
@@ -391,6 +420,10 @@ Requirements:
         if result and "flashcards" in result and len(result["flashcards"]) > 0:
             return result["flashcards"]
 
+        # Thẻ do người học tự tạo; không sinh thẻ mẫu giả khi AI tắt
+        if not ai_feature_enabled("flashcards"):
+            return []
+
         # Fallback
         return [
             {
@@ -450,7 +483,7 @@ Return ONLY valid JSON:
   "follow_up_suggestions": ["Follow-up question 1?", "Follow-up question 2?"]
 }}"""
 
-        result = _call_gemini(prompt, expect_json=True)
+        result = _call_gemini(prompt, expect_json=True, feature="tutor")
 
         if result and "answer" in result:
             return result
@@ -641,7 +674,7 @@ Requirements:
 - collocations: 3-5 cụm từ thông dụng
 - pronunciation: IPA notation nếu có thể"""
 
-        result = _call_gemini(prompt, expect_json=True, timeout=10)
+        result = _call_gemini(prompt, expect_json=True, timeout=10, feature="lookup")
 
         if result and "meaning_vi" in result and len(result["meaning_vi"].strip()) > 2 and "Vui lòng tra từ điển" not in result["meaning_vi"]:
             return result

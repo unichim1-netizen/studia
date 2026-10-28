@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from app.services.dual_coding_engine import DualCodingEngine
+from app.services.ai_engine import require_ai_feature
 
 router = APIRouter(prefix="/dual-coding", tags=["Dual Coding & Diagrams"])
 
@@ -24,6 +25,7 @@ async def generate_mermaid_diagram(req: DiagramRequest):
     """
     Sinh mã nguồn Mermaid Diagram (TD graph / Mindmap) từ tên chủ đề và mô tả khái niệm.
     """
+    require_ai_feature("diagrams", "Tạo sơ đồ")
     if not req.topic_name:
         raise HTTPException(status_code=400, detail="Thiếu topic_name")
 
@@ -44,6 +46,7 @@ async def generate_d2_diagram(req: DiagramRequest):
     """
     Sinh mã nguồn D2 (Terrastruct) Diagram với theme nền trắng (theme-id: 0) & tiếng Việt có dấu.
     """
+    require_ai_feature("diagrams", "Tạo sơ đồ")
     if not req.topic_name:
         raise HTTPException(status_code=400, detail="Thiếu topic_name")
 
@@ -64,6 +67,7 @@ async def enrich_lesson_with_visuals(req: EnrichLessonRequest):
     """
     Tự động bổ sung sơ đồ trực quan (Mermaid / Dual Coding) vào bài học Markdown.
     """
+    require_ai_feature("diagrams", "Tạo sơ đồ")
     if not req.content_markdown:
         raise HTTPException(status_code=400, detail="Thiếu content_markdown")
 

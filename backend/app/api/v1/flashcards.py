@@ -4,7 +4,7 @@ Flashcards API — Generate, Review (FSRS), Due Queue
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
-from app.services.ai_engine import AIEngine
+from app.services.ai_engine import AIEngine, require_ai_feature
 from app.services.rag_engine import RAGEngine
 from app.services.fsrs_engine import FSRSEngine
 from app.core.supabase_client import get_supabase_client
@@ -157,6 +157,7 @@ async def generate_flashcards(req: GenerateFlashcardsRequest):
     Sinh flashcards cho topic từ RAG context (content trong sách).
     Lưu vào Supabase với topic_id.
     """
+    require_ai_feature("flashcards", "Tạo flashcard")
     user_id = current_user_id()
     supabase = get_supabase_client()
 

@@ -191,7 +191,7 @@ def grade(part: int, question: str, transcript: str, metrics: Optional[Dict[str,
     """Kết quả đã chuẩn hoá, hoặc None khi AI không khả dụng / trả sai định dạng."""
     cfg = gc.config()
     prompt = build_prompt(part, question, transcript, metrics, self_review, cfg, learner)
-    raw = _call_gemini(prompt, expect_json=True, timeout=cfg["timeout_sec"])
+    raw = _call_gemini(prompt, expect_json=True, timeout=cfg["timeout_sec"], feature="speaking")
     if not isinstance(raw, dict):
         return None
     result = normalise(raw, transcript, part)

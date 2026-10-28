@@ -293,8 +293,8 @@ async def generate_lesson(req: GenerateLessonRequest):
         rag_context=rag_texts
     )
 
-    # Lưu lesson vào Supabase
-    if supabase and lesson:
+    # Lưu lesson vào Supabase (trích nguyên văn từ sách thì không lưu như bài học)
+    if supabase and lesson and lesson.get("source") != "book":
         try:
             supabase.table("lessons").insert({
                 "topic_id": req.topic_id,
@@ -375,8 +375,8 @@ async def generate_lesson_v2(req: GenerateLessonV2Request):
         proficiency_level=req.proficiency_level or "intermediate"
     )
 
-    # Lưu lesson vào Supabase
-    if supabase and lesson:
+    # Lưu lesson vào Supabase (trích nguyên văn từ sách thì không lưu như bài học)
+    if supabase and lesson and lesson.get("source") != "book":
         try:
             supabase.table("lessons").insert({
                 "topic_id": req.topic_id,

@@ -5,7 +5,7 @@ Tổng hợp recurring errors, sinh remedial exercises, cập nhật mastery t�
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
-from app.services.ai_engine import AIEngine
+from app.services.ai_engine import AIEngine, require_ai_feature
 from app.services.rag_engine import RAGEngine
 from app.core.supabase_client import get_supabase_client
 from app.config import settings
@@ -171,6 +171,7 @@ async def get_remedial_exercises(req: RemedialRequest):
     """
     Sinh bài tập khắc phục dựa trên recurring errors của user cho một topic.
     """
+    require_ai_feature("remedial", "Tạo bài tập khắc phục")
     uid = current_user_id()
     supabase = get_supabase_client()
 

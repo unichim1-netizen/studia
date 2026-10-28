@@ -4,7 +4,7 @@ Quizzes API v3 — RAG-based generation, multi-type exercises, AI open grading, 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
-from app.services.ai_engine import AIEngine
+from app.services.ai_engine import AIEngine, require_ai_feature
 from app.services.rag_engine import RAGEngine
 from app.services.fsrs_engine import FSRSEngine
 from app.core.supabase_client import get_supabase_client
@@ -54,6 +54,7 @@ async def generate_quiz(req: GenerateQuizRequest):
     Tạo quiz adaptive từ RAG context.
     Sinh câu hỏi từ nội dung thực tế trong sách (không bịa).
     """
+    require_ai_feature("quizzes", "Tạo quiz")
     user_id = current_user_id()
     supabase = get_supabase_client()
 
@@ -324,6 +325,7 @@ async def generate_multi_type_quiz(req: GenerateMultiTypeQuizRequest):
     Feature B: Sinh quiz đa dạng loại câu hỏi (fill_blank, recall, sentence_construction, multiple_choice).
     Tự động chọn exercise_types dựa trên mastery nếu không chỉ định.
     """
+    require_ai_feature("quizzes", "Tạo quiz")
     user_id = current_user_id()
     supabase = get_supabase_client()
 

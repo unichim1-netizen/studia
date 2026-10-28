@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: Optional[str] = os.getenv("GEMINI_API_KEY", None)
     OPENAI_API_KEY: Optional[str] = os.getenv("OPENAI_API_KEY", None)
 
+    # Tác vụ được phép gọi Gemini (phân tách bằng dấu phẩy): hỏi đáp, tra cứu, chấm viết, chấm nói.
+    # Mọi thứ khác (bài học, quiz, flashcard, hội thoại, đề thi, sơ đồ…) làm thủ công, không gọi AI.
+    AI_ENABLED_FEATURES: str = os.getenv("AI_ENABLED_FEATURES", "tutor,lookup,writing,speaking")
+
     # Gemini model names
     GEMINI_PRO_MODEL: str = "models/gemini-3.8-flash"
     GEMINI_EMBEDDING_MODEL: str = "models/text-embedding-004"

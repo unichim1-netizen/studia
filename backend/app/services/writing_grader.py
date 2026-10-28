@@ -221,7 +221,7 @@ def grade(task: str, prompt_text: str, essay: str, learner: Optional[Dict[str, A
     sentences = split_sentences(essay)
     words = count_words(essay)
     prompt = build_prompt(task, prompt_text, sentences, words, cfg, learner, attempt)
-    raw = _call_gemini(prompt, expect_json=True, timeout=cfg["timeout_sec"])
+    raw = _call_gemini(prompt, expect_json=True, timeout=cfg["timeout_sec"], feature="writing")
     if not isinstance(raw, dict):
         return None
     result = normalise(raw, sentences, task, words, cfg["writing"]["max_issues"])
