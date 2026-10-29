@@ -29,6 +29,7 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
+      - ./audio:/srv/audio:ro               # tệp Listening, tải lên bằng scp (không commit)
     depends_on: [api]
 
 volumes:

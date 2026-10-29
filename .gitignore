@@ -34,3 +34,4 @@ Thumbs.db
 
 # Khoá SSH
 *.pem
+deploy/ec2/audio/

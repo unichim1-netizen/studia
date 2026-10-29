@@ -4,5 +4,15 @@ api.3-25-144-63.sslip.io {
 	request_body {
 		max_size 150MB
 	}
-	reverse_proxy api:8000
+	# Audio Listening (tệp tĩnh, hỗ trợ Range để tua); đặt NEXT_PUBLIC_AUDIO_BASE_URL=https://<domain>/audio
+	handle /audio/* {
+		root * /srv
+		header Cache-Control "public, max-age=2592000"
+		header Access-Control-Allow-Origin "*"
+		file_server
+	}
+
+	handle {
+		reverse_proxy api:8000
+	}
 }
