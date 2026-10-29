@@ -32,7 +32,10 @@ export default function ProcessingPipeline({ bookId, initial, onDone, onRetry }:
 
   const steps: string[] = book.steps || FALLBACK_STEPS;
   const cur = Math.min(Math.max(Number(book.processing_step) || (running ? 2 : 1), 1), steps.length);
-  const pct = failed ? Math.round(((cur - 1) / steps.length) * 100) : Math.round(((cur - 0.5) / steps.length) * 100);
+  // Bước đọc trang: tiến độ theo số trang đã đọc (có từ migration v14), các bước khác tính nửa bước
+  const pageFrac = book.page_count ? Math.min(1, (Number(book.pages_done) || 0) / Number(book.page_count)) : 0.5;
+  const pct = failed ? Math.round(((cur - 1) / steps.length) * 100)
+    : Math.round(((cur - 1 + (cur === 2 ? pageFrac : 0.5)) / steps.length) * 100);
   const stateOf = (i: number) => (failed && i + 1 === cur ? "fail" : i + 1 < cur ? "done" : i + 1 === cur ? "run" : "todo");
   const color = { done: "var(--success)", run: "var(--brand)", fail: "var(--danger)", todo: "var(--surface-sunken)" } as const;
 
@@ -47,6 +50,16 @@ export default function ProcessingPipeline({ bookId, initial, onDone, onRetry }:
             ? "Studia không xử lý xong cuốn sách này."
             : "Studia đang đọc sách để tách chương, tạo chủ đề và bài học. Bạn có thể rời trang và quay lại sau."}
         </p>
+        {failed && book.ingest_error && <p className="st-alert st-alert-danger" role="alert" style={{ marginTop: 12 }}>{book.ingest_error}</p>}
+        {running && book.resuming && (
+          <p className="st-alert" role="status" style={{ marginTop: 12 }}>Máy chủ vừa khởi động lại. Studia đang chạy tiếp từ trang chưa đọc, phần đã xong được giữ nguyên.</p>
+        )}
+        {running && book.stalled && (
+          <p className="st-alert st-alert-warning" role="status" style={{ marginTop: 12 }}>Vài phút nay chưa thấy tiến triển. Studia sẽ tự chạy tiếp, hoặc bạn bấm "Xử lý lại" để làm lại từ đầu.</p>
+        )}
+        {running && Number(book.page_count) > 0 && (
+          <p className="meta num" style={{ marginTop: 8 }}>Đã đọc {book.pages_done ?? 0}/{book.page_count} trang{Number(book.ocr_page_count) > 0 ? ` · ${book.ocr_page_count} trang scan cần nhận dạng chữ` : ""}</p>
+        )}
         <div className="st-progress-track" role="progressbar" aria-label="Tiến độ xử lý" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} style={{ height: 8, marginTop: 16 }}>
           <div className="st-progress-fill" style={{ width: `${pct}%`, background: failed ? "var(--danger)" : undefined }} />
         </div>
@@ -73,7 +86,7 @@ export default function ProcessingPipeline({ bookId, initial, onDone, onRetry }:
             );
           })}
         </ol>
-        {failed && onRetry && (
+        {(failed || book.stalled) && onRetry && (
           <div className="row-wrap" style={{ gap: 8, marginTop: 8 }}>
             <button className="st-btn st-btn-primary st-btn-sm" type="button" onClick={onRetry}>Xử lý lại</button>
           </div>

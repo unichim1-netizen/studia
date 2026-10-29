@@ -9,6 +9,7 @@ Thứ tự ưu tiên tốc độ cho người dùng:
 """
 import hashlib
 import logging
+import threading
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -59,6 +60,94 @@ def _set_step(supabase, doc_id: str, step: int, detail: Optional[str] = None) ->
         ).eq("id", doc_id).execute()
     except Exception as e:
         logger.debug(f"[{doc_id}] Could not set step {step}: {e}")
+
+
+# ------------------------------------------------------------
+# Tiến độ theo trang, nhịp tim và việc dở (migration v14)
+# ------------------------------------------------------------
+
+HEARTBEAT_SECONDS = 30
+# Quá ngần này không thấy nhịp tim thì coi như việc xử lý đã bị bỏ dở (server tắt/khởi động lại giữa chừng)
+STALE_SECONDS = 120
+# DB chưa chạy migration v14 (không có cột nhịp tim): chỉ dựa vào giờ tạo, chờ lâu hơn cho chắc
+STALE_SECONDS_WITHOUT_HEARTBEAT = 15 * 60
+MAX_RESUMES = 3
+
+# Tài liệu đang được xử lý trong tiến trình này: vòng quét chạy tiếp và nút "Xử lý lại" không đụng vào
+_running: set = set()
+_running_lock = threading.Lock()
+
+
+def _now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def _set_progress(supabase, doc_id: str, **fields: Any) -> None:
+    """Ghi tiến độ chi tiết kèm nhịp tim. DB thiếu cột (chưa chạy migration v14) thì chỉ ghi log."""
+    try:
+        supabase.table("documents").update({**fields, "processing_heartbeat": _now_iso()}).eq("id", doc_id).execute()
+    except Exception as e:
+        logger.debug(f"[{doc_id}] Could not set progress {fields}: {e}")
+
+
+def _fail(supabase, doc_id: str, message: Optional[str] = None) -> None:
+    _set_status(supabase, doc_id, "failed")
+    if message:
+        _set_progress(supabase, doc_id, ingest_error=message)
+
+
+def is_running_here(doc_id: str) -> bool:
+    with _running_lock:
+        return doc_id in _running
+
+
+class _Job:
+    """Đánh dấu tài liệu đang xử lý trong tiến trình này và gửi nhịp tim định kỳ cho tới khi xong."""
+
+    def __init__(self, supabase, doc_id: str):
+        self.supabase, self.doc_id = supabase, doc_id
+        self._stop = threading.Event()
+
+    def __enter__(self):
+        with _running_lock:
+            _running.add(self.doc_id)
+        _set_progress(self.supabase, self.doc_id)
+        threading.Thread(target=self._beat, name=f"heartbeat-{self.doc_id[:8]}", daemon=True).start()
+        return self
+
+    def _beat(self) -> None:
+        while not self._stop.wait(HEARTBEAT_SECONDS):
+            _set_progress(self.supabase, self.doc_id)
+
+    def __exit__(self, *exc) -> bool:
+        self._stop.set()
+        with _running_lock:
+            _running.discard(self.doc_id)
+        return False
+
+
+def _parse_time(value: Any) -> Optional[datetime]:
+    try:
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    return parsed if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
+
+
+def is_stalled(document: Dict[str, Any], now: Optional[datetime] = None) -> bool:
+    """
+    Tài liệu đang chờ/đang xử lý mà không còn tiến trình nào làm: không chạy ở tiến trình này và quá
+    STALE_SECONDS không có nhịp tim. Dòng không có cột nhịp tim (chưa chạy migration v14) thì dựa vào giờ tạo.
+    """
+    if document.get("processing_status") not in ("pending", "processing") or is_running_here(document["id"]):
+        return False
+    now = now or datetime.now(timezone.utc)
+    has_column = "processing_heartbeat" in document
+    last = _parse_time(document.get("processing_heartbeat")) or _parse_time(document.get("created_at"))
+    if last is None:
+        return True
+    limit = STALE_SECONDS if has_column else STALE_SECONDS_WITHOUT_HEARTBEAT
+    return (now - last).total_seconds() > limit
 
 
 def _insert_rows(supabase, table: str, rows: List[Dict[str, Any]], doc_id: str) -> None:
@@ -162,6 +251,80 @@ def _chunk_row(doc_id: str, chunk: Dict[str, Any], embedding: List[float], total
     }
 
 
+def _save_topics(supabase, doc_id: str, user_id: str, extracted: Dict[str, Any]):
+    """Lưu chủ đề, quan hệ giữa chủ đề và trạng thái kiến thức ban đầu. Trả về (topics, topic_ids)."""
+    topics = extracted.get("topics", [])
+    topic_ids = [str(uuid.uuid4()) for _ in topics]
+    _insert_rows(supabase, "topics", [{
+        "id": topic_id,
+        "document_id": doc_id,
+        "name": topic.get("name", ""),
+        # slug duy nhất nhờ hậu tố doc_id
+        "slug": f"{topic.get('slug', '')[:50]}-{doc_id[:8]}",
+        "description": topic.get("description", ""),
+        "difficulty_level": topic.get("difficulty_level", 1),
+    } for topic_id, topic in zip(topic_ids, topics)], doc_id)
+
+    _insert_rows(supabase, "topic_relationships", [{
+        "source_topic_id": topic_ids[rel.get("source_index", 0)],
+        "target_topic_id": topic_ids[rel.get("target_index", 1)],
+        "relationship_type": rel.get("relationship_type", "prerequisite"),
+        "weight": rel.get("weight", 1.0),
+    } for rel in extracted.get("relationships", [])
+        if rel.get("source_index", 0) < len(topic_ids) and rel.get("target_index", 1) < len(topic_ids)], doc_id)
+
+    _insert_rows(supabase, "knowledge_states", [{
+        "user_id": user_id,
+        "topic_id": topic_id,
+        "mastery_score": 0.0,
+        "confidence_score": 0.5,
+        "retention_score": 1.0,
+        "stability": 1.0,
+        "difficulty_rating": 5.0,
+    } for topic_id in topic_ids], doc_id)
+    return topics, topic_ids
+
+
+def _save_flashcards(pool: ThreadPoolExecutor, supabase, doc_id: str, user_id: str,
+                     topics: List[Dict[str, Any]], topic_ids: List[str], chunks: List[str]) -> int:
+    """Flashcard: mỗi chủ đề một lời gọi Gemini, chạy song song. Trả về số thẻ đã tạo."""
+    def cards_for(topic: Dict[str, Any]) -> List[Dict[str, Any]]:
+        name = topic.get("name", "")
+        context = [c for c in chunks if name and name.lower() in c.lower()] or chunks[:6]
+        try:
+            return AIEngine.generate_flashcards(topic_name=name, rag_context=context[:5],
+                                                count=FLASHCARDS_PER_TOPIC)
+        except Exception as e:
+            logger.warning(f"[{doc_id}] Flashcard generation failed for '{name}': {e}")
+            return []
+
+    now = datetime.now(timezone.utc).isoformat()
+    flashcards, states = [], []
+    for topic_id, cards in zip(topic_ids, pool.map(cards_for, topics)):
+        for card in cards:
+            card_id = str(uuid.uuid4())
+            flashcards.append({
+                "id": card_id,
+                "topic_id": topic_id,
+                "document_id": doc_id,
+                "front": card.get("front", ""),
+                "back": card.get("back", ""),
+                "source_chunk": (card.get("source_chunk") or "")[:500],
+                "card_type": card.get("card_type", "concept"),
+            })
+            states.append({
+                "user_id": user_id,
+                "flashcard_id": card_id,
+                "stability": 1.0,
+                "difficulty_rating": 5.0,
+                "mastery_score": 0.0,
+                "next_review_at": now,
+            })
+    _insert_rows(supabase, "flashcards", flashcards, doc_id)
+    _insert_rows(supabase, "flashcard_states", states, doc_id)
+    return len(flashcards)
+
+
 def index_document(doc_id: str, user_id: str, title: str, raw_content: str, supabase,
                    blocks: Optional[List[Dict[str, Any]]] = None, enrich: bool = True) -> None:
     started = time.perf_counter()
@@ -190,81 +353,18 @@ def index_document(doc_id: str, user_id: str, title: str, raw_content: str, supa
 
             _set_step(supabase, doc_id, 5)
             extracted = topics_future.result() if topics_future else {}
-            topics = extracted.get("topics", [])
-            topic_ids = [str(uuid.uuid4()) for _ in topics]
-            _insert_rows(supabase, "topics", [{
-                "id": topic_id,
-                "document_id": doc_id,
-                "name": topic.get("name", ""),
-                # slug duy nhất nhờ hậu tố doc_id
-                "slug": f"{topic.get('slug', '')[:50]}-{doc_id[:8]}",
-                "description": topic.get("description", ""),
-                "difficulty_level": topic.get("difficulty_level", 1),
-            } for topic_id, topic in zip(topic_ids, topics)], doc_id)
-
-            _insert_rows(supabase, "topic_relationships", [{
-                "source_topic_id": topic_ids[rel.get("source_index", 0)],
-                "target_topic_id": topic_ids[rel.get("target_index", 1)],
-                "relationship_type": rel.get("relationship_type", "prerequisite"),
-                "weight": rel.get("weight", 1.0),
-            } for rel in extracted.get("relationships", [])
-                if rel.get("source_index", 0) < len(topic_ids) and rel.get("target_index", 1) < len(topic_ids)], doc_id)
-
-            _insert_rows(supabase, "knowledge_states", [{
-                "user_id": user_id,
-                "topic_id": topic_id,
-                "mastery_score": 0.0,
-                "confidence_score": 0.5,
-                "retention_score": 1.0,
-                "stability": 1.0,
-                "difficulty_rating": 5.0,
-            } for topic_id in topic_ids], doc_id)
-
-            # Flashcard: mỗi chủ đề một lời gọi Gemini, chạy song song
-            def cards_for(topic: Dict[str, Any]) -> List[Dict[str, Any]]:
-                name = topic.get("name", "")
-                context = [c for c in chunks if name and name.lower() in c.lower()] or chunks[:6]
-                try:
-                    return AIEngine.generate_flashcards(topic_name=name, rag_context=context[:5],
-                                                        count=FLASHCARDS_PER_TOPIC)
-                except Exception as e:
-                    logger.warning(f"[{doc_id}] Flashcard generation failed for '{name}': {e}")
-                    return []
-
-            now = datetime.now(timezone.utc).isoformat()
-            flashcards, states = [], []
-            for topic_id, cards in zip(topic_ids, pool.map(cards_for, topics)):
-                for card in cards:
-                    card_id = str(uuid.uuid4())
-                    flashcards.append({
-                        "id": card_id,
-                        "topic_id": topic_id,
-                        "document_id": doc_id,
-                        "front": card.get("front", ""),
-                        "back": card.get("back", ""),
-                        "source_chunk": (card.get("source_chunk") or "")[:500],
-                        "card_type": card.get("card_type", "concept"),
-                    })
-                    states.append({
-                        "user_id": user_id,
-                        "flashcard_id": card_id,
-                        "stability": 1.0,
-                        "difficulty_rating": 5.0,
-                        "mastery_score": 0.0,
-                        "next_review_at": now,
-                    })
-            _insert_rows(supabase, "flashcards", flashcards, doc_id)
-            _insert_rows(supabase, "flashcard_states", states, doc_id)
+            topics, topic_ids = _save_topics(supabase, doc_id, user_id, extracted)
+            card_count = _save_flashcards(pool, supabase, doc_id, user_id, topics, topic_ids, chunks)
 
         _set_status(supabase, doc_id, "completed")
         _set_step(supabase, doc_id, len(PIPELINE_STEPS) + 1)
         logger.info(
             f"[{doc_id}] Indexed: {len(chunks)} chunks in {embedded_at - started:.1f}s, "
-            f"{len(topics)} topics + {len(flashcards)} flashcards in {time.perf_counter() - embedded_at:.1f}s"
+            f"{len(topics)} topics + {card_count} flashcards in {time.perf_counter() - embedded_at:.1f}s"
         )
     except Exception as e:
         logger.error(f"[{doc_id}] Indexing FAILED: {e}", exc_info=True)
-        _set_status(supabase, doc_id, "failed")
+        _fail(supabase, doc_id, "Lập chỉ mục AI bị lỗi. Bấm \"Xử lý lại\" để thử lại.")
 
 
 # ------------------------------------------------------------
@@ -298,22 +398,28 @@ CONTENT_TYPES = {
 OCR_BATCH_PAGES = 6
 
 
-def _extract_pdf_progressively(supabase, doc_id: str, file_bytes: bytes, ocr) -> List[Dict[str, Any]]:
+def _extract_pdf_progressively(supabase, doc_id: str, file_bytes: bytes, ocr,
+                               skip_pages: frozenset = frozenset()) -> List[Dict[str, Any]]:
     """
     PDF: lưu ngay các trang có lớp văn bản (sách mở đọc được ngay), rồi OCR các trang scan theo lô
-    và lưu dần. `processing_detail` báo tiến độ để giao diện hiển thị.
+    và lưu dần. `processing_detail` và `pages_done` báo tiến độ để giao diện hiển thị.
+    `skip_pages`: trang đã có khối từ lần chạy trước (khi chạy tiếp) thì không đọc lại, tránh nhân đôi.
+    Trả về các khối mới lưu ở lần chạy này.
     """
     blocks, page_count, empty = read_pdf_text_layer(file_bytes)
     saved: List[Dict[str, Any]] = []
-    if blocks:
-        saved += save_blocks(supabase, doc_id, blocks)
-    text_pages = page_count - len(empty)
-    _set_step(supabase, doc_id, 3, f"{text_pages}/{page_count} trang đã đọc xong")
-    if empty and ocr is not None:
-        done = 0
-        for i in range(0, len(empty), OCR_BATCH_PAGES):
-            batch = empty[i:i + OCR_BATCH_PAGES]
-            _set_step(supabase, doc_id, 2, f"Đang nhận dạng chữ trang scan: {done}/{len(empty)}")
+    fresh = [b for b in blocks if b.get("page_number") not in skip_pages]
+    if fresh:
+        saved += save_blocks(supabase, doc_id, fresh)
+    todo = [p for p in empty if p not in skip_pages]
+    pages_done = page_count - len(todo)
+    ocr_done = len(empty) - len(todo)
+    _set_step(supabase, doc_id, 3, f"{pages_done}/{page_count} trang đã đọc xong")
+    _set_progress(supabase, doc_id, page_count=page_count, pages_done=pages_done, ocr_page_count=len(empty))
+    if todo and ocr is not None:
+        for i in range(0, len(todo), OCR_BATCH_PAGES):
+            batch = todo[i:i + OCR_BATCH_PAGES]
+            _set_step(supabase, doc_id, 2, f"Đang nhận dạng chữ trang scan: {ocr_done}/{len(empty)}")
             try:
                 got = ocr_pdf_pages(file_bytes, batch, ocr)
             except Exception as e:
@@ -322,8 +428,10 @@ def _extract_pdf_progressively(supabase, doc_id: str, file_bytes: bytes, ocr) ->
             page_blocks = [b for page in sorted(got) for b in got[page]]
             if page_blocks:
                 saved += save_blocks(supabase, doc_id, page_blocks)
-            done += len(batch)
-        _set_step(supabase, doc_id, 3, f"{text_pages + done}/{page_count} trang đã đọc xong")
+            ocr_done += len(batch)
+            pages_done += len(batch)
+            _set_progress(supabase, doc_id, pages_done=pages_done)
+        _set_step(supabase, doc_id, 3, f"{pages_done}/{page_count} trang đã đọc xong")
     saved.sort(key=lambda r: r["order_index"])  # trang OCR đến sau phải về đúng vị trí khi chunk/index
     return saved
 
@@ -333,43 +441,171 @@ def process_uploaded_file(doc_id: str, user_id: str, title: str, filename: str,
     """PDF/DOCX: tách khối (đọc được ngay) → lưu tệp gốc (song song) → lập chỉ mục AI."""
     started = time.perf_counter()
     storage_path = f"{user_id}/{doc_id}/{safe_filename(filename)}"
-    try:
-        _set_status(supabase, doc_id, "processing")
-        _set_step(supabase, doc_id, 2)
-        with ThreadPoolExecutor(max_workers=1) as pool:
-            upload_future = pool.submit(_store_original, supabase, doc_id, storage_path, file_bytes,
-                                        CONTENT_TYPES[kind])
-            if kind == "pdf":
-                saved_blocks = _extract_pdf_progressively(supabase, doc_id, file_bytes,
-                                                          get_ocr_provider())
-            else:
-                result = extract_blocks(file_bytes, kind)
-                _set_step(supabase, doc_id, 3)
-                saved_blocks = save_blocks(supabase, doc_id, result.blocks)
-            upload_future.result()
-            logger.info(f"[{doc_id}] Readable: {len(saved_blocks)} blocks in {time.perf_counter() - started:.2f}s")
+    with _Job(supabase, doc_id):
+        try:
+            _set_status(supabase, doc_id, "processing")
+            _set_step(supabase, doc_id, 2)
+            _set_progress(supabase, doc_id, resume_count=0, ingest_error=None, pages_done=0)
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                upload_future = pool.submit(_store_original, supabase, doc_id, storage_path, file_bytes,
+                                            CONTENT_TYPES[kind])
+                if kind == "pdf":
+                    saved_blocks = _extract_pdf_progressively(supabase, doc_id, file_bytes,
+                                                              get_ocr_provider())
+                else:
+                    result = extract_blocks(file_bytes, kind)
+                    _set_step(supabase, doc_id, 3)
+                    saved_blocks = save_blocks(supabase, doc_id, result.blocks)
+                upload_future.result()
+                logger.info(f"[{doc_id}] Readable: {len(saved_blocks)} blocks in {time.perf_counter() - started:.2f}s")
 
-        raw_text = blocks_to_text(saved_blocks)
-        if len(raw_text) < 50:
-            logger.error(f"[{doc_id}] No extractable text (scanned document?)")
-            _set_step(supabase, doc_id, 2, "Không đọc được chữ — có thể là bản scan mờ")
-            _set_status(supabase, doc_id, "failed")
+            raw_text = blocks_to_text(saved_blocks)
+            if len(raw_text) < 50:
+                logger.error(f"[{doc_id}] No extractable text (scanned document?)")
+                _set_step(supabase, doc_id, 2, "Không đọc được chữ — có thể là bản scan mờ")
+                _fail(supabase, doc_id, "Không đọc được chữ trong tệp, có thể là bản scan mờ.")
+                return
+        except Exception as e:
+            logger.error(f"[{doc_id}] File processing FAILED: {e}", exc_info=True)
+            _fail(supabase, doc_id, "Không đọc được tệp này. Bấm \"Xử lý lại\" để thử lại.")
             return
-    except Exception as e:
-        logger.error(f"[{doc_id}] File processing FAILED: {e}", exc_info=True)
-        _set_status(supabase, doc_id, "failed")
-        return
 
-    index_document(doc_id, user_id, title, raw_text, supabase, blocks=saved_blocks, enrich=enrich)
+        index_document(doc_id, user_id, title, raw_text, supabase, blocks=saved_blocks, enrich=enrich)
 
 
 def process_text_document(doc_id: str, user_id: str, title: str, raw_content: str, supabase) -> None:
-    saved_blocks: List[Dict[str, Any]] = []
+    with _Job(supabase, doc_id):
+        saved_blocks: List[Dict[str, Any]] = []
+        try:
+            saved_blocks = save_blocks(supabase, doc_id, blocks_from_text(raw_content))
+        except Exception as e:
+            logger.warning(f"[{doc_id}] Could not save blocks for text document: {e}")
+        index_document(doc_id, user_id, title, raw_content, supabase, blocks=saved_blocks)
+
+
+# ------------------------------------------------------------
+# Chạy tiếp tài liệu bị bỏ dở (server tắt/khởi động lại giữa lúc xử lý)
+# ------------------------------------------------------------
+
+# Một luồng: chạy tiếp lần lượt từng tài liệu, không tranh tài nguyên với việc upload mới
+_resume_pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="resume")
+
+_STALL_FIELDS = "id, processing_status, created_at"
+
+
+def find_stalled(supabase, now: Optional[datetime] = None) -> List[Dict[str, Any]]:
+    """Các tài liệu đang chờ/đang xử lý mà không còn tiến trình nào làm."""
+    query = lambda fields: supabase.table("documents").select(fields) \
+        .in_("processing_status", ["pending", "processing"]).execute().data or []
     try:
-        saved_blocks = save_blocks(supabase, doc_id, blocks_from_text(raw_content))
+        rows = query(_STALL_FIELDS + ", processing_heartbeat, resume_count")
+    except Exception:  # chưa chạy migration v14
+        rows = query(_STALL_FIELDS)
+    return [row for row in rows if is_stalled(row, now)]
+
+
+def resume_document(supabase, document: Dict[str, Any]) -> None:
+    """
+    Chạy tiếp một tài liệu bị bỏ dở mà không làm lại phần đã xong:
+    - PDF chỉ đọc (và OCR) các trang chưa có khối; DOCX/văn bản chỉ tách lại khi chưa có khối nào;
+    - chỉ mục vector dùng lại chunk đã có (chỉ embedding chunk còn thiếu);
+    - chủ đề và flashcard chỉ tạo khi chưa có.
+    """
+    doc_id = document["id"]
+    user_id = str(document.get("user_id") or "")
+    title = document.get("title") or ""
+    with _Job(supabase, doc_id):
+        try:
+            _set_status(supabase, doc_id, "processing")
+            existing = load_all_blocks(supabase, doc_id)
+            path = storage_path_from(document.get("file_path"))
+            lower = (path or "").lower()
+            kind = "pdf" if lower.endswith(".pdf") else "docx" if lower.endswith(".docx") else None
+            if kind:
+                _set_step(supabase, doc_id, 2, "Đang chạy tiếp sau khi máy chủ khởi động lại")
+                try:
+                    file_bytes = supabase.storage.from_(DOCUMENTS_BUCKET).download(path)
+                except Exception as e:
+                    logger.warning(f"[{doc_id}] Resume: original file missing: {e}")
+                    _set_step(supabase, doc_id, 1, "Chưa lưu xong tệp gốc")
+                    _fail(supabase, doc_id, "Máy chủ khởi động lại trước khi lưu xong tệp gốc. Hãy tải tệp lên lại.")
+                    return
+                if kind == "pdf":
+                    done_pages = frozenset(b["page_number"] for b in existing if b.get("page_number"))
+                    _extract_pdf_progressively(supabase, doc_id, file_bytes, get_ocr_provider(), skip_pages=done_pages)
+                elif not existing:
+                    _set_step(supabase, doc_id, 3)
+                    save_blocks(supabase, doc_id, extract_blocks(file_bytes, kind).blocks)
+            elif not existing and document.get("raw_content"):
+                save_blocks(supabase, doc_id, blocks_from_text(document["raw_content"]))
+
+            blocks = load_all_blocks(supabase, doc_id)
+            raw_text = blocks_to_text(blocks) or (document.get("raw_content") or "")
+            if len(raw_text) < 50:
+                _set_step(supabase, doc_id, 2, "Không đọc được chữ — có thể là bản scan mờ")
+                _fail(supabase, doc_id, "Không đọc được chữ trong tệp, có thể là bản scan mờ.")
+                return
+
+            _set_step(supabase, doc_id, 4)
+            stats = reindex_document(supabase, doc_id)
+            _set_step(supabase, doc_id, 5)
+            topics = supabase.table("topics").select("id, name").eq("document_id", doc_id).execute().data or []
+            has_cards = bool(supabase.table("flashcards").select("id").eq("document_id", doc_id).limit(1).execute().data)
+            if not topics or not has_cards:
+                chunks = [c["content"] for c in RAGEngine.chunk_blocks(blocks)]
+                with ThreadPoolExecutor(max_workers=AI_WORKERS) as pool:
+                    if topics:
+                        topic_ids = [t["id"] for t in topics]
+                    else:
+                        topics, topic_ids = _save_topics(supabase, doc_id, user_id,
+                                                         AIEngine.extract_topics_and_graph(raw_text, title))
+                    _save_flashcards(pool, supabase, doc_id, user_id, topics, topic_ids, chunks)
+
+            _set_status(supabase, doc_id, "completed")
+            _set_step(supabase, doc_id, len(PIPELINE_STEPS) + 1)
+            _set_progress(supabase, doc_id, ingest_error=None)
+            logger.info(f"[{doc_id}] Resumed and completed: {len(blocks)} blocks, index {stats}")
+        except Exception as e:
+            logger.error(f"[{doc_id}] Resume FAILED: {e}", exc_info=True)
+            _fail(supabase, doc_id, "Không chạy tiếp được. Bấm \"Xử lý lại\" để thử lại.")
+
+
+def _resume_safely(supabase, doc_id: str) -> None:
+    try:
+        rows = supabase.table("documents").select("*").eq("id", doc_id).execute().data or []
+        if rows and rows[0].get("processing_status") in ("pending", "processing"):
+            resume_document(supabase, rows[0])
     except Exception as e:
-        logger.warning(f"[{doc_id}] Could not save blocks for text document: {e}")
-    index_document(doc_id, user_id, title, raw_content, supabase, blocks=saved_blocks)
+        logger.error(f"[{doc_id}] Resume crashed: {e}", exc_info=True)
+    finally:
+        with _running_lock:
+            _running.discard(doc_id)
+
+
+def resume_stalled(supabase, run=None) -> List[str]:
+    """
+    Tìm tài liệu bị bỏ dở và xếp hàng chạy tiếp (mặc định ở luồng nền riêng; `run` để test chạy đồng bộ).
+    Tài liệu đã chạy tiếp MAX_RESUMES lần mà vẫn dở thì dừng hẳn, báo lỗi để người dùng tự bấm "Xử lý lại".
+    Trả về id các tài liệu đã xếp hàng.
+    """
+    queued: List[str] = []
+    for row in find_stalled(supabase):
+        doc_id = row["id"]
+        tries = int(row.get("resume_count") or 0)
+        if tries >= MAX_RESUMES:
+            logger.warning(f"[{doc_id}] Gave up after {tries} resumes")
+            _fail(supabase, doc_id, "Xử lý bị gián đoạn nhiều lần. Bấm \"Xử lý lại\" để làm lại từ đầu.")
+            continue
+        with _running_lock:
+            if doc_id in _running:
+                continue
+            _running.add(doc_id)  # giữ chỗ để vòng quét sau không xếp hàng trùng
+        # Ghi lượt chạy tiếp và nhịp tim trước khi chạy: tiến trình khác (nếu có) thấy tài liệu không còn "bỏ dở"
+        _set_progress(supabase, doc_id, resume_count=tries + 1)
+        logger.info(f"[{doc_id}] Resuming stalled document (attempt {tries + 1})")
+        (run or _resume_pool.submit)(_resume_safely, supabase, doc_id)
+        queued.append(doc_id)
+    return queued
 
 
 # ------------------------------------------------------------

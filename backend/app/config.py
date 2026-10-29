@@ -68,6 +68,8 @@ class Settings(BaseSettings):
     SMTP_FROM: str = ""  # vd. "Studia <no-reply@studia.vn>"; trống thì dùng SMTP_USER
     SMTP_SECURITY: str = "starttls"  # starttls | ssl | none
     REMINDERS_ENABLED: bool = True
+    # Tự chạy tiếp tài liệu đang xử lý dở khi server khởi động lại (cần migration v14 để biết chính xác việc nào bị bỏ dở)
+    RESUME_PROCESSING: bool = True
     REMINDER_LEAD_MINUTES: int = 10
     # Múi giờ của người học (Việt Nam không có giờ mùa hè nên dùng độ lệch cố định so với UTC)
     TZ_OFFSET_HOURS: float = 7.0

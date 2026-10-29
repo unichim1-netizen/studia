@@ -19,7 +19,6 @@ from app.services.doc_ingest.ocr import get_ocr_provider
 from app.services.doc_ingest.render import render_page_png
 from app.services.document_pipeline import process_text_document, process_uploaded_file
 from fastapi.concurrency import run_in_threadpool
-from datetime import datetime, timezone
 import uuid
 import logging
 from collections import OrderedDict
@@ -197,17 +196,26 @@ async def get_document_status(document_id: str):
 
     doc = resp.data[0]
     # Chỉ trả các trường giao diện cần, kèm danh sách bước xử lý
-    from app.services.document_pipeline import PIPELINE_STEPS
+    from app.services.document_pipeline import PIPELINE_STEPS, is_running_here, is_stalled
+    stalled = is_stalled(doc)
+    resumed = int(doc.get("resume_count") or 0) > 0 and is_running_here(document_id)
     doc = {k: doc.get(k) for k in ("id", "title", "source_type", "file_path", "processing_status",
-                                    "created_at", "processing_step", "processing_detail")}
+                                    "created_at", "processing_step", "processing_detail",
+                                    "page_count", "pages_done", "ocr_page_count", "ingest_error", "resume_count")}
     doc["steps"] = PIPELINE_STEPS
+    # stalled: không còn tiến trình nào xử lý (server vừa tắt) → backend sẽ tự chạy tiếp trong ít phút
+    doc["stalled"] = stalled
+    doc["resuming"] = resumed
 
     # Có khối nội dung là mở trình đọc được, không cần chờ phân tích AI xong
     try:
         block_resp = supabase.table("document_blocks").select("id").eq("document_id", document_id).limit(1).execute()
         doc["readable"] = bool(block_resp.data)
+        count_resp = supabase.table("document_blocks").select("id", count="exact").eq("document_id", document_id).execute()
+        doc["block_count"] = count_resp.count or 0
     except Exception:
         doc["readable"] = False
+        doc["block_count"] = 0
 
     # Đếm chunks và topics đã xử lý
     chunk_count = 0
@@ -299,16 +307,10 @@ def reprocess_document(document_id: str, background_tasks: BackgroundTasks, disc
     kind = "pdf" if lower.endswith(".pdf") else "docx" if lower.endswith(".docx") else None
     if not path or not kind:
         raise HTTPException(status_code=409, detail="Tài liệu này không có tệp gốc để xử lý lại (tạo từ văn bản dán).")
-    if document.get("processing_status") in ("pending", "processing"):
-        # Tiến trình nền bị mất (server khởi động lại giữa chừng) thì trạng thái kẹt mãi: cho xử lý lại sau 15 phút
-        created = None
-        try:
-            created = datetime.fromisoformat(str(document.get("created_at")).replace("Z", "+00:00"))
-        except ValueError:
-            pass
-        age = (datetime.now(timezone.utc) - created).total_seconds() if created and created.tzinfo else 0
-        if age < 15 * 60:
-            raise HTTPException(status_code=409, detail="Tài liệu đang được xử lý, vui lòng chờ.")
+    # Đang có tiến trình xử lý (nhịp tim còn mới) thì chờ; bị bỏ dở (server tắt giữa chừng) thì cho xử lý lại ngay
+    from app.services.document_pipeline import is_stalled
+    if document.get("processing_status") in ("pending", "processing") and not is_stalled(document):
+        raise HTTPException(status_code=409, detail="Tài liệu đang được xử lý, vui lòng chờ.")
 
     edited = supabase.table("document_blocks").select("id").eq("document_id", document_id) \
         .eq("is_edited", True).limit(1).execute().data

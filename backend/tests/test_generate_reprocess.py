@@ -153,7 +153,9 @@ class ReprocessTests(EbookApiTestCase):
     def test_reprocess_waits_for_running_jobs_but_not_for_stuck_ones(self):
         doc_id = self.upload_book()
         self.assertEqual(self.client.post(f"/api/v1/documents/{doc_id}/reprocess").status_code, 409)
-        self.store.table("documents").update({"created_at": "2020-01-01T00:00:00+00:00"}).eq("id", doc_id).execute()
+        # Bị bỏ dở: không còn nhịp tim mới (server tắt giữa chừng) thì xử lý lại được ngay
+        old = "2020-01-01T00:00:00+00:00"
+        self.store.table("documents").update({"created_at": old, "processing_heartbeat": old}).eq("id", doc_id).execute()
         self.assertEqual(self.client.post(f"/api/v1/documents/{doc_id}/reprocess").status_code, 200)
 
     def test_reprocess_protects_user_edits(self):

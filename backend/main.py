@@ -36,6 +36,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 REMINDER_SCAN_SECONDS = 60
+RESUME_SCAN_SECONDS = 60
 
 
 async def _reminder_loop():
@@ -52,15 +53,35 @@ async def _reminder_loop():
         await asyncio.sleep(REMINDER_SCAN_SECONDS)
 
 
+async def _resume_loop():
+    """Tài liệu đang xử lý dở lúc server tắt: chạy tiếp từ trang chưa đọc. Vòng đầu chạy ngay sau khi khởi động."""
+    from fastapi.concurrency import run_in_threadpool
+    from app.core.supabase_client import get_supabase_client
+    from app.services.document_pipeline import resume_stalled
+    await asyncio.sleep(5)
+    while True:
+        try:
+            queued = await run_in_threadpool(resume_stalled, get_supabase_client())
+            if queued:
+                logger.info(f"Resuming {len(queued)} stalled document(s): {queued}")
+        except Exception as e:
+            logger.warning(f"Resume scan error: {e}")
+        await asyncio.sleep(RESUME_SCAN_SECONDS)
+
+
 @contextlib.asynccontextmanager
 async def lifespan(_app: FastAPI):
     # Chỉ chạy vòng quét khi có SMTP để gửi: không thì mỗi phút đọc DB chỉ để bỏ qua
     from app.services import mailer
-    task = asyncio.create_task(_reminder_loop()) if settings.REMINDERS_ENABLED and mailer.smtp_configured() else None
+    tasks = []
+    if settings.REMINDERS_ENABLED and mailer.smtp_configured():
+        tasks.append(asyncio.create_task(_reminder_loop()))
+    if settings.RESUME_PROCESSING:
+        tasks.append(asyncio.create_task(_resume_loop()))
     try:
         yield
     finally:
-        if task:
+        for task in tasks:
             task.cancel()
             with contextlib.suppress(asyncio.CancelledError):
                 await task
