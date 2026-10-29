@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 from datetime import date, timedelta
-from app.services.schedule import local_today
+from app.services.schedule import can_mark_done, local_today
 from app.services.graph_engine import GraphEngine
 from app.services.learning_engine import LearningEngine
 from app.services.ai_engine import AIEngine
@@ -620,6 +620,10 @@ async def update_task_status(plan_date: str, task_index: int, req: TaskStatusReq
     """Đánh dấu một nhiệm vụ trong lịch học (và tự cập nhật trạng thái cả ngày)."""
     if req.status not in ("pending", "in_progress", "completed", "skipped"):
         raise HTTPException(status_code=400, detail="Trạng thái không hợp lệ")
+    try:
+        day = date.fromisoformat(plan_date)
+    except ValueError:
+        raise HTTPException(status_code=422, detail="Ngày không hợp lệ, cần dạng YYYY-MM-DD")
     uid = current_user_id()
     supabase = get_supabase_client()
     if not supabase:
@@ -634,6 +638,8 @@ async def update_task_status(plan_date: str, task_index: int, req: TaskStatusReq
     if task_index < 0 or task_index >= len(tasks):
         raise HTTPException(status_code=404, detail="Không có nhiệm vụ này")
 
+    if req.status == "completed" and tasks[task_index].get("status") != "completed" and not can_mark_done(day):
+        raise HTTPException(status_code=422, detail="Chỉ đánh dấu hoàn thành nhiệm vụ của hôm nay hoặc hôm qua")
     tasks[task_index] = {**tasks[task_index], "status": req.status}
     new_status = _plan_status(tasks)
     supabase.table("daily_learning_plans").update({"tasks": tasks, "status": new_status}) \

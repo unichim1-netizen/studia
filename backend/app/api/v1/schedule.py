@@ -223,10 +223,18 @@ def update_slot(slot_id: str, body: SlotPatch):
         updates["skill"] = data["skill"]
     if data.get("remind") is not None:
         updates["remind"] = data["remind"]
+    if "slot_date" in updates and date.fromisoformat(updates["slot_date"]) < sched.local_today():
+        raise HTTPException(status_code=422, detail="Không thể dời lịch học sang ngày đã qua")
     if data.get("status") is not None:
         if data["status"] not in SLOT_STATUSES:
             raise HTTPException(status_code=422, detail="Trạng thái không hợp lệ")
+        slot_day = date.fromisoformat(str(updates.get("slot_date") or cur.get("slot_date"))[:10])
+        if data["status"] == "done" and cur.get("status") != "done" and not sched.can_mark_done(slot_day):
+            raise HTTPException(status_code=422, detail="Chỉ đánh dấu xong khung giờ của hôm nay hoặc hôm qua")
         updates["status"] = data["status"]
+    if "slot_date" in updates and (updates.get("status") or cur.get("status")) == "done" \
+            and not sched.can_mark_done(date.fromisoformat(updates["slot_date"])):
+        raise HTTPException(status_code=422, detail="Khung giờ đã xong chỉ dời trong hôm nay hoặc hôm qua")
     if updates:
         db.table("study_slots").update(updates).eq("id", slot_id).eq("user_id", uid).execute()
     return {"slot": _slot_view({**cur, **updates})}

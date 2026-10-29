@@ -215,6 +215,29 @@ def _remaining(row: Dict[str, Any], meta: Dict[str, Any], section: Optional[str]
     return max(0, int(duration - (_now() - started).total_seconds()))
 
 
+def _section_closed(row: Dict[str, Any], section: str) -> bool:
+    """Phòng thi thật: hết giờ của một phần (cộng thời gian dự phòng) thì không nhận thêm câu trả lời cho phần đó."""
+    cfg = _config(row)
+    if cfg["mode"] != "real" or cfg["untimed"]:
+        return False
+    meta = _answers_of(row).get(META_KEY) or {}
+    started = _parse_time((meta.get("section_started") or {}).get(section))
+    if not started:
+        return False
+    duration = _durations([section], row).get(section, 0)
+    return _now() > started + timedelta(seconds=duration + EXPIRY_GRACE_SECONDS)
+
+
+def _open_for_writes(supabase, session_id: str, section: str) -> Dict[str, Any]:
+    """Phiên còn nhận bài: tự nộp nếu đã quá hạn tổng, chặn khi đã nộp hoặc phần thi đã hết giờ."""
+    row = _auto_submit_if_expired(supabase, _get_session(supabase, session_id))
+    if row.get("status") in ("SUBMITTED", "AUTO_SUBMITTED"):
+        raise HTTPException(status_code=409, detail="Phiên thi đã nộp bài")
+    if _section_closed(row, section):
+        raise HTTPException(status_code=409, detail="Phần thi này đã hết giờ")
+    return row
+
+
 def _signed(supabase, bucket: str, path: Optional[str]) -> Optional[str]:
     return signed_storage_url(supabase, bucket, path, settings.SIGNED_URL_TTL_SECONDS) if path else None
 
@@ -400,6 +423,8 @@ def _finalize(supabase, row: Dict[str, Any], auto: bool) -> Dict[str, Any]:
         supabase.table("exam_sessions").update(update).eq("id", row["id"]).execute()
     except Exception as e:
         logger.warning(f"[{row['id']}] Could not store exam result: {e}")
+    with _answer_locks_guard:
+        _answer_locks.pop(row["id"], None)
     return result
 
 
@@ -547,7 +572,7 @@ def start_exam_session(session_id: str):
 def enter_section(session_id: str, req: SectionRequest):
     """Ghi lại việc vào một phần thi (khởi động đồng hồ của phần đó trên server)."""
     supabase = _db()
-    row = _get_session(supabase, session_id)
+    row = _auto_submit_if_expired(supabase, _get_session(supabase, session_id))
     if req.section not in _sections_of(row):
         raise HTTPException(status_code=422, detail="Phần thi không thuộc phiên này")
     if row.get("status") != "IN_PROGRESS":
@@ -571,12 +596,12 @@ def save_answer(session_id: str, req: SaveAnswerRequest):
     if req.section not in ("listening", "reading"):
         raise HTTPException(status_code=422, detail="section phải là listening hoặc reading")
     supabase = _db()
-    row = _get_session(supabase, session_id)
-    if row.get("status") in ("SUBMITTED", "AUTO_SUBMITTED"):
-        raise HTTPException(status_code=409, detail="Phiên thi đã nộp bài")
+    _open_for_writes(supabase, session_id, req.section)
     value = req.answer if isinstance(req.answer, (str, int, float, list)) else str(req.answer)
     if isinstance(value, str):
         value = value[:500]
+    elif isinstance(value, list):
+        value = [str(v)[:500] for v in value[:10]]
 
     def mutate(answers, current):
         answers[f"{req.section}_{req.question_number}"] = value
@@ -591,9 +616,7 @@ def save_writing(session_id: str, req: SaveWritingRequest):
     if req.task not in ("task1", "task2"):
         raise HTTPException(status_code=422, detail="task phải là task1 hoặc task2")
     supabase = _db()
-    row = _get_session(supabase, session_id)
-    if row.get("status") in ("SUBMITTED", "AUTO_SUBMITTED"):
-        raise HTTPException(status_code=409, detail="Phiên thi đã nộp bài")
+    _open_for_writes(supabase, session_id, "writing")
     words = grading.count_words(req.content)
 
     def mutate(answers, current):
@@ -608,7 +631,7 @@ def save_writing(session_id: str, req: SaveWritingRequest):
 def submit_exam(session_id: str, req: Optional[SubmitExamRequest] = None):
     """Nộp bài → chấm điểm theo đáp án của đề → kết quả đầy đủ kèm bảng xem lại từng câu."""
     supabase = _db()
-    row = _get_session(supabase, session_id)
+    row = _auto_submit_if_expired(supabase, _get_session(supabase, session_id))
     return _finalize(supabase, row, auto=bool(req and req.auto_submitted))
 
 

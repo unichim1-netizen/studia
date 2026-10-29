@@ -253,6 +253,41 @@ class ScoringTests(SessionTestCase):
         self.assertEqual(view["session"]["status"], "AUTO_SUBMITTED")
         self.assertEqual(view["result"]["section_results"]["listening"]["raw_score"], 1)
 
+    def test_answers_after_deadline_are_rejected_and_session_auto_submitted(self):
+        set_id, _key = self.published_set()
+        sid = self.create_session(set_id, exam_type="listening")["session"]["session_id"]
+        self.client.post(f"/api/v1/exam/sessions/{sid}/start")
+        self.answer(sid, "listening", 1, "25")
+        long_ago = (datetime.now(timezone.utc) - timedelta(hours=3)).isoformat()
+        self.store.table("exam_sessions").update({"started_at": long_ago}).eq("id", sid).execute()
+
+        # Không mở lại trang mà gửi thẳng câu trả lời sau giờ: phải bị chặn
+        self.assertEqual(self.answer(sid, "listening", 2, "late").status_code, 409)
+        result = self.client.post(f"/api/v1/exam/sessions/{sid}/submit", json={}).json()
+        self.assertEqual(result["status"], "AUTO_SUBMITTED")
+        self.assertNotIn("listening_2", self.client.get(f"/api/v1/exam/sessions/{sid}").json()["answers"])
+
+    def test_real_mode_closes_a_section_when_its_clock_runs_out(self):
+        set_id, _key = self.published_set()
+        sid = self.create_session(set_id)["session"]["session_id"]
+        self.client.post(f"/api/v1/exam/sessions/{sid}/start")
+        row = self.store.table("exam_sessions").select("*").eq("id", sid).execute().data[0]
+        answers = dict(row["answers_json"])
+        answers["__meta__"] = {**answers["__meta__"], "section_started": {
+            "listening": (datetime.now(timezone.utc) - timedelta(minutes=40)).isoformat()}}
+        self.store.table("exam_sessions").update({"answers_json": answers}).eq("id", sid).execute()
+
+        self.assertEqual(self.answer(sid, "listening", 1, "25").status_code, 409)
+        self.assertEqual(self.answer(sid, "reading", 1, "TRUE").status_code, 200)
+
+    def test_oversized_list_answer_is_trimmed(self):
+        set_id, _key = self.published_set()
+        sid = self.create_session(set_id, exam_type="listening")["session"]["session_id"]
+        self.client.post(f"/api/v1/exam/sessions/{sid}/start")
+        self.assertEqual(self.answer(sid, "listening", 1, ["x" * 2000] * 50).status_code, 200)
+        saved = self.client.get(f"/api/v1/exam/sessions/{sid}").json()["answers"]["listening_1"]
+        self.assertEqual((len(saved), len(saved[0])), (10, 500))
+
     def test_history_lists_sessions_with_bands(self):
         set_id, key = self.published_set()
         sid, result = self.submit_with(set_id, key, correct_listening=10)

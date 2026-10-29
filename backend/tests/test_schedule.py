@@ -145,6 +145,47 @@ class ScheduleApiTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 200, r.text)
         self.assertEqual(self.client.get(f"{self.api}/schedule/streak").json()["current"], 2)
 
+    def test_cannot_backfill_streak_by_moving_slot_to_the_past(self):
+        slot = self.slot().json()["slot"]
+        old = (sched.local_today() - timedelta(days=10)).isoformat()
+        r = self.client.patch(f"{self.api}/schedule/slots/{slot['id']}", json={"day": old, "status": "done"})
+        self.assertEqual(r.status_code, 422)
+        self.assertEqual(self.client.get(f"{self.api}/schedule/streak").json()["current"], 0)
+
+    def test_cannot_mark_future_slot_done_or_move_done_slot_ahead(self):
+        tomorrow = (sched.local_today() + timedelta(days=1)).isoformat()
+        future = self.slot(day=tomorrow).json()["slot"]
+        r = self.client.patch(f"{self.api}/schedule/slots/{future['id']}", json={"status": "done"})
+        self.assertEqual(r.status_code, 422)
+
+        slot = self.slot().json()["slot"]
+        self.assertEqual(self.client.patch(f"{self.api}/schedule/slots/{slot['id']}", json={"status": "done"}).status_code, 200)
+        r = self.client.patch(f"{self.api}/schedule/slots/{slot['id']}", json={"day": tomorrow})
+        self.assertEqual(r.status_code, 422)
+
+    def test_old_day_slot_cannot_be_marked_done_later(self):
+        slot = self.slot().json()["slot"]
+        old = (sched.local_today() - timedelta(days=5)).isoformat()
+        self.store.table("study_slots").update({"slot_date": old}).eq("id", slot["id"]).execute()
+        r = self.client.patch(f"{self.api}/schedule/slots/{slot['id']}", json={"status": "done"})
+        self.assertEqual(r.status_code, 422)
+
+    def test_backdated_moment_shows_but_does_not_count_for_streak(self):
+        old = (sched.local_today() - timedelta(days=30)).isoformat()
+        r = self.client.post(f"{self.api}/schedule/moments", data={"day": old},
+                             files={"file": ("a.jpg", _jpeg(), "image/jpeg")})
+        self.assertEqual(r.status_code, 200, r.text)
+        self.assertEqual(len(self.client.get(f"{self.api}/schedule/day/{old}").json()["moments"]), 1)
+        stats = sched.day_stats(self.store, UID, date.fromisoformat(old), date.fromisoformat(old))
+        self.assertFalse(stats[old]["active"])
+
+    def test_can_mark_done_window(self):
+        today = date(2026, 10, 17)
+        self.assertTrue(sched.can_mark_done(today, today))
+        self.assertTrue(sched.can_mark_done(today - timedelta(days=1), today))
+        self.assertFalse(sched.can_mark_done(today - timedelta(days=2), today))
+        self.assertFalse(sched.can_mark_done(today + timedelta(days=1), today))
+
     def test_moment_upload_and_delete(self):
         r = self.client.post(f"{self.api}/schedule/moments", data={"day": self.today, "caption": "Hôm nay học Reading"},
                              files={"file": ("big.png", _jpeg((3000, 2000)), "image/png")})
