@@ -142,7 +142,7 @@ export default function StartPanel({ test, config, onChange, agreed, onAgree, on
         <span className="ink2">{picked.length} phần · {config.untimed ? "không tính giờ" : "tổng"}</span>
         <b>{config.untimed ? "Tự do" : picked.length ? fmtDuration(total) : "—"}</b>
       </div>
-      {error && <div role="alert" style={{ padding: "10px 12px", borderRadius: "var(--radius-sm)", background: "var(--danger-tint)", color: "var(--danger)", fontSize: 14 }}>{error}</div>}
+      {error && <div role="alert" className="st-alert st-alert-danger">{error}</div>}
       <button className="st-btn st-btn-primary st-btn-lg st-btn-block" type="button" disabled={!canStart} onClick={onStart}>
         {starting ? <><span className="st-spinner" />Đang chuẩn bị đề…</> : real ? "Bắt đầu thi" : "Bắt đầu luyện tập"}
       </button>

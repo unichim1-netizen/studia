@@ -56,7 +56,7 @@ function Detail() {
         <span className={locked ? "st-badge st-badge-danger" : "st-badge st-badge-success"}>{locked ? "Bị khoá" : "Hoạt động"}</span>
       </header>
 
-      {msg && <div role={msg.ok ? "status" : "alert"} style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: msg.ok ? "var(--success-tint)" : "var(--danger-tint)", color: msg.ok ? "var(--success)" : "var(--danger)" }}>{msg.text}</div>}
+      {msg && <div role={msg.ok ? "status" : "alert"} className={msg.ok ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{msg.text}</div>}
 
       <div className="split">
         <div className="stack" style={{ gap: 16 }}>

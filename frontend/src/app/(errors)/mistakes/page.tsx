@@ -73,7 +73,6 @@ export default function MistakesPage() {
     <div className="wrap stagger">
       <header className="page-head">
         <div>
-          <Link className="crumb" href="/feedback">Phân tích lỗi</Link>
           <h1 className="page-title">Sổ lỗi sai</h1>
           <p className="page-sub">Mọi lỗi từ quiz, hội thoại và luyện phát âm, gom lại để bạn luyện đúng chỗ hay sai.</p>
         </div>
@@ -101,7 +100,7 @@ export default function MistakesPage() {
       </div>
 
       {error && (
-        <div role="alert" className="row" style={{ justifyContent: "space-between", padding: "10px 14px", borderRadius: "var(--radius-md)", background: "var(--danger-tint)", color: "var(--danger)" }}>
+        <div role="alert" className="st-alert st-alert-danger" style={{ justifyContent: "space-between" }}>
           <span>{error}</span>
           <button className="st-btn st-btn-ghost st-btn-sm" type="button" onClick={load}>Tải lại</button>
         </div>

@@ -57,7 +57,7 @@ function Content() {
           <p className="page-sub">Thông báo toàn hệ thống, ngân hàng đoạn Nghe chép và câu luyện Phát âm.</p>
         </div>
       </header>
-      {msg && <div role={msg.ok ? "status" : "alert"} style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: msg.ok ? "var(--success-tint)" : "var(--danger-tint)", color: msg.ok ? "var(--success)" : "var(--danger)" }}>{msg.text}</div>}
+      {msg && <div role={msg.ok ? "status" : "alert"} className={msg.ok ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{msg.text}</div>}
 
       <section className="st-card stack" style={{ gap: 14 }} aria-labelledby="an-h">
         <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>

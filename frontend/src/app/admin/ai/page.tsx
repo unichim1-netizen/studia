@@ -79,7 +79,7 @@ function AiGrading() {
           <p className="page-sub">Ngữ cảnh AI dùng khi chấm Writing và Speaking: mức chấm, ngôn ngữ nhận xét, hướng dẫn riêng của trung tâm và việc dùng hồ sơ người học (band mục tiêu, Academic/General, điểm muốn tập trung). Có hiệu lực ngay, không cần deploy lại.</p>
         </div>
       </header>
-      {msg && <div role={msg.ok ? "status" : "alert"} style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: msg.ok ? "var(--success-tint)" : "var(--danger-tint)", color: msg.ok ? "var(--success)" : "var(--danger)" }}>{msg.text}</div>}
+      {msg && <div role={msg.ok ? "status" : "alert"} className={msg.ok ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{msg.text}</div>}
 
       <form className="stack" style={{ gap: 16 }} onSubmit={(e) => { e.preventDefault(); send({ config: cfg }, "Đã lưu. Lần chấm tiếp theo sẽ dùng cấu hình mới."); }}>
         <section className="st-card" aria-labelledby="ag-common">

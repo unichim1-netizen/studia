@@ -63,7 +63,7 @@ function Packs() {
   return (
     <div className="wrap stagger">
       <header className="page-head"><div><h1 className="page-title">Gói &amp; cài đặt</h1><p className="page-sub">Giá mới áp dụng cho đơn tạo sau khi lưu; đơn đang chờ giữ giá cũ.</p></div></header>
-      {msg && <div role={msg.ok ? "status" : "alert"} style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: msg.ok ? "var(--success-tint)" : "var(--danger-tint)", color: msg.ok ? "var(--success)" : "var(--danger)" }}>{msg.text}</div>}
+      {msg && <div role={msg.ok ? "status" : "alert"} className={msg.ok ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{msg.text}</div>}
 
       <section className="st-card" aria-labelledby="pk-h">
         <div className="sec-head"><h2 id="pk-h" className="sec-title">Gói lượt upload</h2>

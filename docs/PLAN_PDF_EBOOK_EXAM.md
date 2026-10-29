@@ -306,10 +306,30 @@ chạy trên server cô lập (không Supabase, không AI).
 - Đáp án trong bảng `exam_sets`/`exam_sessions.exam_snapshot` nằm cùng dòng với đề: người dùng đọc trực tiếp bằng anon key vẫn thấy đáp án của đề do chính họ tạo. Phòng thi không bao giờ nhận đáp án từ API.
 
 **Việc cần người làm trước khi dùng thật** (theo thứ tự)
-1. Supabase SQL Editor: chạy lần lượt `migration_v5.sql`, `migration_v6.sql`, `migration_v7.sql`. Thiếu một file thì phần tương ứng lặng lẽ rơi về `backend/data/local_db.json` (mất khi đổi máy).
+1. Supabase SQL Editor: chạy lần lượt `migration_v5.sql`, `migration_v6.sql`, `migration_v7.sql` (và các bản sau tới `migration_v14.sql`). Thiếu một file thì phần tương ứng lặng lẽ rơi về `backend/data/local_db.json` (mất khi đổi máy).
 2. Thay khoá Gemini hợp lệ trong `backend/.env` (OCR, trích câu hỏi bằng AI, chấm Writing, tạo bài kiểm tra).
 3. `pip install -r backend/requirements.txt`; khởi động lại backend.
 4. Kiểm tra trên Supabase thật: signed URL của kho `documents`, `exam-audio`, `exam-media` (bucket riêng tư).
+
+## Rà soát đối chiếu code (29/10/2026)
+
+Kiểm chứng: `pytest` toàn bộ **318 passed** (chạy với `SUPABASE_URL=` để không đụng Supabase thật) · `npx tsc --noEmit` 0 lỗi. Các checkbox P1–P5 bên dưới vẫn để trống vì được viết trước khi làm; bảng này là tình trạng thật.
+
+**Đã đáp ứng** (có code + test): tách PDF/DOCX theo khối bằng PDFium (đặt ở `app/services/doc_ingest/`, không phải `pdf_ingest/` như dự kiến), phát hiện trang scan + OCR Gemini theo trang, ảnh trang gốc; ebook API đủ các route ở P2 (khối, tách/gộp, xoá mềm, khôi phục, lịch sử sửa, highlight, ghi chú, vị trí đọc, tìm kiếm, reindex tăng dần, xuất Markdown); trình đọc/sửa P3; Exam Builder P4 (segmenter, answer key, validator, extractor có fallback, sinh đề `generic`, API `exam-sets` kể cả preview/unpublish); phiên thi P5 (snapshot, `GET session` khôi phục bài và giờ, chấm theo `answer_key`, payload không có đáp án, Speaking `not_scored`, xem lại từng câu, sảnh lấy đề từ API).
+
+**Chưa đáp ứng / lệch kế hoạch**
+| # | Yêu cầu | Tình trạng | Mức |
+|---|---|---|---|
+| 1 | P2.2 + P2.6: tiến độ theo trang, tự chạy tiếp khi server khởi động lại; `/status` trả số trang, số khối | **Xong 29/10/2026** (cần chạy `migration_v14.sql`): cột `page_count`, `pages_done`, `ocr_page_count`, `processing_heartbeat` (ghi mỗi 30 s), `resume_count`, `ingest_error`. Vòng nền trong `main.py` (lúc khởi động và mỗi phút) tìm tài liệu quá 2 phút không có nhịp tim, chạy tiếp: PDF chỉ đọc/OCR trang chưa có khối, chỉ mục dùng lại chunk cũ, chủ đề/flashcard chỉ tạo khi thiếu; quá 3 lần thì dừng và báo lỗi. `/status` thêm `pages_done`, `block_count`, `stalled`, `resuming`, `ingest_error`; màn tiến độ hiện số trang và lý do dừng. Không làm `index_dirty` (đã có `GET /index-status`). Test: `tests/test_resume_processing.py` | ~~Cao~~ |
+| 2 | P5.3: ghi câu trả lời nguyên tử qua RPC `exam_session_set_answer` | Thay bằng khoá trong tiến trình (`_locked_update`). Đúng khi chỉ 1 tiến trình uvicorn (cấu hình EC2 hiện tại); chạy nhiều worker/instance thì vẫn có thể mất câu | Trung bình |
+| 3 | P5.6: "Tạo flashcard từ câu sai", "Thêm chủ đề yếu vào lịch học", đoạn audioscript liên quan ở trang kết quả | Chưa có nút nào; backend có trả `materials.audioscripts` nhưng màn kết quả chưa hiện | Trung bình |
+| 4 | P6.1–P6.2: bài học/flashcard/quiz theo khoảng khối kèm "Xem trong sách"; Knowledge Graph theo heading path | Chưa làm (chunk có `heading_path` nhưng topic/flashcard chưa trỏ về khối) | Trung bình |
+| 5 | P1.4 + P4.4: dựng bảng trong PDF; tự cắt hình bản đồ/sơ đồ/Task 1 | Chưa làm: bảng thành dòng chữ, hình phải upload tay ở màn duyệt | Trung bình |
+| 6 | P3.4: bookmark do người đọc đặt; "Tạo quiz từ chương này" ngay trong trình đọc | Chưa có trong trình đọc (tạo đề từ chương chỉ ở màn Exam Builder) | Thấp |
+| 7 | P6.4: xuất ebook ra PDF qua `export_engine.py` | Chỉ có `format=md`; PDF qua hộp thoại in của trình duyệt | Thấp |
+| 8 | P1.6: CLI riêng cho bước tách PDF | Không có; CLI dựng đề nhận thẳng PDF nên vẫn test được | Thấp |
+| 9 | `documents.source_type = 'docx'`; chấm Speaking trong phòng thi | Vẫn như hạn chế đã ghi ở trên | Thấp |
+| 10 | P6.6: cập nhật `config.md` | Chưa kiểm | Thấp |
 
 ## Hướng dẫn kiểm thử nhanh
 
@@ -650,4 +670,6 @@ Kịch bản thủ công (đầu-cuối, dùng `mini_ielts.pdf` + 1 file mp3 b�
 | 14/10/2026 | P1–P6 | `pytest`: 157 passed · `tsc`: 0 lỗi · `next build` OK · Cambridge IELTS 21: 4 test đủ 40+40 câu và đáp án, tách 146 trang trong ≈1.5 s, dựng đề ≈1.5 s | Máy thử bị chậm I/O ở một số lúc (import mất ~20 s) nên lần chạy test đầy đủ có thể lâu hơn. Chưa thử với Supabase thật và khoá Gemini hợp lệ. |
 | 13/10/2026 | Ebook MVP | `pytest`: 55 passed · `tsc --noEmit`: 0 lỗi · thử trên trình duyệt (server cô lập, không Supabase/không AI): đọc PDF + DOCX, đổi nền/phông/cỡ chữ, sửa đoạn, in đậm, ghi chú kèm trích dẫn đều chạy | Chưa thử trên Supabase thật (cần chạy migration v5). Khoá Gemini bị đình chỉ. |
 | 13/10/2026 | P0 | `pytest`: 30 passed · `tsc --noEmit`: 0 lỗi · fixtures: 6/2/19 trang | Bỏ mục gỡ Cambridge (file đã khôi phục). `npm run build` và signed URL trên Supabase thật chưa xác nhận — xem bảng P0. Cài thêm `pytest`, `fpdf2` vào Python 3.12 hệ thống. |
+| 29/10/2026 | Chạy tiếp việc dở | `pytest`: 329 passed (thêm 11 test) · `tsc`: 0 lỗi · chạy thật app với lifespan trên DB tạm: tài liệu "bỏ dở" tự hoàn tất sau khởi động | Cần chạy `migration_v14.sql` trên Supabase; chưa chạy thì vẫn hoạt động nhưng chỉ nhận ra việc dở sau 15 phút (dựa vào giờ tạo) và không hiện số trang. |
+| 29/10/2026 | Rà soát + UI | `pytest`: 318 passed · `tsc --noEmit`: 0 lỗi · đo 26 trang ở 1280px và 390px trên bản xem thử cô lập | Xem mục "Rà soát đối chiếu code". Đồng nhất UI: quy tắc ghi ở `DESIGN.md` mục "Khuôn trang". |
 | 19/10/2026 | Exam v2 | `pytest` (exam_sessions + exam_sets + exam_builder): 75 passed · `tsc --noEmit`: 0 lỗi · thử trên trình duyệt (server cô lập): sảnh chọn đề theo bộ, cấu hình phần thi/giờ, 2 chế độ thi thật và luyện tập, giải thích từng câu, thẻ ảnh kết quả lưu vào Khoảnh khắc học | Phiên thi lưu cấu hình trong `exam_snapshot.config` (không cần migration). Giải thích do Gemini viết khi có khoá, không thì theo luật; chưa thử Gemini thật. Backend đang chạy cần khởi động lại để nhận API mới. |

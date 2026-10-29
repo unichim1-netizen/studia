@@ -175,9 +175,9 @@ export default function SpeakingPage() {
       )}
 
       <div className="row-wrap" style={{ gap: 12, marginBottom: 16, alignItems: "center" }}>
-        <div className="seg" role="tablist" aria-label="Chế độ">
-          <button type="button" role="tab" className="seg-btn" aria-selected={mode === "practice"} onClick={() => setMode("practice")}>Luyện Part 1–3</button>
-          <button type="button" role="tab" className="seg-btn" aria-selected={mode === "paraphrase"} onClick={() => setMode("paraphrase")}>Luyện diễn đạt lại</button>
+        <div className="tabs page-tabs" role="tablist" aria-label="Chế độ" style={{ marginBottom: 0 }}>
+          <button type="button" role="tab" className="tab" aria-selected={mode === "practice"} onClick={() => setMode("practice")}>Luyện Part 1–3</button>
+          <button type="button" role="tab" className="tab" aria-selected={mode === "paraphrase"} onClick={() => setMode("paraphrase")}>Luyện diễn đạt lại</button>
         </div>
         {mode === "practice" && (
           <div className="seg" role="radiogroup" aria-label="Phần thi">

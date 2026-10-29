@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Home, BarChart3, BookOpen, CalendarDays, Layers, Mic,
   PenLine, Target, FlaskConical, Headphones, BookOpenCheck, Speech, AudioLines, FileText, LogOut, PanelLeftClose, PanelLeftOpen, type LucideIcon,
-  NotebookPen, RotateCcw, BookMarked, AlertCircle, ChevronRight, LayoutGrid, Users, CreditCard, Package, Library, Sparkles, Zap, Settings, SlidersHorizontal, Megaphone, BrainCircuit,
+  NotebookPen, RotateCcw, ChevronDown, GraduationCap, Network, ShieldAlert, BookMarked, AlertCircle, ChevronRight, LayoutGrid, Users, CreditCard, Package, Library, Sparkles, Zap, Settings, SlidersHorizontal, Megaphone, BrainCircuit,
 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import SelectionContextMenu from "@/components/SelectionContextMenu";
@@ -26,7 +26,11 @@ const AUTH_DISABLED = process.env.NEXT_PUBLIC_AUTH_DISABLED === "true";
 
 type NavItem = { href: string; label: string; icon: LucideIcon; also?: string[] };
 
-const navGroups: NavItem[][] = [
+type NavFolder = { folder: string; label: string; icon: LucideIcon; children: NavItem[] };
+type NavEntry = NavItem | NavFolder;
+const isFolder = (e: NavEntry): e is NavFolder => "folder" in e;
+
+const navGroups: NavEntry[][] = [
   [
     { href: "/home", label: "Hôm nay", icon: Home },
     { href: "/dashboard", label: "Tiến độ", icon: BarChart3, also: ["/knowledge-map"] },
@@ -36,22 +40,44 @@ const navGroups: NavItem[][] = [
   ],
   [
     { href: "/practice", label: "Ôn luyện", icon: Zap },
-    { href: "/review", label: "Ôn tập", icon: RotateCcw },
-    { href: "/flashcards", label: "Flashcards", icon: Layers },
-    { href: "/vocabulary", label: "Từ vựng", icon: BookMarked },
+    {
+      folder: "memory", label: "Ôn tập & từ vựng", icon: RotateCcw, children: [
+        { href: "/review", label: "Ôn tập", icon: RotateCcw },
+        { href: "/flashcards", label: "Flashcards", icon: Layers },
+        { href: "/vocabulary", label: "Từ vựng", icon: BookMarked },
+      ],
+    },
   ],
   [
-    { href: "/scenarios", label: "Luyện nói", icon: Mic },
-    { href: "/pronunciation", label: "Shadowing", icon: AudioLines },
-    { href: "/dictation", label: "Nghe chép chính tả", icon: Headphones },
-    { href: "/reading", label: "Luyện đọc", icon: BookOpenCheck },
-    { href: "/speaking", label: "Speaking IELTS", icon: Speech },
-    { href: "/writing", label: "Luyện Writing", icon: FileText },
-    { href: "/feedback", label: "Phân tích lỗi", icon: PenLine },
-    { href: "/mistakes", label: "Sổ lỗi sai", icon: AlertCircle },
+    {
+      folder: "skills", label: "Kỹ năng IELTS", icon: GraduationCap, children: [
+        { href: "/scenarios", label: "Luyện hội thoại", icon: Mic },
+        { href: "/pronunciation", label: "Luyện phát âm", icon: AudioLines },
+        { href: "/dictation", label: "Nghe chép chính tả", icon: Headphones },
+        { href: "/reading", label: "Luyện đọc", icon: BookOpenCheck },
+        { href: "/speaking", label: "Speaking IELTS", icon: Speech },
+        { href: "/writing", label: "Luyện Writing", icon: FileText },
+      ],
+    },
+    {
+      folder: "errors", label: "Lỗi sai", icon: ShieldAlert, children: [
+        { href: "/feedback", label: "Phân tích lỗi", icon: PenLine },
+        { href: "/mistakes", label: "Sổ lỗi sai", icon: AlertCircle },
+      ],
+    },
     { href: "/exam", label: "Thi thử IELTS", icon: Target },
     ...(SHOW_DEV_TOOLS ? [{ href: "/config-test", label: "Công cụ kiểm thử", icon: FlaskConical }] : []),
   ],
+];
+
+// Một mục sidebar nhưng có nhiều màn: hiện cùng thanh tab đầu trang như các nhóm ở trên.
+const tabSections: NavFolder[] = [
+  {
+    folder: "progress", label: "Tiến độ", icon: BarChart3, children: [
+      { href: "/dashboard", label: "Tổng quan", icon: BarChart3 },
+      { href: "/knowledge-map", label: "Bản đồ kiến thức", icon: Network },
+    ],
+  },
 ];
 
 const mobileTabs: NavItem[] = [
@@ -92,14 +118,22 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const ignoreHover = useRef(false);
   // Chưa đọc xong trạng thái đã lưu thì tắt hiệu ứng, để sidebar không "co lại" mỗi lần tải trang.
   const [settled, setSettled] = useState(false);
+  // Người dùng tự mở/đóng nhóm; chưa chọn thì nhóm tự mở khi đang ở một trang con của nó.
+  const [folderOpen, setFolderOpen] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
   const { account, isAdmin } = useAccount();
   const site = useSiteConfig();
   const displayName = useDisplayName(account);
   // Quản lý tắt tính năng nào thì học sinh không thấy mục đó; quản lý vẫn thấy và vào được để kiểm thử.
   const visible = (it: NavItem) => isAdmin || featureOn(site, featureForPath(it.href));
-  const baseGroups = navGroups.map((g) => g.filter(visible)).filter((g) => g.length);
-  const groups = isAdmin ? [adminGroup, ...baseGroups] : baseGroups;
+  const baseGroups: NavEntry[][] = navGroups
+    .map((g) => g.flatMap((e): NavEntry[] => {
+      if (!isFolder(e)) return visible(e) ? [e] : [];
+      const children = e.children.filter(visible);
+      return children.length ? [{ ...e, children }] : [];
+    }))
+    .filter((g) => g.length);
+  const groups: NavEntry[][] = isAdmin ? [adminGroup, ...baseGroups] : baseGroups;
   const featureOff = !isAdmin && !featureOn(site, featureForPath(pathname));
   const expanded = !collapsed || hover;
   const peek = collapsed && hover;
@@ -108,6 +142,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     try {
       const savedState = localStorage.getItem("studia_sidebar_collapsed");
       if (savedState !== null) setCollapsed(savedState === "true");
+      const savedFolders = localStorage.getItem("studia_nav_folders");
+      if (savedFolders) setFolderOpen(JSON.parse(savedFolders));
     } catch {}
     const id = requestAnimationFrame(() => setSettled(true));
     return () => cancelAnimationFrame(id);
@@ -121,11 +157,46 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     try { localStorage.setItem("studia_sidebar_collapsed", String(nextState)); } catch {}
   };
 
+  // Thanh tab nhóm cuộn ngang trên màn hẹp: luôn đưa tab của trang hiện tại vào tầm nhìn.
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>(".section-tabs [aria-current=\"page\"]");
+    const bar = el?.parentElement;
+    if (el && bar && bar.scrollWidth > bar.clientWidth) bar.scrollLeft += el.getBoundingClientRect().left - bar.getBoundingClientRect().left - (bar.clientWidth - el.offsetWidth) / 2;
+  }, [pathname]);
+
+  const toggleFolder = (id: string, open: boolean) => {
+    const next = { ...folderOpen, [id]: open };
+    setFolderOpen(next);
+    try { localStorage.setItem("studia_nav_folders", JSON.stringify(next)); } catch {}
+  };
+
   if (BARE_PATHS.includes(pathname) || pathname === "/blog" || pathname.startsWith("/blog/")) {
     return <><RouteTitle /><AuthGate>{children}</AuthGate></>;
   }
 
   const cls = (...parts: (string | false)[]) => parts.filter(Boolean).join(" ");
+
+  // Trang thuộc một nhóm trên sidebar → hiện thanh tab anh em ở đầu trang (cùng kiểu với mọi thanh tab khác).
+  const section = [...baseGroups.flat().filter(isFolder), ...tabSections.map((s) => ({ ...s, children: s.children.filter(visible) }))]
+    .find((f) => f.children.some((c) => c.href === pathname));
+
+  const renderItem = (item: NavItem, child: boolean) => {
+    const active = isItemActive(pathname, item);
+    const Icon = item.icon;
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={cls("nav-item", child && "nav-child", active && "active")}
+        aria-current={active ? "page" : undefined}
+        title={!expanded ? item.label : undefined}
+      >
+        {active && <span className="nav-indicator" />}
+        <Icon size={child ? 18 : 20} strokeWidth={1.75} aria-hidden="true" />
+        <span className="nav-label">{item.label}</span>
+      </Link>
+    );
+  };
 
   return (
     <AuthGate>
@@ -152,22 +223,29 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           <nav className="sidebar-nav">
             {groups.map((group, gi) => (
               <div key={gi} className="nav-group">
-                {group.map((item) => {
-                  const active = isItemActive(pathname, item);
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cls("nav-item", active && "active")}
-                      aria-current={active ? "page" : undefined}
-                      title={!expanded ? item.label : undefined}
-                    >
-                      {active && <span className="nav-indicator" />}
-                      <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
-                      <span className="nav-label">{item.label}</span>
-                    </Link>
-                  );
+                {group.map((entry) => {
+                  if (isFolder(entry)) {
+                    const FolderIcon = entry.icon;
+                    const hasActive = entry.children.some((c) => isItemActive(pathname, c));
+                    const open = folderOpen[entry.folder] ?? hasActive;
+                    return (
+                      <div key={entry.folder} className="nav-folder">
+                        <button
+                          type="button"
+                          className={cls("nav-item nav-button nav-folder-btn", hasActive && !open && "active")}
+                          onClick={() => toggleFolder(entry.folder, !open)}
+                          aria-expanded={open}
+                          title={!expanded ? entry.label : undefined}
+                        >
+                          <FolderIcon size={20} strokeWidth={1.75} aria-hidden="true" />
+                          <span className="nav-label">{entry.label}</span>
+                          <ChevronDown className="nav-label nav-folder-chev" size={16} strokeWidth={2} aria-hidden="true" data-open={open} />
+                        </button>
+                        {open && expanded && entry.children.map((item) => renderItem(item, true))}
+                      </div>
+                    );
+                  }
+                  return renderItem(entry, false);
                 })}
               </div>
             ))}
@@ -242,7 +320,26 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 <Link className="st-btn st-btn-primary" href="/home" style={{ marginTop: 16 }}>Về trang Hôm nay</Link>
               </div>
             </div>
-          ) : children}
+          ) : (
+            <>
+              {section && section.children.length > 1 && (
+                <div className="wrap section-tabs">
+                  <nav className="tabs page-tabs" aria-label={section.label}>
+                    {section.children.map((c) => {
+                      const on = c.href === pathname;
+                      const Icon = c.icon;
+                      return (
+                        <Link key={c.href} href={c.href} className="tab" aria-current={on ? "page" : undefined}>
+                          <Icon size={16} strokeWidth={1.75} aria-hidden="true" />{c.label}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                </div>
+              )}
+              {children}
+            </>
+          )}
         </main>
 
         {/* Thanh tab dưới (mobile) */}

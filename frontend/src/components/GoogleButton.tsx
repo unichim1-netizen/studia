@@ -107,8 +107,8 @@ export default function GoogleButton({ label = "Tiếp tục với Google", onEr
         </div>
       )}
       {!(CLIENT_ID && gsiReady) && (
-        <button type="button" onClick={redirect} disabled={busy} aria-busy={busy || undefined} className="btn-ghost btn-lg btn-block"
-          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 12, border: "1.5px solid var(--border-control)", background: "var(--surface)", color: "var(--ink)", fontWeight: 600 }}>
+        <button type="button" onClick={redirect} disabled={busy} aria-busy={busy || undefined} className="st-btn st-btn-secondary st-btn-lg st-btn-block"
+          style={{ gap: 12, fontWeight: 600 }}>
           {GOOGLE_ICON}
           {busy ? "Đang chuyển tới Google…" : label}
         </button>

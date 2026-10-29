@@ -182,9 +182,9 @@ export default function PlanPage() {
       </div>
 
       <div className="plan-bar">
-        <div className="seg" role="tablist" aria-label="Chế độ xem lịch">
+        <div className="tabs page-tabs" role="tablist" aria-label="Chế độ xem lịch" style={{ marginBottom: 0 }}>
           {VIEWS.map((v) => (
-            <button key={v.id} type="button" role="tab" className="seg-btn" aria-selected={view === v.id} onClick={() => setView(v.id)}>{v.label}</button>
+            <button key={v.id} type="button" role="tab" className="tab" aria-selected={view === v.id} onClick={() => setView(v.id)}>{v.label}</button>
           ))}
         </div>
         <div className="plan-nav">

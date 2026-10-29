@@ -241,7 +241,7 @@ function LessonContent() {
             <div role="tabpanel" aria-label="Sơ đồ khái niệm" style={{ overflowX: "auto" }}>
               {diagramState === "loading" && <div className="skeleton" style={{ height: 320 }} />}
               {diagramState === "error" && (
-                <div role="alert" className="row" style={{ justifyContent: "space-between", padding: "10px 14px", borderRadius: "var(--radius-md)", background: "var(--danger-tint)", color: "var(--danger)" }}>
+                <div role="alert" className="st-alert st-alert-danger" style={{ justifyContent: "space-between" }}>
                   <span>Không tạo được sơ đồ lúc này.</span>
                   <button className="st-btn st-btn-ghost st-btn-sm" type="button" onClick={() => { setDiagramState("idle"); loadDiagram(); }}>Thử lại</button>
                 </div>

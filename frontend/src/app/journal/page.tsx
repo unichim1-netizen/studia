@@ -22,9 +22,11 @@ export default function JournalPage() {
 
   return (
     <div className="wrap stagger">
-      <header>
-        <h1 className="heading-1">Nhật ký học tập</h1>
-        <p className="meta">Ghi lại cảm xúc sau mỗi ngày học. Nhìn lại để biết lúc nào bạn học tốt nhất. Dữ liệu lưu trên thiết bị này.</p>
+      <header className="page-head">
+        <div>
+          <h1 className="page-title">Nhật ký học tập</h1>
+          <p className="page-sub">Ghi lại cảm xúc sau mỗi ngày học. Nhìn lại để biết lúc nào bạn học tốt nhất. Dữ liệu lưu trên thiết bị này.</p>
+        </div>
       </header>
 
       <div className="jn-grid">

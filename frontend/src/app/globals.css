@@ -1139,6 +1139,12 @@ mark.studia-hl-purple { background-color: #e9d5ff !important; color: #6b21a8 !im
 .nav-group { display: flex; flex-direction: column; gap: 2px; }
 .nav-group + .nav-group { margin-top: clamp(2px, 0.8vh, 6px); padding-top: clamp(2px, 0.8vh, 6px); border-top: 1px solid var(--hairline); }
 .sidebar-foot { margin-top: auto; padding-top: clamp(4px, 1vh, 10px); display: flex; flex-direction: column; gap: 2px; border-top: 1px solid var(--hairline); }
+.nav-folder { display: flex; flex-direction: column; gap: 2px; }
+.nav-folder-btn { text-align: left; }
+.nav-folder-chev { margin-left: auto; transition: transform var(--dur-fast) var(--ease-out); }
+.nav-folder-chev[data-open="true"] { transform: rotate(180deg); }
+.app-sidebar .nav-child { padding-left: 24px; height: calc(var(--nav-h) - 4px); font-size: 14px; }
+.app-sidebar.collapsed .nav-child { padding-left: 0; }
 .nav-button { background: none; border: none; cursor: pointer; width: 100%; font-family: inherit; }
 .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 4px 8px; min-height: var(--nav-h); overflow: hidden; }
 .sidebar-avatar { flex-shrink: 0; width: 24px; height: 24px; margin: 0 2px; border-radius: 50%; display: grid; place-items: center; background: var(--brand-tint); color: var(--brand); font: 650 12px/1 var(--font-sans); }

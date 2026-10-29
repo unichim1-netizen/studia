@@ -127,6 +127,18 @@ Bricolage Grotesque cho tiêu đề và con số; Be Vietnam Pro cho giao diện
 ## Chuyển động
 Chỉ animate `transform`/`opacity` (và `width` của progress). Vào màn: fade-up 8px, xếp tầng 60ms (`.stagger`). Nút nhấn `scale(.97)`; card hover nâng 2px; đúng → `bump` + ✓; sai → `shake` một lần; số liệu đếm lên (`<CountUp />`). Chuyển trang: mờ dần 240ms. `prefers-reduced-motion` tắt toàn bộ.
 
+## Khuôn trang (áp cho mọi màn có sidebar)
+Một trang học luôn theo thứ tự: thanh tab nhóm (nếu có) → đầu trang → nội dung.
+- **Khung**: `<div className="wrap stagger">` (rộng 1080px) hoặc `wrap-narrow` (760px) cho màn đọc/viết một cột.
+- **Đầu trang**: `<header className="page-head"><div><h1 className="page-title">…</h1><p className="page-sub">…</p></div>{nút phụ}</header>`. Tiêu đề trùng với nhãn trên sidebar (hoặc là dạng đầy đủ của nhãn đó). Không dùng `.crumb` cho trang đã có thanh tab nhóm.
+- **Thanh tab nhóm**: trang nằm trong một nhóm sidebar (`NavFolder`) hoặc trong `tabSections` của `MainLayout.tsx` tự có thanh tab anh em ở đầu trang. Muốn gộp các trang thành nhóm thì khai báo ở đó, đừng tự vẽ tab trong trang.
+- **Tab và bộ chọn**: đổi giữa các màn/chế độ của cùng một trang dùng `.tabs.page-tabs` + `.tab` (gạch chân). Chọn một giá trị trong nội dung (tốc độ, Part, nguồn đề) dùng `.seg` + `.seg-btn`. Lọc nhiều giá trị dùng `.st-chip`.
+- **Nút**: chỉ dùng bộ `st-btn` (`st-btn-primary | secondary | ghost | accent`, cỡ `st-btn-sm | st-btn-lg`, `st-btn-block`). Các lớp `.btn-primary`… cũ trong `globals.css` chỉ còn để tương thích, không dùng ở code mới.
+- **Thông báo trong trang**: `.st-alert` + `st-alert-success | danger | warning` (mặc định là thông tin), kèm `role="status"` hoặc `role="alert"`. Không tự viết `style` nền/màu cho hộp báo lỗi.
+- **Ô nhập**: `<label className="st-field"><span className="st-field-label">…</span><input className="st-input" /></label>`.
+- **Ngoại lệ có chủ đích**: Hôm nay (hero riêng), Ôn luyện và Kiểm tra trình độ (chế độ tập trung, thanh trên riêng), Coal (khung chat), phòng thi và các trang không khung (đăng nhập, onboarding, blog).
+- `vibrant.css` phủ một lớp màu lên toàn app (gradient nút chính, ô số liệu, thanh tiến độ, đốm màu nền). Lớp này nhận diện qua class `st-*`, nên dùng sai bộ class cũ thì nút sẽ "phẳng" khác hẳn trang bên cạnh.
+
 ## Iconography
 `lucide-react`, nét 1.75, cỡ 16/20/24, luôn `currentColor`. Nút chỉ có icon phải có `aria-label`.
 

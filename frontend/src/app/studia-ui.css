@@ -269,6 +269,11 @@
 .page-sub { margin-top: 4px; color: var(--ink-muted); font-size: 15px; }
 .crumb { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-muted); font-size: 14px; font-weight: 500; text-decoration: none; margin-bottom: 8px; }
 .crumb:hover { color: var(--brand); }
+/* Hộp thông báo trong trang (lỗi, lưu xong, lưu ý): mọi trang dùng chung, không tự viết style. */
+.st-alert { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 14px; border-radius: var(--radius-md); background: var(--brand-tint); color: var(--ink); font: 400 14px/20px var(--font-sans); }
+.st-alert-success { background: var(--success-tint); color: var(--success); }
+.st-alert-danger { background: var(--danger-tint); color: var(--danger); }
+.st-alert-warning { background: var(--warning-tint); color: var(--ink); }
 .sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 16px; }
 .sec-title { font: 650 22px/30px var(--font-display); letter-spacing: -0.3px; color: var(--ink); }
 .meta { color: var(--ink-muted); font-size: 13px; line-height: 18px; }
@@ -286,6 +291,7 @@
 .divider { height: 1px; background: var(--hairline); border: 0; margin: 4px 0; }
 .link { color: var(--brand); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; font-size: 14px; }
 .link:hover { text-decoration: underline; text-underline-offset: 3px; }
+button.link { background: none; border: 0; padding: 0; font-family: inherit; cursor: pointer; }
 
 /* Icon tile & small parts */
 .tile { display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--radius-md); background: var(--brand-tint); color: var(--brand); }
@@ -308,7 +314,16 @@
 .seg-btn[aria-pressed="true"], .seg-btn[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-xs); }
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--hairline); }
 .tab { height: 44px; padding: 0 14px; border: 0; background: transparent; color: var(--ink-muted); font: 550 14.5px/1 var(--font-sans); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
-.tab[aria-selected="true"] { color: var(--brand); border-bottom-color: var(--brand); }
+.tab[aria-selected="true"], .tab[aria-current="page"] { color: var(--brand); border-bottom-color: var(--brand); }
+.tab { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; white-space: nowrap; transition: color var(--dur-fast); }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"]:hover, .tab[aria-current="page"]:hover { color: var(--brand); }
+/* Thanh tab đầu trang: một kiểu duy nhất cho mọi trang (tab gạch chân, cuộn ngang trên màn hình hẹp). */
+.page-tabs { overflow-x: auto; scrollbar-width: none; margin-bottom: 20px; }
+.page-tabs::-webkit-scrollbar { display: none; }
+.section-tabs { padding-bottom: 0; margin-bottom: 20px; }
+.section-tabs .page-tabs { margin-bottom: 0; gap: 0; }
+.section-tabs .tab { padding: 0 12px; }
 
 /* Fields */
 .field { display: flex; flex-direction: column; gap: 6px; }

@@ -74,19 +74,19 @@ function LoginForm() {
             <span style={{ flex: 1, height: 1, background: "var(--hairline)" }} />hoặc dùng email<span style={{ flex: 1, height: 1, background: "var(--hairline)" }} />
           </div>
 
-          <label>
-            <span className="label-text">Email</span>
+          <label className="st-field">
+            <span className="st-field-label">Email</span>
             <input
               type="email" required autoComplete="email" placeholder="ban@email.com"
-              value={email} onChange={(e) => setEmail(e.target.value)} className="input-field"
+              value={email} onChange={(e) => setEmail(e.target.value)} className="st-input"
             />
           </label>
-          <label>
-            <span className="label-text">Mật khẩu</span>
+          <label className="st-field">
+            <span className="st-field-label">Mật khẩu</span>
             <input
               type="password" required minLength={6} placeholder="Tối thiểu 6 ký tự"
               autoComplete={mode === "signin" ? "current-password" : "new-password"}
-              value={password} onChange={(e) => setPassword(e.target.value)} className="input-field"
+              value={password} onChange={(e) => setPassword(e.target.value)} className="st-input"
             />
           </label>
 
@@ -94,15 +94,15 @@ function LoginForm() {
             <Link href="/forgot-password" style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--brand)", textDecoration: "none", alignSelf: "flex-end" }}>Quên mật khẩu?</Link>
           )}
 
-          {error && <p role="alert" className="fade-in-up" style={{ fontSize: "0.88rem", color: "var(--danger)", background: "var(--danger-tint)", padding: "10px 12px", borderRadius: "var(--radius-sm)" }}>{error}</p>}
-          {notice && <p role="status" className="fade-in-up" style={{ fontSize: "0.88rem", color: "var(--success)", background: "var(--success-tint)", padding: "10px 12px", borderRadius: "var(--radius-sm)" }}>{notice}</p>}
+          {error && <p role="alert" className="st-alert st-alert-danger fade-in-up">{error}</p>}
+          {notice && <p role="status" className="st-alert st-alert-success fade-in-up">{notice}</p>}
 
-          <button type="submit" disabled={loading} className="btn-primary btn-lg btn-block" aria-busy={loading || undefined}>
+          <button type="submit" disabled={loading} className="st-btn st-btn-primary st-btn-lg st-btn-block" aria-busy={loading || undefined}>
             {loading && <span className="spinner" />}
             {mode === "signin" ? "Đăng nhập" : "Đăng ký"}
           </button>
 
-          <Link href="/signup" className="btn-ghost btn-block" style={{ textAlign: "center", textDecoration: "none" }}>
+          <Link href="/signup" className="st-btn st-btn-ghost st-btn-block">
             Chưa có tài khoản? Đăng ký
           </Link>
         </form>

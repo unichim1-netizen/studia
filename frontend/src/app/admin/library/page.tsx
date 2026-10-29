@@ -74,7 +74,7 @@ function SharedLibrary() {
         <div><h1 className="page-title">Sách hệ thống</h1><p className="page-sub">Sách ở thư viện chung hiện cho mọi học sinh, kể cả tài khoản miễn phí, và không tính vào lượt upload. Nổi bật lên đầu, rồi theo thứ tự bạn đặt.</p></div>
         <Link className="st-btn st-btn-primary" href="/books">Tải sách vào thư viện chung</Link>
       </header>
-      {msg && <div role={msg.ok ? "status" : "alert"} style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: msg.ok ? "var(--success-tint)" : "var(--danger-tint)", color: msg.ok ? "var(--success)" : "var(--danger)" }}>{msg.text}</div>}
+      {msg && <div role={msg.ok ? "status" : "alert"} className={msg.ok ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{msg.text}</div>}
 
       <div className="seg" role="radiogroup" aria-label="Phạm vi" style={{ width: "fit-content" }}>
         <button type="button" className="seg-btn" role="radio" aria-checked={scope === "shared"} onClick={() => { setScope("shared"); setDocs(null); }}>Thư viện chung</button>

@@ -16,7 +16,7 @@ interface EmptyStateProps {
   mood?: Mood;
 }
 
-function ActionButton({ action, kind }: { action: Action; kind: "btn-primary" | "btn-secondary" }) {
+function ActionButton({ action, kind }: { action: Action; kind: "st-btn st-btn-primary" | "st-btn st-btn-secondary" }) {
   if (action.href) {
     return <Link href={action.href} className={kind}>{action.label}</Link>;
   }
@@ -26,7 +26,7 @@ function ActionButton({ action, kind }: { action: Action; kind: "btn-primary" | 
 export default function EmptyState({ title, description, steps, primary, secondary, compact, mood = "hello" }: EmptyStateProps) {
   return (
     <div
-      className={compact ? undefined : "glass-panel fade-in-up"}
+      className={compact ? undefined : "st-card st-enter"}
       style={{ padding: compact ? "24px 16px" : "48px 32px", textAlign: "center" }}
     >
       {!compact && <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}><Mascot mood={mood} size={110} /></div>}
@@ -82,8 +82,8 @@ export default function EmptyState({ title, description, steps, primary, seconda
 
       {(primary || secondary) && (
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          {primary && <ActionButton action={primary} kind="btn-primary" />}
-          {secondary && <ActionButton action={secondary} kind="btn-secondary" />}
+          {primary && <ActionButton action={primary} kind="st-btn st-btn-primary" />}
+          {secondary && <ActionButton action={secondary} kind="st-btn st-btn-secondary" />}
         </div>
       )}
     </div>

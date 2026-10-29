@@ -58,7 +58,7 @@ export default function BuyPacks({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className="stack" style={{ gap: 10 }}>
-      {error && <div role="alert" style={{ padding: "10px 12px", borderRadius: "var(--radius-sm)", background: "var(--danger-tint)", color: "var(--danger)", fontSize: 14 }}>{error}</div>}
+      {error && <div role="alert" className="st-alert st-alert-danger">{error}</div>}
       {compact ? (
         packs.map((p) => (
           <button key={p.id} type="button" className="pack-row" data-hot={p.highlight || undefined} data-picked={p.id === picked || undefined} onClick={() => buy(p)} disabled={!!busy}>

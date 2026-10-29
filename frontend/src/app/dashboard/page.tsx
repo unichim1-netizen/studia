@@ -61,11 +61,6 @@ function ProgressView({ profile, weakTopics, loading, overallMastery, masteredCo
         </div>
       </header>
 
-      <div className="tabs" role="tablist" aria-label="Chế độ xem tiến độ">
-        <span className="tab" role="tab" aria-selected="true">Tổng quan</span>
-        <Link className="tab" role="tab" aria-selected="false" href="/knowledge-map" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>Bản đồ kiến thức</Link>
-      </div>
-
       <section className="grid-4" aria-label="Số liệu chính">
         {loading ? [1, 2, 3, 4].map((i) => <div key={i} className="skeleton" style={{ height: 120 }} />) : (
           <>

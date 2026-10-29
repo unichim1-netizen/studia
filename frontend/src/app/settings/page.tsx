@@ -172,7 +172,7 @@ export default function SettingsPage() {
         <div><h1 className="page-title">Cài đặt</h1><p className="page-sub">Thay đổi được lưu ngay khi bạn chỉnh.</p></div>
         <span className={badge[0]} role="status">{badge[1]}</span>
       </header>
-      {msg && <div role="alert" style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: "var(--danger-tint)", color: "var(--danger)" }}>{msg}</div>}
+      {msg && <div role="alert" className="st-alert st-alert-danger">{msg}</div>}
 
       <div className="set-layout" style={{ display: "grid", gridTemplateColumns: "200px minmax(0, 1fr)", gap: 32, alignItems: "start" }}>
         <nav className="toc" aria-label="Mục cài đặt" style={{ position: "sticky", top: 24, display: "flex", flexDirection: "column", gap: 2 }}>

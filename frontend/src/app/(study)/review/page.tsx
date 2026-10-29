@@ -84,7 +84,7 @@ export default function ReviewQueuePage() {
       </header>
 
       {loadError && (
-        <div role="alert" className="row" style={{ justifyContent: "space-between", padding: "10px 14px", borderRadius: "var(--radius-md)", background: "var(--danger-tint)", color: "var(--danger)" }}>
+        <div role="alert" className="st-alert st-alert-danger" style={{ justifyContent: "space-between" }}>
           <span>{loadError}</span>
           <button className="st-btn st-btn-ghost st-btn-sm" type="button" onClick={fetchQueue}>Tải lại</button>
         </div>

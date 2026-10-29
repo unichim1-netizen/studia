@@ -184,9 +184,9 @@ export default function WritingPage() {
 
       <section className="st-card wr-form" aria-label="Đề bài">
         <div className="row" style={{ justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
-          <div className="seg" role="tablist" aria-label="Loại bài">
+          <div className="tabs page-tabs" role="tablist" aria-label="Loại bài" style={{ marginBottom: 0 }}>
             {TASKS.map((t) => (
-              <button key={t.id} type="button" role="tab" className="seg-btn" aria-selected={task === t.id} onClick={() => switchTask(t.id)}>{t.label}</button>
+              <button key={t.id} type="button" role="tab" className="tab" aria-selected={task === t.id} onClick={() => switchTask(t.id)}>{t.label}</button>
             ))}
           </div>
           <PromptPicker task={task} onPick={(p) => { setPrompt(p.text); setImage(p.image); setSource(p.source); setOutline({}); setCheck(null); setResult(null); }} />

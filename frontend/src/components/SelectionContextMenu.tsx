@@ -747,7 +747,7 @@ export default function SelectionContextMenu() {
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 {/* Select Deck */}
                 <div>
-                  <label className="label-text">BỘ THẺ (DECK)</label>
+                  <label className="label-text">Bộ thẻ</label>
                   <div style={{ display: "flex", gap: "8px" }}>
                     <select
                       value={fcDeckId}
@@ -784,7 +784,7 @@ export default function SelectionContextMenu() {
 
                 {/* Front */}
                 <div>
-                  <label className="label-text">MẶT TRƯỚC (TỪ VỰNG / KHÁI NIỆM)</label>
+                  <label className="label-text">Mặt trước (từ vựng hoặc khái niệm)</label>
                   <input
                     type="text"
                     value={fcFront}
@@ -796,7 +796,7 @@ export default function SelectionContextMenu() {
 
                 {/* Back */}
                 <div>
-                  <label className="label-text">MẶT SAU (NGHĨA & VÍ DỤ){fcBackLoading && <Loader2 size={12} className="spin" style={{ marginLeft: 6, verticalAlign: -1 }} aria-label="Đang dịch" />}</label>
+                  <label className="label-text">Mặt sau (nghĩa và ví dụ){fcBackLoading && <Loader2 size={12} className="spin" style={{ marginLeft: 6, verticalAlign: -1 }} aria-label="Đang dịch" />}</label>
                   <textarea
                     rows={3}
                     value={fcBack}

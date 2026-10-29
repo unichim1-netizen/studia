@@ -753,7 +753,7 @@ function WritingEditor({ draft, task, update, onTask, onUploadImage }: {
     <div>
       <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
         {(["task1", "task2"] as const).map((t) => (
-          <button key={t} className={t === task ? "btn-primary" : "btn-secondary"} onClick={() => onTask(t)}>
+          <button key={t} className={t === task ? "st-btn st-btn-primary st-btn-sm" : "st-btn st-btn-secondary st-btn-sm"} onClick={() => onTask(t)}>
             {t === "task1" ? "Task 1" : "Task 2"}
           </button>
         ))}

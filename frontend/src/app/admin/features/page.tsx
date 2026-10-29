@@ -86,7 +86,7 @@ function Features() {
           <p className="page-sub">Bật hoặc tắt từng tính năng cho học sinh và đặt giới hạn tải lên. Có hiệu lực không cần deploy lại.</p>
         </div>
       </header>
-      {msg && <div role={msg.ok ? "status" : "alert"} style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: msg.ok ? "var(--success-tint)" : "var(--danger-tint)", color: msg.ok ? "var(--success)" : "var(--danger)" }}>{msg.text}</div>}
+      {msg && <div role={msg.ok ? "status" : "alert"} className={msg.ok ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{msg.text}</div>}
 
       <form className="stack" style={{ gap: 16 }} onSubmit={save}>
         <section className="st-card" aria-labelledby="ft-h">

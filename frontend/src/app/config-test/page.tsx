@@ -199,9 +199,9 @@ export default function ConfigTestPage() {
   return (
     <div style={{ maxWidth: "1050px", margin: "0 auto", display: "flex", flexDirection: "column", gap: "24px" }}>
       {/* Header */}
-      <div className="glass-panel" style={{ padding: "28px 32px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="st-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div>
-          <span className="badge badge-indigo" style={{ marginBottom: "10px" }}>
+          <span className="st-badge st-badge-brand" style={{ marginBottom: "10px" }}>
              Senior Technical Business Analyst Test Suite
           </span>
           <h1 style={{ fontSize: "2rem", fontWeight: 700, fontFamily: "var(--font-display)" }}>
@@ -213,10 +213,10 @@ export default function ConfigTestPage() {
         </div>
 
         <div style={{ display: "flex", gap: "10px" }}>
-          <a href={`${API}/export/schedule/ical`} target="_blank" className="btn-secondary">
+          <a href={`${API}/export/schedule/ical`} target="_blank" className="st-btn st-btn-secondary">
              Export iCal (.ics)
           </a>
-          <a href={`${API}/docs`} target="_blank" className="btn-primary">
+          <a href={`${API}/docs`} target="_blank" className="st-btn st-btn-primary">
             Swagger API Docs 
           </a>
         </div>
@@ -230,7 +230,7 @@ export default function ConfigTestPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={isActive ? "btn-primary" : "btn-ghost"}
+              className={isActive ? "st-btn st-btn-primary" : "st-btn st-btn-ghost"}
               style={{
                 borderRadius: "12px", padding: "10px 18px", fontSize: "0.88rem",
                 display: "flex", alignItems: "center", gap: "8px", flexShrink: 0
@@ -245,7 +245,7 @@ export default function ConfigTestPage() {
       {/* TAB 1: RAG & Vector Chunks */}
       {activeTab === "rag" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div className="glass-panel" style={{ padding: 24, borderRadius: 12 }}>
+          <div className="st-card">
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
               Thử nghiệm Semantic Vector Search (pgvector 768d + Gemini)
             </h2>
@@ -271,12 +271,12 @@ export default function ConfigTestPage() {
                 style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid var(--border-subtle)", background: "var(--bg-card)", color: "var(--text-primary)", fontSize: "0.88rem" }}
               />
 
-              <button className="btn-primary" onClick={runRagSearch} disabled={searching || !selectedDocId}>
+              <button className="st-btn st-btn-primary" onClick={runRagSearch} disabled={searching || !selectedDocId}>
                 {searching ? <span className="spinner" /> : null}
                 Tìm Vector Search
               </button>
 
-              <button className="btn-secondary" onClick={loadChunks} disabled={!selectedDocId}>
+              <button className="st-btn st-btn-secondary" onClick={loadChunks} disabled={!selectedDocId}>
                 Xem 10 Chunks
               </button>
             </div>
@@ -292,7 +292,7 @@ export default function ConfigTestPage() {
                     <div key={idx} style={{ background: "var(--bg-card)", padding: 12, borderRadius: 8, border: "1px solid var(--border-subtle)" }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: 4 }}>
                         <span>Chunk #{m.chunk_index || idx + 1}</span>
-                        <span className="badge badge-emerald">Similarity: {((1 - (m.similarity || 0.1)) * 100).toFixed(1)}%</span>
+                        <span className="st-badge st-badge-success">Similarity: {((1 - (m.similarity || 0.1)) * 100).toFixed(1)}%</span>
                       </div>
                       <p style={{ fontSize: "0.85rem", margin: 0, color: "var(--text-primary)", lineHeight: 1.5 }}>
                         {m.content}
@@ -323,7 +323,7 @@ export default function ConfigTestPage() {
       {/* TAB 2: FSRS & Export Console */}
       {activeTab === "fsrs" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div className="glass-panel" style={{ padding: 24, borderRadius: 12 }}>
+          <div className="st-card">
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
               Mô phỏng Thuật toán FSRS toán học (Free Spaced Repetition Scheduler)
             </h2>
@@ -360,7 +360,7 @@ export default function ConfigTestPage() {
                     <button
                       key={r}
                       onClick={() => setFsrsRating(r)}
-                      className={fsrsRating === r ? "btn-primary" : "btn-secondary"}
+                      className={fsrsRating === r ? "st-btn st-btn-primary" : "st-btn st-btn-secondary"}
                       style={{ flex: 1, padding: "6px", fontSize: "0.8rem" }}
                     >
                       {r === 1 ? "Again" : r === 2 ? "Hard" : r === 3 ? "Good" : "Easy"}
@@ -370,7 +370,7 @@ export default function ConfigTestPage() {
               </div>
             </div>
 
-            <button className="btn-primary" onClick={simulateFsrs} style={{ marginBottom: 16 }}>
+            <button className="st-btn st-btn-primary" onClick={simulateFsrs} style={{ marginBottom: 16 }}>
                Tính toán FSRS Interval Tiếp theo
             </button>
 
@@ -397,7 +397,7 @@ export default function ConfigTestPage() {
           </div>
 
           {/* Export section */}
-          <div className="glass-panel" style={{ padding: 24, borderRadius: 12 }}>
+          <div className="st-card">
             <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
               Xuất tệp tích hợp Anki CSV & iCalendar (.ics)
             </h2>
@@ -405,10 +405,10 @@ export default function ConfigTestPage() {
               Hỗ trợ xuất Flashcards ra Anki TSV/CSV (.apkg importable) và đồng bộ Lịch học Thích ứng ra tệp iCalendar cho Google Calendar / Outlook.
             </p>
             <div style={{ display: "flex", gap: 12 }}>
-              <a href={`${API}/export/flashcards/anki/all`} target="_blank" className="btn-secondary">
+              <a href={`${API}/export/flashcards/anki/all`} target="_blank" className="st-btn st-btn-secondary">
                 Export Anki CSV/TSV (.apkg)
               </a>
-              <a href={`${API}/export/schedule/ical`} target="_blank" className="btn-secondary">
+              <a href={`${API}/export/schedule/ical`} target="_blank" className="st-btn st-btn-secondary">
                 Export Lịch học iCalendar (.ics)
               </a>
             </div>
@@ -419,7 +419,7 @@ export default function ConfigTestPage() {
       {/* TAB 3: Dual Coding Visuals */}
       {activeTab === "dual" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div className="glass-panel" style={{ padding: 24, borderRadius: 12 }}>
+          <div className="st-card">
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
               Thử nghiệm Sinh Sơ đồ Trực quan (Dual Coding Theory)
             </h2>
@@ -439,7 +439,7 @@ export default function ConfigTestPage() {
                 placeholder="Mô tả khái niệm..."
                 style={{ padding: "10px 14px", borderRadius: 8, border: "1px solid var(--border-subtle)", background: "var(--bg-card)", color: "var(--text-primary)", fontSize: "0.88rem" }}
               />
-              <button className="btn-primary" onClick={generateVisuals} disabled={generatingVisuals} style={{ alignSelf: "flex-start" }}>
+              <button className="st-btn st-btn-primary" onClick={generateVisuals} disabled={generatingVisuals} style={{ alignSelf: "flex-start" }}>
                 {generatingVisuals ? <span className="spinner" /> : null}
                 Sinh Mermaid & D2 Diagram
               </button>
@@ -469,7 +469,7 @@ export default function ConfigTestPage() {
       {/* TAB 4: Speech & Shadowing */}
       {activeTab === "speech" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div className="glass-panel" style={{ padding: 24, borderRadius: 12 }}>
+          <div className="st-card">
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
               Kỹ thuật Speech Shadowing & Chấm điểm Levenshtein Distance
             </h2>
@@ -489,14 +489,14 @@ export default function ConfigTestPage() {
                   <button
                     key={spd}
                     onClick={() => setSpeechSpeed(spd)}
-                    className={speechSpeed === spd ? "btn-primary" : "btn-secondary"}
+                    className={speechSpeed === spd ? "st-btn st-btn-primary" : "st-btn st-btn-secondary"}
                     style={{ padding: "6px 12px", fontSize: "0.8rem" }}
                   >
                     {spd}x
                   </button>
                 ))}
 
-                <button className="btn-primary" onClick={testSpeechGuide} disabled={testingSpeech}>
+                <button className="st-btn st-btn-primary" onClick={testSpeechGuide} disabled={testingSpeech}>
                   {testingSpeech ? <span className="spinner" /> : null}
                   Phân tích Hướng dẫn Shadowing
                 </button>
@@ -531,7 +531,7 @@ export default function ConfigTestPage() {
                   placeholder="Nhập hoặc dán transcript học viên đọc..."
                   style={{ flex: 1, padding: "10px 14px", borderRadius: 8, border: "1px solid var(--border-subtle)", background: "var(--bg-card)", color: "var(--text-primary)", fontSize: "0.88rem" }}
                 />
-                <button className="btn-primary" onClick={evaluateSpeech}>
+                <button className="st-btn st-btn-primary" onClick={evaluateSpeech}>
                   Chấm điểm Levenshtein
                 </button>
               </div>
@@ -555,7 +555,7 @@ export default function ConfigTestPage() {
       {/* TAB 5: Master Config Matrix */}
       {activeTab === "matrix" && (
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div className="glass-panel" style={{ padding: 24, borderRadius: 12 }}>
+          <div className="st-card">
             <h2 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: 16, display: "flex", alignItems: "center", gap: 8 }}>
               Bảng Audit Tiến độ 10 Phân hệ & 21 Hàm Cốt lõi (config.md)
             </h2>
@@ -588,7 +588,7 @@ export default function ConfigTestPage() {
                       <td style={{ padding: "10px 12px", fontFamily: "monospace", color: "var(--accent-indigo)", fontSize: "0.78rem" }}>{row.fn}</td>
                       <td style={{ padding: "10px 12px", color: "var(--text-secondary)", fontSize: "0.78rem" }}>{row.code}</td>
                       <td style={{ padding: "10px 12px" }}>
-                        <span className="badge badge-emerald">{row.status}</span>
+                        <span className="st-badge st-badge-success">{row.status}</span>
                       </td>
                     </tr>
                   ))}

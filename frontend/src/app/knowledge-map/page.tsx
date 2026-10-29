@@ -83,12 +83,7 @@ export default function KnowledgeMapPage() {
         </div>
       </header>
 
-      <div className="tabs" role="tablist" aria-label="Chế độ xem tiến độ">
-        <Link className="tab" role="tab" aria-selected="false" href="/dashboard" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>Tổng quan</Link>
-        <span className="tab" role="tab" aria-selected="true">Bản đồ kiến thức</span>
-      </div>
-
-      {error && <div role="alert" style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: "var(--danger-tint)", color: "var(--danger)" }}>{error}</div>}
+      {error && <div role="alert" className="st-alert st-alert-danger">{error}</div>}
 
       {loading ? (
         <div className="skeleton" style={{ height: 420 }} />

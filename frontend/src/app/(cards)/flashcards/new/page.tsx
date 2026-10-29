@@ -99,7 +99,7 @@ export default function FlashcardNewPage() {
       </header>
 
       {msg && (
-        <div role={msg.type === "error" ? "alert" : "status"} className="st-enter row" style={{ gap: 10, padding: "12px 16px", borderRadius: "var(--radius-md)", background: msg.type === "success" ? "var(--success-tint)" : "var(--danger-tint)", color: msg.type === "success" ? "var(--success)" : "var(--danger)", fontWeight: 550 }}>
+        <div role={msg.type === "error" ? "alert" : "status"} className="st-enter row" style={{ fontWeight: 550 }}>
           {msg.type === "success" ? <Check size={18} strokeWidth={2.4} /> : null}{msg.text}
         </div>
       )}

@@ -82,12 +82,12 @@ export default function SignupPage() {
             <div className="row" style={{ gap: 12, color: "var(--ink-muted)", fontSize: 13 }} aria-hidden="true">
               <span style={{ flex: 1, height: 1, background: "var(--hairline)" }} />hoặc đăng ký bằng email<span style={{ flex: 1, height: 1, background: "var(--hairline)" }} />
             </div>
-            <label><span className="label-text">Tên gọi</span>
-              <input className="input-field" type="text" autoComplete="given-name" placeholder="Studia sẽ gọi bạn là…" value={name} onChange={(e) => setName(e.target.value)} /></label>
-            <label><span className="label-text">Email</span>
-              <input className="input-field" type="email" required autoComplete="email" placeholder="ban@email.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
-            <label><span className="label-text">Mật khẩu</span>
-              <input className="input-field" type="password" required minLength={8} autoComplete="new-password" aria-describedby="pw-hint" placeholder="Tối thiểu 8 ký tự" value={pw} onChange={(e) => setPw(e.target.value)} />
+            <label className="st-field"><span className="st-field-label">Tên gọi</span>
+              <input className="st-input" type="text" autoComplete="given-name" placeholder="Studia sẽ gọi bạn là…" value={name} onChange={(e) => setName(e.target.value)} /></label>
+            <label className="st-field"><span className="st-field-label">Email</span>
+              <input className="st-input" type="email" required autoComplete="email" placeholder="ban@email.com" value={email} onChange={(e) => setEmail(e.target.value)} /></label>
+            <label className="st-field"><span className="st-field-label">Mật khẩu</span>
+              <input className="st-input" type="password" required minLength={8} autoComplete="new-password" aria-describedby="pw-hint" placeholder="Tối thiểu 8 ký tự" value={pw} onChange={(e) => setPw(e.target.value)} />
               <span aria-hidden="true" style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: 4, marginTop: 8 }}>
                 {[0, 1, 2, 3].map((n) => <i key={n} style={{ height: 4, borderRadius: 2, background: n < score ? "var(--success)" : "var(--surface-sunken)" }} />)}
               </span>
@@ -97,8 +97,8 @@ export default function SignupPage() {
               <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} style={{ marginTop: 4 }} />
               <span className="ink2" style={{ fontSize: 14, lineHeight: "21px" }}>Tôi đồng ý với Điều khoản và Chính sách quyền riêng tư.</span>
             </label>
-            {error && <p role="alert" style={{ fontSize: "0.88rem", color: "var(--danger)", background: "var(--danger-tint)", padding: "10px 12px", borderRadius: "var(--radius-sm)" }}>{error}</p>}
-            <button type="submit" disabled={busy || !agree || pw.length < 8} className="btn-primary btn-lg btn-block" aria-busy={busy || undefined}>
+            {error && <p role="alert" className="st-alert st-alert-danger">{error}</p>}
+            <button type="submit" disabled={busy || !agree || pw.length < 8} className="st-btn st-btn-primary st-btn-lg st-btn-block" aria-busy={busy || undefined}>
               {busy && <span className="spinner" />}Tạo tài khoản
             </button>
           </form>

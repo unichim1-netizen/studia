@@ -181,7 +181,7 @@ export default function BooksPage() {
         </button>
       </header>
 
-      <div className="tabs" role="tablist" aria-label="Nguồn sách">
+      <div className="tabs page-tabs" role="tablist" aria-label="Nguồn sách">
         <button className="tab" type="button" role="tab" aria-selected={activeTab === "shared"} onClick={() => { setTab("shared"); setFilter("all"); }}>
           Thư viện Studia <span className="meta num">· {sharedBooks.length}</span>
         </button>
@@ -369,7 +369,7 @@ export default function BooksPage() {
               )}
 
               {uploadMsg && (
-                <div role="alert" style={{ padding: "10px 12px", borderRadius: "var(--radius-sm)", background: uploadMsg.type === "success" ? "var(--success-tint)" : "var(--danger-tint)", color: uploadMsg.type === "success" ? "var(--success)" : "var(--danger)", fontSize: 14 }}>{uploadMsg.text}</div>
+                <div role="alert" className={uploadMsg.type === "success" ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{uploadMsg.text}</div>
               )}
 
               <button type="submit" className="st-btn st-btn-primary st-btn-lg st-btn-block">Tải lên và phân tích</button>

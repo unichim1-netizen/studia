@@ -199,7 +199,7 @@ export default function QuizPage({ params }: { params: { id: string } }) {
   if (phase === "error") {
     return wrap(
       <div className="st-card stack" style={{ padding: 28, gap: 16 }}>
-        <p role="alert" style={{ padding: "10px 12px", borderRadius: "var(--radius-sm)", background: "var(--danger-tint)", color: "var(--danger)" }}>{error}</p>
+        <p role="alert" className="st-alert st-alert-danger">{error}</p>
         <div className="row">
           <button className="st-btn st-btn-primary" type="button" onClick={() => (questions.length && Object.keys(answers).length === questions.length ? finish(answers) : load())}>Thử lại</button>
           <Link className="st-btn st-btn-secondary" href={exitHref}>Quay lại</Link>

@@ -53,7 +53,7 @@ function Orders() {
   return (
     <div className="wrap stagger">
       <header className="page-head"><div><h1 className="page-title">Thanh toán</h1><p className="page-sub">Đơn khớp mã và đủ tiền được duyệt tự động qua webhook ngân hàng. Phần còn lại xử lý ở đây.</p></div></header>
-      {msg && <div role={msg.ok ? "status" : "alert"} style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", background: msg.ok ? "var(--success-tint)" : "var(--danger-tint)", color: msg.ok ? "var(--success)" : "var(--danger)" }}>{msg.text}</div>}
+      {msg && <div role={msg.ok ? "status" : "alert"} className={msg.ok ? "st-alert st-alert-success" : "st-alert st-alert-danger"}>{msg.text}</div>}
 
       {(txs.length > 0 || (status === "" && review.length > 0)) && (
         <section className="st-card" style={{ borderColor: "color-mix(in srgb, var(--warning) 45%, transparent)" }} aria-labelledby="un-h">
